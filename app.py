@@ -38,20 +38,20 @@ def processRequest(req):
   specifiedGenresID = []
   for genre in specifiedGenresEnglish:
       specifiedGenresID.append(genreMap[genre])
-  # The genres of each movie returned from movie DB are in order so we do the same for the specified genres.
-  sorted(specifiedGenresID)
   selectedMovies = []
   maxRecs = MAX_RECS
   for movieData in allMovies['results']:
       # All the listed genres for this movie.
       genres = movieData['genre_ids']
       # All of the specified genres must be present in the genre list for the current movie we are looking at.
-      if cmp(specifiedGenresID, genres) == 0 and maxRecs > 0:  
+      if all(x in genres for x in specifiedGenresID):
         selectedMovies.append(movieData['title'])
         maxRecs -= 1
   # If the user provided a rating, then filter movies further based on Rotten Tomatoes percentage.
+  specifiedPercentage = req.get('result').get('parameters').get('movie-percentage')
+  if specifiedPercentage != '':
+    # Rotten tomatoes provides no API, so scraping is required.
 
-  # Rotten tomatoes provides no API, so scraping is required.
   speech = "I recommend the following movies: " + ', '.join(selectedMovies)
   return {
     "speech": speech,
