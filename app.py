@@ -30,7 +30,7 @@ def processRequest(req):
   movies = json.loads(moviesRes.text)
   genres = json.loads(genresRes.text)
   # Filter based on requested genre(s)
-  params = req.get('parameters')
+  params = req.get('result').get('parameters')
   specifiedGenres = params.get('movie-genre')
   selectedMovies = []
   for movieData in movies['results']:
