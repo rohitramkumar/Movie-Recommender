@@ -52,7 +52,10 @@ def processRequest(req):
   if specifiedPercentage != '':
     # Rotten tomatoes provides no API, so scraping is required.
     pass
-  speech = "I recommend the following movies: " + ', '.join(selectedMovies)
+  if len(selectedMovies) == 0:
+      speech = "Sorry, there are no movies currently playing that match your request."
+  else:
+      speech= "I recommend the following movies: " + ', '.join(selectedMovies)
   return {
     "speech": speech,
     "displayText": speech,
