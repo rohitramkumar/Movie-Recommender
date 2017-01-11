@@ -14,9 +14,9 @@ MAX_RECS = 10
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-  req = request.get_json(silent=True, force=True)
+  req = request.get_json(force=True)
   res = processRequest(req)
-  r = make_response(res)
+  r = make_response(json.dumps(res))
   r.headers['Content-Type'] = 'application/json'
   return r
 
@@ -39,15 +39,16 @@ def processRequest(req):
   for genre in specifiedGenresEnglish:
       specifiedGenresID.append(genreMap[genre])
   # The genres of each movie returned from movie DB are in order so we do the same for the specified genres.
-  sort(specifiedGenresID)
+  sorted(specifiedGenresID)
   selectedMovies = []
+  maxRecs = MAX_RECS
   for movieData in allMovies['results']:
       # All the listed genres for this movie.
       genres = movieData['genre_ids']
       # All of the specified genres must be present in the genre list for the current movie we are looking at.
-      if cmp(specifiedGenresID, genres) == 0 and MAX_RECS > 0:  
+      if cmp(specifiedGenresID, genres) == 0 and maxRecs > 0:  
         selectedMovies.append(movieData['title'])
-        MAX_RECS -= 1
+        maxRecs -= 1
   # If the user provided a rating, then filter movies further based on Rotten Tomatoes percentage.
 
   # Rotten tomatoes provides no API, so scraping is required.
