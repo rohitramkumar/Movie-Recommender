@@ -23,14 +23,14 @@ def webhook():
 def processRequest(req):
   genresURL = (MOVIE_DB_URL + 'genre/movie/list?api_key={}&language=en-US').format(API_KEY)
   moviesURL = (MOVIE_DB_URL + 'movie/now_playing?api_key={}&language=en-US').format(API_KEY)
-  moviesRes = requests.post(moviesURL)
-  genresRes = requests.post(genresURL)
+  moviesRes = requests.get(moviesURL)
+  genresRes = requests.get(genresURL)
   # TODO: Response code check
   allMovies = json.loads(moviesRes.text)
   allGenres = json.loads(genresRes.text)
   # Map a genre to a genre id given the response from the movie database.
   genreMap = {}
-  for genre in allGenres['genres']
+  for genre in allGenres['genres']:
       genreMap[genre['name']] = genre['id']
   # Filter movies based on requested genre(s).
   specifiedGenresEnglish = req.get('result').get('parameters').get('movie-genres')
