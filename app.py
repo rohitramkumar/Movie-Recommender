@@ -33,7 +33,7 @@ def processRequest(req):
   for genre in allGenres['genres']:
       genreMap[genre['name']] = genre['id']
   # Filter movies based on requested genre(s).
-  specifiedGenresEnglish = req.get('result').get('parameters').get('movie-genres')
+  specifiedGenresEnglish = req.get('result').get('parameters').get('movie-genre')
   # The genres provided by api.ai are english words so we need to convert them to numbers.
   specifiedGenresID = []
   for genre in specifiedGenresEnglish:
