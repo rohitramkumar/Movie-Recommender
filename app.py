@@ -12,6 +12,10 @@ API_KEY = os.environ['MOVIE_DB_API_KEY']
 # Maximum number of movies that are returned after initial genre filtering.
 MAX_RECS = 10
 
+@app.route('/', methods=['GET'])
+def index():
+    return "Hello, World!"
+
 @app.route('/webhook', methods=['POST'])
 def webhook():
   req = request.get_json(force=True)
