@@ -10,7 +10,7 @@ MOVIE_DB_URL = 'https://api.themoviedb.org/3/'
 API_KEY = os.environ['MOVIE_DB_API_KEY']
 
 # Maximum number of movies that are returned after initial genre filtering.
-MAX_RECS = 10
+MAX_RECS = 5
 
 @app.route('/', methods=['GET'])
 def index():
@@ -63,6 +63,7 @@ def processRequest(req):
   return {
     "speech": speech,
     "displayText": speech,
+    "contextOut": [{"name":"recommendations", "lifespan":2, "parameters":{"recommendations":selectedMovies}}]
     "source": 'movie-recommendations-service'
   }
 
