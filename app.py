@@ -48,7 +48,7 @@ def processRequest(req):
       # All the listed genres for this movie.
       genres = movieData['genre_ids']
       # All of the specified genres must be present in the genre list for the current movie we are looking at.
-      if all(x in genres for x in specifiedGenresID):
+      if all(x in genres for x in specifiedGenresID) and maxRecs > 0:
         selectedMovies.append(movieData['title'])
         maxRecs -= 1
   if len(selectedMovies) == 0:
