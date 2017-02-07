@@ -5,11 +5,11 @@ import json
 
 app = Flask(__name__)
 
+# Database that provides simple genre filtering.
 MOVIE_DB_URL = 'https://api.themoviedb.org/3/'
-
 API_KEY = os.environ['MOVIE_DB_API_KEY']
 
-# Maximum number of movies that are returned after initial genre filtering.
+# Maximum number of movies that are returned after all filtering.
 MAX_RECS = 5
 
 @app.route('/', methods=['GET'])
@@ -29,7 +29,7 @@ def processRequest(req):
   moviesURL = (MOVIE_DB_URL + 'movie/now_playing?api_key={}&language=en-US').format(API_KEY)
   moviesRes = requests.get(moviesURL)
   genresRes = requests.get(genresURL)
-  #TODO: response code
+  #TODO: Response code check
   allMovies = json.loads(moviesRes.text)
   allGenres = json.loads(genresRes.text)
   # Map a genre to a genre id given the response from the movie database.
@@ -51,15 +51,11 @@ def processRequest(req):
       if all(x in genres for x in specifiedGenresID):
         selectedMovies.append(movieData['title'])
         maxRecs -= 1
-  # If the user provided a rating, then filter movies further based on Rotten Tomatoes percentage.
-  specifiedPercentage = req.get('result').get('parameters').get('movie-percentage')
-  if specifiedPercentage != '':
-    # Rotten tomatoes provides no API, so scraping is required.
-    pass
   if len(selectedMovies) == 0:
       speech = "Sorry, there are no movies currently playing that match your request."
   else:
       speech= "I recommend the following movies: " + ', '.join(selectedMovies)
+  # The outbound context are the movies that are recommended
   return {
     "speech": speech,
     "displayText": speech,
