@@ -63,7 +63,7 @@ def processRequest(req):
   return {
     "speech": speech,
     "displayText": speech,
-    "contextOut": [{"name":"recommendations", "lifespan":2, "parameters":{"recommendations":selectedMovies}}]
+    "contextOut": [{"name":"recommendations", "lifespan":2, "parameters":{"recommendations":selectedMovies}}],
     "source": 'movie-recommendations-service'
   }
 
