@@ -29,7 +29,7 @@ def processRequest(req):
   moviesURL = (MOVIE_DB_URL + 'movie/now_playing?api_key={}&language=en-US').format(API_KEY)
   moviesRes = requests.get(moviesURL)
   genresRes = requests.get(genresURL)
-  # TODO: Response code check
+  #TODO: response code
   allMovies = json.loads(moviesRes.text)
   allGenres = json.loads(genresRes.text)
   # Map a genre to a genre id given the response from the movie database.
