@@ -2,4 +2,4 @@
 
 git add .
 git commit -m "Blah"
-git push heroku master
+git push origin master
