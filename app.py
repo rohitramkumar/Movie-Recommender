@@ -7,10 +7,9 @@ import datetime
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET'])
+@app.route("/")
 def index():
-    response = make_response(send_file("templates/index.html"))
-    return response
+    return make_response(open('templates/index.html').read())
 
 if __name__ == '__main__':
     app.run(debug=False, port='8888', host='0.0.0.0')
