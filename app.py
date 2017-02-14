@@ -10,7 +10,6 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def index():
     response = make_response(send_file("templates/index.html"))
-
     return response
 
 if __name__ == '__main__':
