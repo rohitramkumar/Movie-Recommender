@@ -1,8 +1,8 @@
 _Store
 *.pyc
 *.pyo
-env
-env*
+venv
+venv*
 dist
 build
 *.egg
