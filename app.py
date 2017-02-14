@@ -10,7 +10,7 @@ app = Flask(__name__)
 @app.route('/', methods=['GET'])
 def index():
     response = app.make_response(send_file("templates/index.html"))
-    response.headers['Last-Modified'] = datetime.now()
+    response.headers['Last-Modified'] = datetime.datetime.now()
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '-1'
 
