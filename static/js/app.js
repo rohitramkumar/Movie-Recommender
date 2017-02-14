@@ -6,6 +6,7 @@ var myApp = angular.module('myApp', [
 
 myApp.config(['$routeProvider',
      function($routeProvider) {
+         console.log("I'm trying to resolve routes!");
          $routeProvider.
              when('/', {
                  templateUrl: 'static/partials/index.html',
