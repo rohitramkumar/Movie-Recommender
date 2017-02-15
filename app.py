@@ -69,6 +69,7 @@ def processRequest(req):
         counter = 0
         while counter < MAX_RESULTS:
             recommendations.append(movieDiscoveryResults.get('results')[counter].get('title'))
+            counter += 1
     if len(recommendations) > 0:
         speech = "I recommend the following movies: " + ''.join(recommendations)
     else:
