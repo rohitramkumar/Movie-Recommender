@@ -74,12 +74,10 @@ def processRequest(req):
         speech = "I recommend the following movies: " + ''.join(recommendations)
     else:
         speech = "Sorry there are no movies that match your request"
-    return 
-    {
+    return {
         "speech":speech,
         "displayText":speech,
         "source":"movie-recommendation-service"
-
     }
     
 if __name__ == '__main__':
