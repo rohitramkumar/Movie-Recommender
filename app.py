@@ -67,7 +67,7 @@ def processRequest(req):
     recommendations = []
     if len(movieDiscoveryResults.get('results')) > 0:
         counter = 0
-        while counter < MAX_RESULTS:
+        while counter < MAX_RESULTS and counter < len(movieDiscoveryResults.get('results')):
             recommendations.append(movieDiscoveryResults.get('results')[counter].get('title'))
             counter += 1
     if len(recommendations) > 0:
