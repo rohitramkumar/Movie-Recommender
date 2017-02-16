@@ -71,7 +71,7 @@ def processRequest(req):
             recommendations.append(movieDiscoveryResults.get('results')[counter].get('title'))
             counter += 1
     if len(recommendations) > 0:
-        speech = "I recommend the following movies: " + ''.join(recommendations)
+        speech = "I recommend the following movies: " + ', '.join(recommendations)
     else:
         speech = "Sorry there are no movies that match your request"
     return {
