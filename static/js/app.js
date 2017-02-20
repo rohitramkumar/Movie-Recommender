@@ -14,6 +14,9 @@ myApp.config(['$routeProvider',
              when('/about', {
                  templateUrl: 'static/partials/about.html',
              }).
+             when('/sign-up', {
+                 templateUrl: 'static/partials/sign-up.html',
+             }).
              otherwise({
                  redirectTo: '/'
              });
