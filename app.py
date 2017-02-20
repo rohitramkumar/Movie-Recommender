@@ -76,7 +76,6 @@ def processRequest(req):
     movieDiscoveryRequest = requests.get(finalDiscoveryURL)
     movieDiscoveryResults = json.loads(movieDiscoveryRequest.text)
     recommendations = []
-    if len(movieDiscoveryResults.get('results')) > 0:
     counter = 0
     while counter < MAX_RESULTS and counter < len(movieDiscoveryResults.get('results')):
         recommendations.append(movieDiscoveryResults.get('results')[counter].get('title'))
