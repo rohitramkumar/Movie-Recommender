@@ -15,13 +15,10 @@ API_KEY = os.environ['MOVIE_DB_API_KEY']
 
 # URL Endpoints for different types of filtering data.
 GENRES_URL = (MOVIE_DB_URL + 'genre/movie/list?api_key={}&language=en-US').format(API_KEY)
-PEOPLE_SEARCH_URL = (
-    MOVIE_DB_URL + 'search/person/?api_key={}&language=en-US&query={}&page1&include_adult=false')
+PEOPLE_SEARCH_URL = (MOVIE_DB_URL + 'search/person/?api_key={}&language=en-US&query={}&page1&include_adult=false')
 
 # URL Endpoint for movie discovery
-MOVIE_DISCOVERY_URL = (
-    MOVIE_DB_URL + 'discover/movie?api_key={}&include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc').format(API_KEY)
-
+MOVIE_DISCOVERY_URL = (MOVIE_DB_URL + 'discover/movie?api_key={}&include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc').format(API_KEY)
 
 @app.route("/")
 def index():
@@ -42,7 +39,7 @@ def processRequest(req):
     # The final URL which will allow us to retrieve recommendations based on
     # filters. Initially it is just the base url.
     finalDiscoveryURL = MOVIE_DISCOVERY_URL
-    userSpecifiedGenres = req.get('result').get('parameters').get('genre')
+    userSpecifiedGenres = req.get('result').get('contexts')[0].get('parameters').get('genre')
     # If the user did not specify genre to chat agent, then do not bother get the genre id's.
     if len(userSpecifiedGenres) != 0:
         genreRequestResult = requests.get(GENRES_URL)
@@ -54,10 +51,8 @@ def processRequest(req):
                 if userSpecifiedGenre == genre['name']:
                     genreIds.append(genre['id'])
         finalDiscoveryURL = finalDiscoveryURL + '&with_genres=' + ''.join(str(g) for g in genreIds)
-    userSpecifiedCastFirstName = req.get('result').get(
-        'contexts')[0].get('parameters').get('cast-first-name')
-    userSpecifiedCastLastName = req.get('result').get(
-        'contexts')[0].get('parameters').get('cast-last-name')
+    userSpecifiedCastFirstName = req.get('result').get('contexts')[0].get('parameters').get('cast-first-name')
+    userSpecifiedCastLastName = req.get('result').get('contexts')[0].get('parameters').get('cast-last-name')
     # Chat agent only allows us to parse out first and last names seperately
     # so we need to merge these to get a list of full names.
     userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(
@@ -72,7 +67,7 @@ def processRequest(req):
             if len(castInfo.get('results')) > 0:
                 castIds.append(castInfo.get('results')[0].get('id'))
         finalDiscoveryURL = finalDiscoveryURL + '&with_people=' + ''.join(str(c) for c in castIds)
-    userSpecifiedRating = req.get('result').get('parameters').get('rating')
+    userSpecifiedRating = req.get('result').get('contexts')[0].get('parameters').get('rating')
     # If the user did not specify an mpaa rating, then do not bother putting
     # it in the final url string
     if userSpecifiedRating != '':
