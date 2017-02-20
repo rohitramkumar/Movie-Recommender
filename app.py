@@ -74,4 +74,4 @@ def processRequest(req):
     movieDiscoveryRequest = requests.get(finalDiscoveryURL)
 
 if __name__ == '__main__':
-    app.run(debug=False, port='8888', host='0.0.0.0')
+    app.run(debug=True, port='8888', host='0.0.0.0')
