@@ -25,7 +25,8 @@ MOVIE_DISCOVERY_URL = (
 
 @app.route("/")
 def index():
-    return make_response(open('templates/index.html').read())
+    # return make_response(open('templates/index.html').read())
+    return render_template('index.html')
 
 
 @app.route('/webhook', methods=['POST'])
