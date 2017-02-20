@@ -18,6 +18,8 @@ PEOPLE_SEARCH_URL = (MOVIE_DB_URL + 'search/person/?api_key={}&language=en-US&qu
 # URL Endpoint for movie discovery
 MOVIE_DISCOVERY_URL = (MOVIE_DB_URL + 'discover/movie?api_key={}&include_adult=false&include_video=false&language=en-US&sort_by=release_date.desc').format(API_KEY)
 
+MAX_RESULTS = 5
+
 @app.route("/")
 def index():
     return make_response(open('templates/index.html').read())
@@ -33,7 +35,7 @@ def webhook():
 def processRequest(req):
     # The final URL which will allow us to retrieve recommendations based on filters. Initially it is just the base url.
     finalDiscoveryURL = MOVIE_DISCOVERY_URL
-    userSpecifiedGenres = req.get('result').get('parameters').get('genre')
+    userSpecifiedGenres = req.get('result').get('contexts')[0].get('parameters').get('genre')
     # If the user did not specify genre to chat agent, then do not bother get the genre id's.
     if len(userSpecifiedGenres) != 0:
         genreRequestResult = requests.get(GENRES_URL)
@@ -45,7 +47,7 @@ def processRequest(req):
                 if userSpecifiedGenre == genre['name']:
                     genreIds.append(genre['id'])
         finalDiscoveryURL = finalDiscoveryURL + '&with_genres=' + ''.join(str(g) for g in genreIds)
-    userSpecifiedCast = req.get('result').get('parameters').get('cast')
+    userSpecifiedCast = req.get('result').get('contexts')[0].get('parameters').get('cast')
     # If the user did not specify cast to the chat agent, then do not bother getting cast id's.
     if len(userSpecifiedCast) != 0:
         castIds = []
@@ -55,12 +57,28 @@ def processRequest(req):
             if len(castInfo.get('results')) > 0:
                 castIds.append(castInfo.get('results')[0].get('id'))
         finalDiscoveryURL = finalDiscoveryURL + '&with_people=' + ''.join(str(c) for c in castIds)
-    userSpecifiedRating = req.get('result').get('parameters').get('rating')
+    userSpecifiedRating = req.get('result').get('contexts')[0].get('parameters').get('rating')
     # If the user did not specify an mpaa rating, then do not bother putting it in the final url string
     if userSpecifiedRating != '':
         finalDiscoveryURL = finalDiscoveryURL + '&certification=' + userSpecifiedRating
     # Construct final URL.
     movieDiscoveryRequest = requests.get(finalDiscoveryURL)
+    movieDiscoveryResults = json.loads(movieDiscoveryRequest.text)
+    recommendations = []
+    if len(movieDiscoveryResults.get('results')) > 0:
+        counter = 0
+        while counter < MAX_RESULTS and counter < len(movieDiscoveryResults.get('results')):
+            recommendations.append(movieDiscoveryResults.get('results')[counter].get('title'))
+            counter += 1
+    if len(recommendations) > 0:
+        speech = "I recommend the following movies: " + ', '.join(recommendations)
+    else:
+        speech = "Sorry there are no movies that match your request"
+    return {
+        "speech":speech,
+        "displayText":speech,
+        "source":"movie-recommendation-service"
+    }
     
 if __name__ == '__main__':
     app.run(debug=False, port='8888', host='0.0.0.0')
