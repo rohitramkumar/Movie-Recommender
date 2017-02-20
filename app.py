@@ -20,6 +20,8 @@ PEOPLE_SEARCH_URL = (MOVIE_DB_URL + 'search/person/?api_key={}&language=en-US&qu
 # URL Endpoint for movie discovery
 MOVIE_DISCOVERY_URL = (MOVIE_DB_URL + 'discover/movie?api_key={}&include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc').format(API_KEY)
 
+MAX_RESULTS = 5
+
 @app.route("/")
 def index():
     # return make_response(open('templates/index.html').read())
