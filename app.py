@@ -47,7 +47,10 @@ def processRequest(req):
                 if userSpecifiedGenre == genre['name']:
                     genreIds.append(genre['id'])
         finalDiscoveryURL = finalDiscoveryURL + '&with_genres=' + ''.join(str(g) for g in genreIds)
-    userSpecifiedCast = req.get('result').get('contexts')[0].get('parameters').get('cast')
+    userSpecifiedCastFirstName = req.get('result').get('contexts')[0].get('parameters').get('cast-first-name')
+    userSpecifiedCastLastName = req.get('result').get('contexts')[0].get('parameters').get('cast-last-name')
+    # Chat agent only allows us to parse out first and last names seperately so we need to merge these to get a list of full names.
+    userSpecifiedCast = [s1 + " " + s2 for s1,s2 in zip(userSpecifiedCastFirstName, userSpecifiedCastLastName) 
     # If the user did not specify cast to the chat agent, then do not bother getting cast id's.
     if len(userSpecifiedCast) != 0:
         castIds = []
