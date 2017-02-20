@@ -20,7 +20,7 @@ PEOPLE_SEARCH_URL = (
 
 # URL Endpoint for movie discovery
 MOVIE_DISCOVERY_URL = (
-    MOVIE_DB_URL + 'discover/movie?api_key={}&include_adult=false&include_video=false&language=en-US&sort_by=release_date.desc').format(API_KEY)
+    MOVIE_DB_URL + 'discover/movie?api_key={}&include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc').format(API_KEY)
 
 
 @app.route("/")
@@ -54,7 +54,14 @@ def processRequest(req):
                 if userSpecifiedGenre == genre['name']:
                     genreIds.append(genre['id'])
         finalDiscoveryURL = finalDiscoveryURL + '&with_genres=' + ''.join(str(g) for g in genreIds)
-    userSpecifiedCast = req.get('result').get('parameters').get('cast')
+    userSpecifiedCastFirstName = req.get('result').get(
+        'contexts')[0].get('parameters').get('cast-first-name')
+    userSpecifiedCastLastName = req.get('result').get(
+        'contexts')[0].get('parameters').get('cast-last-name')
+    # Chat agent only allows us to parse out first and last names seperately
+    # so we need to merge these to get a list of full names.
+    userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(
+        userSpecifiedCastFirstName, userSpecifiedCastLastName)]
     # If the user did not specify cast to the chat agent, then do not bother getting cast id's.
     if len(userSpecifiedCast) != 0:
         castIds = []
