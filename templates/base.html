@@ -1,0 +1,22 @@
+% extends "bootstrap/base.html" %}
+
+{% block body %}
+{% block navbar %}
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Movie Recommendation Engine (MRE)</a>
+    </div>
+  </div>
+</nav>
+{% endblock navbar %}
+<div class="container">
+    <div class="jumbotron">
+    	{% block j_content %}{% endblock j_content %}
+    </div>
+</div>
+
+{% block scripts %}
+{{ super() }}
+{% endblock scripts %}
+{% endblock body %}

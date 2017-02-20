@@ -1,8 +1,15 @@
-#all{
-    width:100%;
-    float:left;
+#modal_dialog {
+    display:none;
+    font-family: Calibri;
+    font-size: 20px;
+    padding:10px;
     text-align:center;
 }
-div.sub, iframe {
-    margin: 0 auto;
+
+.ui-dialog-titlebar-close {
+  visibility: hidden;
+}
+
+.ui-dialog-titlebar {
+    display: none;
 }

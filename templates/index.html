@@ -1,17 +1,20 @@
-<!doctype html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
-		<script src="https://code.angularjs.org/1.5.3/angular-route.min.js"></script>
-		<script src="static/js/app.js"></script>
-		<link rel="stylesheet" href="static/css/style.css" />
+{% extends "base.html" %}
 
-    </head>
-    <body ng-app="myApp">
-                <h1>Movie Recommendation Engine (MRE)</h1>
-				<hr/>
-			 <div ng-view></div>
-    </body>
-</html>
+{% block j_content %}
+<h1>Talk to our chat agent!!</h1>
+</br>
+<iframe width="350" height="430" src="https://console.api.ai/api-client/demo/embedded/4f8d9544-1d5d-4a0a-b308-7bb03eeeaee3"></iframe>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+<script src="//code.angularjs.org/1.5.3/angular-route.min.js"></script>
+{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"></script>
+<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/ui-darkness/jquery-ui.min.css" rel="stylesheet">
+{% endblock %}
