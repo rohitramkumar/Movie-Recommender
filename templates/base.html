@@ -2,17 +2,20 @@
 
 {% block body %}
 {% block navbar %}
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">Movie Recommendation Engine (MRE)</a>
-    </div>
-  </div>
-</nav>
 {% endblock navbar %}
 <div class="container">
-    <div class="jumbotron">
-    	{% block j_content %}{% endblock j_content %}
+    <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="#">Home</a></li>
+            <li role="presentation"><a href="#">About</a></li>
+            <li role="presentation"><a href="#">Contact</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Movie Recommendation Engine</h3>
+        <div class="jumbotron">
+    	       {% block j_content %}{% endblock j_content %}
+           </div>
     </div>
 </div>
 
