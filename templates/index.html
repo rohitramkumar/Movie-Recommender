@@ -2,16 +2,17 @@
 
 {% block body %}
 {{ super() }}
-<br>
-<br>
-<br>
-<p> More to come soon.. </p>
+    <hr>
+    <br>
+    <br>
+    <br>
+	<div ng-view></div>
+    <p> More to come soon.. </p>
 {% endblock %}
 
 {% block j_content %}
 <p class="lead">Talk to our chat agent!</p>
 <p><iframe width="350" height="430" src="https://console.api.ai/api-client/demo/embedded/4f8d9544-1d5d-4a0a-b308-7bb03eeeaee3"></iframe></p>
-
 </br>
 {% endblock %}
 
