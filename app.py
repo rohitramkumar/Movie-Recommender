@@ -74,6 +74,22 @@ def processRequest(req):
         finalDiscoveryURL = finalDiscoveryURL + '&certification=' + userSpecifiedRating
     # Construct final URL.
     movieDiscoveryRequest = requests.get(finalDiscoveryURL)
+    movieDiscoveryResults = json.loads(movieDiscoveryRequest.text)
+    recommendations = []
+    if len(movieDiscoveryResults.get('results')) > 0:
+    counter = 0
+    while counter < MAX_RESULTS and counter < len(movieDiscoveryResults.get('results')):
+        recommendations.append(movieDiscoveryResults.get('results')[counter].get('title'))
+        counter += 1
+    if len(recommendations) > 0:
+        speech = "I recommend the following movies: " + ''.join(recommendations)
+    else:
+        speech = "Sorry there are no movies that match your request"
+    return {
+        "speech":speech,
+        "displayText":speech,
+        "source":"movie-recommendation-service"
+    }
 
 if __name__ == '__main__':
     app.run(debug=True, port='8888', host='0.0.0.0')
