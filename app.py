@@ -36,8 +36,7 @@ def webhook():
     r.headers['Content-Type'] = 'application/json'
     return r
 
-
-def processRequest(req):
+def processRecommendationRequest(req):
     # The final URL which will allow us to retrieve recommendations based on
     # filters. Initially it is just the base url.
     finalDiscoveryURL = MOVIE_DISCOVERY_URL
@@ -57,8 +56,7 @@ def processRequest(req):
     userSpecifiedCastLastName = req.get('result').get('contexts')[0].get('parameters').get('cast-last-name')
     # Chat agent only allows us to parse out first and last names seperately
     # so we need to merge these to get a list of full names.
-    userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(
-        userSpecifiedCastFirstName, userSpecifiedCastLastName)]
+    userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(userSpecifiedCastFirstName, userSpecifiedCastLastName)]
     # If the user did not specify cast to the chat agent, then do not bother getting cast id's.
     if len(userSpecifiedCast) != 0:
         castIds = []
@@ -83,7 +81,7 @@ def processRequest(req):
         recommendations.append(movieDiscoveryResults.get('results')[counter].get('title'))
         counter += 1
     if len(recommendations) > 0:
-        speech = "I recommend the following movies: " + ''.join(recommendations)
+        speech = "I recommend the following movies: " + ', '.join(recommendations)
     else:
         speech = "Sorry there are no movies that match your request"
     return {
