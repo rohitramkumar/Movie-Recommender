@@ -36,7 +36,7 @@ def webhook():
     r.headers['Content-Type'] = 'application/json'
     return r
 
-def processRecommendationRequest(req):
+def processRequest(req):
     # The final URL which will allow us to retrieve recommendations based on
     # filters. Initially it is just the base url.
     finalDiscoveryURL = MOVIE_DISCOVERY_URL
