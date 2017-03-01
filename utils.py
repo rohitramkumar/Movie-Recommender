@@ -8,7 +8,8 @@ API_KEY = os.environ['MOVIE_DB_API_KEY']
 MOVIE_DB_URL = 'https://api.themoviedb.org/3/'
 # URL Endpoints for different types of filtering data.
 GENRES_URL = (MOVIE_DB_URL + 'genre/movie/list?api_key={}&language=en-US').format(API_KEY)
-PEOPLE_SEARCH_URL = (MOVIE_DB_URL + 'search/person/?api_key={}&language=en-US&query={}&page1&include_adult=false')
+PEOPLE_SEARCH_URL = (MOVIE_DB_URL + 'search/person?api_key={}&language=en-US&query={}&page=1&include_adult=false')
+MOVIE_SEARCH_URL = (MOVIE_DB_URL + 'search/movie?api_key={}&language=en-US&query={}&page=1&include_adult=false')
 # URL Endpoint for movie discovery
 MOVIE_DISCOVERY_URL = (MOVIE_DB_URL + 'discover/movie?api_key={}&include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc').format(API_KEY)
 # URL Endpoint for movie similarity
@@ -52,13 +53,17 @@ class MovieDBApiClient:
     return movies
 
   def getSimilarMovies(self, benchmarkMovie):
-    movieSimilarityRequest = requests.get(MOVIE_SIMILARITY_URL.format(urllib.quote_plus(benchmarkMovie), API_KEY))
-    movieSimilarityResults = json.loads(movieSimilarityRequest.text)
     similarMovies = []
-    counter = 0
-    while counter < MAX_RESULTS and counter < len(movieSimilarityResults.get('results')):
-      similarMovies.append(movieSimilarityResults.get('results')[counter].get('title'))
-      counter += 1
+    benchmarkMovieIdRequest = requests.get(MOVIE_SEARCH_URL.format(API_KEY, urllib.quote_plus(benchmarkMovie)))
+    benchmarkMovieIdResponse = json.loads(benchmarkMovieIdRequest.text)
+    if len(benchmarkMovieIdResponse.get('results')) > 0:
+      bechmarkMovieId = benchmarkMovieIdResponse.get('results')[0].get('id')
+      movieSimilarityRequest = requests.get(MOVIE_SIMILARITY_URL.format(benchmarkMovieId, API_KEY))
+      movieSimilarityResults = json.loads(movieSimilarityRequest.text)
+      counter = 0
+      while counter < MAX_RESULTS and counter < len(movieSimilarityResults.get('results')):
+        similarMovies.append(movieSimilarityResults.get('results')[counter].get('title'))
+        counter += 1
     return similarMovies
 
   def encodeURLKeyValue(self, pair):

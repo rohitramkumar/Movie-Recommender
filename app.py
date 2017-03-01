@@ -61,7 +61,7 @@ def prepareResponse(movies):
     "speech":speech,
     "displayText":speech,
     "source":"movie-recommendation-service"
-      }
+  }
 
 if __name__ == '__main__':
   app.run(debug=True, port='8888', host='0.0.0.0')
