@@ -38,9 +38,9 @@ def processFilteringRequest(req):
     genreIds = client.getGenresIds(userSpecifiedGenres)
     castIds = client.getCastIds(userSpecifiedCast)
     # Construct movie discovery URL.
-    finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue('with_genres', genreIds)
-    finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue('with_people', castIds)
-    finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue('certification', userSpecifiedRating)
+    finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_genres', genreIds))
+    finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_people', castIds))
+    finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('certification', userSpecifiedRating))
     movies = client.getDiscoveredMovies(finalDiscoveryURL)
     if len(movies) > 0:
         speech = "I recommend the following movies: " + ', '.join(movies)
