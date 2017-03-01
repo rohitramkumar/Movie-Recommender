@@ -31,6 +31,7 @@ class MovieDBApiClient:
     return genreIds
 
   def getCastIds(self, userSpecifiedCast):
+    castIds = []
     for cast in userSpecifiedCast:
       castRequestResult = requests.get(PEOPLE_SEARCH_URL.format(API_KEY, urllib.quote_plus(cast)))
       castInfo = json.loads(castRequestResult.text)

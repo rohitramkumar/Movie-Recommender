@@ -7,20 +7,20 @@ Bootstrap(app)
 
 @app.route("/")
 def index():
-    # return make_response(open('templates/index.html').read())
-    return render_template('index.html')
+  # return make_response(open('templates/index.html').read())
+  return render_template('index.html')
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    req = request.get_json(force=True)
-    action = req.get('result').get('action')
-    if action == "movie.filtering":
-        res = processFilteringRequest(req)
-    elif action == "movie.similar":
-        res = processSimilarityRequest()
-    r = make_response(json.dumps(res))
-    r.headers['Content-Type'] = 'application/json'
-    return r
+  req = request.get_json(force=True)
+  action = req.get('result').get('action')
+  if action == "movie.filtering":
+    res = processFilteringRequest(req)
+  elif action == "movie.similar":
+    res = processSimilarityRequest()
+  r = make_response(json.dumps(res))
+  r.headers['Content-Type'] = 'application/json'
+  return r
 
 def processFilteringRequest(req):
     # Init client which helps process information from themoviedb.
@@ -53,9 +53,9 @@ def processFilteringRequest(req):
     }
 
 def processSimilarityRequest(req):
-    # Init client which helps process information from themoviedb.
-    client = MovieDBApiClient()
-    pass
+  # Init client which helps process information from themoviedb.
+  client = MovieDBApiClient()
+  pass
 
 if __name__ == '__main__':
-    app.run(debug=True, port='8888', host='0.0.0.0')
+  app.run(debug=True, port='8888', host='0.0.0.0')
