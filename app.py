@@ -1,6 +1,7 @@
 from flask import Flask, url_for, make_response, send_file, request, jsonify, render_template
 from flask_bootstrap import Bootstrap
 from utils import MovieDBApiClient, MOVIE_DISCOVERY_URL
+import json
 
 app = Flask(__name__)
 Bootstrap(app)
