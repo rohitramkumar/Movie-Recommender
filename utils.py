@@ -63,7 +63,7 @@ class MovieDBApiClient:
 
   def encodeURLKeyValue(self, pair):
     if len(pair[1]) == 0 or len(pair[0]) == 0:
-        return ""
+      return ""
     else:
       if type(pair[1]) == list:
         return '&' + pair[0] + '=' + ''.join(str(i) for i in pair[1])

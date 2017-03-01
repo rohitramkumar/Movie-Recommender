@@ -43,20 +43,25 @@ def processFilteringRequest(req):
     finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_people', castIds))
     finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('certification', userSpecifiedRating))
     movies = client.getDiscoveredMovies(finalDiscoveryURL)
-    if len(movies) > 0:
-        speech = "I recommend the following movies: " + ', '.join(movies)
-    else:
-        speech = "Sorry there are no movies that match your request"
-    return {
-        "speech":speech,
-        "displayText":speech,
-        "source":"movie-recommendation-service"
-    }
+    return prepareResponse(similarMovies)
 
 def processSimilarityRequest(req):
   # Init client which helps process information from themoviedb.
   client = MovieDBApiClient()
-  pass
+  benchmarkMovie = req.get('result').get('contexts')[0].get('parameters').get('benchmark')
+  similarMovies = client.getSimilarMovies(benchmarkMovie)
+  return prepareResponse(similarMovies)
+
+def prepareResponse(movies):
+  if len(movies) > 0:
+  speech = "I recommend the following movies:" + ', '.join(similarMovies)
+  else:
+    speech = "Sorry there are no movies that match your request"
+  return {
+    "speech":speech,
+    "displayText":speech,
+    "source":"movie-recommendation-service"
+      }
 
 if __name__ == '__main__':
   app.run(debug=True, port='8888', host='0.0.0.0')
