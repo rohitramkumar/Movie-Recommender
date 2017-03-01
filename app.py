@@ -54,7 +54,7 @@ def processSimilarityRequest(req):
 
 def prepareResponse(movies):
   if len(movies) > 0:
-  speech = "I recommend the following movies:" + ', '.join(similarMovies)
+    speech = "I recommend the following movies:" + ', '.join(similarMovies)
   else:
     speech = "Sorry there are no movies that match your request"
   return {
