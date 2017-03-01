@@ -1,6 +1,6 @@
 from flask import Flask, url_for, make_response, send_file, request, jsonify, render_template
 from flask_bootstrap import Bootstrap
-from utils import MovieDBApiClient, MOVIE_DISCOVERY_URL
+from utils import MovieDBApiClient, MOVIE_DISCOVERY_URL, spellCheck
 import json
 
 app = Flask(__name__)
@@ -41,6 +41,7 @@ def processFilteringRequest(req):
   # Chat agent only allows us to parse out first and last names seperately
   # so we need to merge these to get a list of full names.
   userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(userSpecifiedCastFirstName, userSpecifiedCastLastName)]
+  userSpecifiedCast = map(spellCheck, userSpecifiedCast)
   userSpecifiedRating = userSpecifedData.get('parameters').get('rating')
   # Get movie database information using previously instantiated API client.
   genreIds = client.getGenresIds(userSpecifiedGenres)
@@ -57,6 +58,7 @@ def processSimilarityRequest(req):
   returning a list of movies which are similar."""
   client = MovieDBApiClient()
   benchmarkMovie = req.get('result').get('contexts')[0].get('parameters').get('benchmark')
+  benchmarkMovie = spellCheck(benchmarkMovie)
   similarMovies = client.getSimilarMovies(benchmarkMovie)
   return prepareResponse(similarMovies)
 
@@ -64,7 +66,7 @@ def prepareResponse(movies):
   """Helper function that prepares the return object we send to the user
    given a list of movies."""
   if len(movies) > 0:
-    speech = "I recommend the following movies:" + ', '.join(movies)
+    speech = "I recommend the following movies: " + ', '.join(movies)
   else:
     speech = "Sorry there are no movies that match your request"
   return {

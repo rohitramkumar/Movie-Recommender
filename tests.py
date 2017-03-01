@@ -1,7 +1,14 @@
 import unittest
 import mock
+from app import processFilteringRequest, processSimilarityRequest, prepareResponse
 
-class MyTest(unittest.TestCase):
+class AppTest(unittest.TestCase):
 
-    def test(self):
-        self.assertEqual(3,3)
+  def processFilteringRequestTest(self):
+    pass
+
+  def processSimilarityRequestTest(self):
+    pass
+
+  def prepareResponseTest(self):
+    pass
