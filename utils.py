@@ -45,7 +45,7 @@ class MovieDBApiClient:
     movies = []
     counter = 0
     while counter < MAX_RESULTS and counter < len(movieDiscoveryResults.get('results')):
-      recommendations.append(movieDiscoveryResults.get('results')[counter].get('title'))
+      movies.append(movieDiscoveryResults.get('results')[counter].get('title'))
       counter += 1
     return movies
 
