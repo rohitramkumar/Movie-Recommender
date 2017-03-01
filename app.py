@@ -1,6 +1,6 @@
 from flask import Flask, url_for, make_response, send_file, request, jsonify, render_template
 from flask_bootstrap import Bootstrap
-from utils import MovieDBApiClient
+from utils import MovieDBApiClient, MOVIE_DISCOVERY_URL
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -25,7 +25,7 @@ def webhook():
 def processFilteringRequest(req):
     # Init client which helps process information from themoviedb.
     client = MovieDBApiClient()
-    finalDiscoveryURL = utils.MOVIE_DISCOVERY_URL
+    finalDiscoveryURL = MOVIE_DISCOVERY_URL
     # Get all filters specified by user on api.ai.
     userSpecifiedGenres = req.get('result').get('contexts')[0].get('parameters').get('genre')
     userSpecifiedCastFirstName = req.get('result').get('contexts')[0].get('parameters').get('cast-first-name')
