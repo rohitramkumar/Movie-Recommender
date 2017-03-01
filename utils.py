@@ -18,11 +18,15 @@ MOVIE_SIMILARITY_URL = (MOVIE_DB_URL + 'movie/{}/similar?api_key={}&language=en-
 MAX_RESULTS = 5
 
 class MovieDBApiClient:
+  """This class abstracts API calls for the api.themoviedb.org."""
 
   def __init__(self):
-      pass
+    pass
 
   def getGenresIds(self, userSpecifiedGenres):
+    """Gets a list of genre id's corresponding to the names of the genres
+    specified by the user."""
+
     genreRequestResult = requests.get(GENRES_URL)
     genres = json.loads(genreRequestResult.text)
     # For each user specified genre, find its corresponding genre id
@@ -34,6 +38,9 @@ class MovieDBApiClient:
     return genreIds
 
   def getCastIds(self, userSpecifiedCast):
+    """Gets a list of cast (actor) id's corresponding to the names of the
+    cast specified by the user."""
+
     castIds = []
     for cast in userSpecifiedCast:
       castRequestResult = requests.get(PEOPLE_SEARCH_URL.format(API_KEY, urllib.quote_plus(cast)))
@@ -43,30 +50,41 @@ class MovieDBApiClient:
     return castIds
 
   def getDiscoveredMovies(self, discoveryURL):
-    movieDiscoveryRequest = requests.get(discoveryURL)
-    movieDiscoveryResults = json.loads(movieDiscoveryRequest.text)
+    """Given an API endpoint which corresponds to movie discovery given a set
+    of filters, get a list of movies that are returned."""
+
+    movieDiscoveryResult = requests.get(discoveryURL)
+    movieInfo = json.loads(movieDiscoveryResult.text)
     movies = []
     counter = 0
-    while counter < MAX_RESULTS and counter < len(movieDiscoveryResults.get('results')):
-      movies.append(movieDiscoveryResults.get('results')[counter].get('title'))
+    while counter < MAX_RESULTS and counter < len(movieInfo.get('results')):
+      movies.append(movieInfo.get('results')[counter].get('title'))
       counter += 1
     return movies
 
   def getSimilarMovies(self, benchmarkMovie):
+    """Given a benchmark movie, return a list of movies that are similar."""
+
     similarMovies = []
-    benchmarkMovieIdRequest = requests.get(MOVIE_SEARCH_URL.format(API_KEY, urllib.quote_plus(benchmarkMovie)))
-    benchmarkMovieIdResponse = json.loads(benchmarkMovieIdRequest.text)
-    if len(benchmarkMovieIdResponse.get('results')) > 0:
-      benchmarkMovieId = benchmarkMovieIdResponse.get('results')[0].get('id')
-      movieSimilarityRequest = requests.get(MOVIE_SIMILARITY_URL.format(benchmarkMovieId, API_KEY))
-      movieSimilarityResults = json.loads(movieSimilarityRequest.text)
+    # First, get the id of the movie given the name.
+    benchmarkMovieIdResult = requests.get(MOVIE_SEARCH_URL.format(API_KEY, urllib.quote_plus(benchmarkMovie)))
+    benchmarkMovieIdInfo = json.loads(benchmarkMovieIdResult.text)
+    if len(benchmarkMovieIdInfo.get('results')) > 0:
+      benchmarkMovieId = benchmarkMovieIdInfo.get('results')[0].get('id')
+      # Get the similar movies given the movie id.
+      movieSimilarityResult = requests.get(MOVIE_SIMILARITY_URL.format(benchmarkMovieId, API_KEY))
+      movieSimilarityInfo = json.loads(movieSimilarityResult.text)
       counter = 0
-      while counter < MAX_RESULTS and counter < len(movieSimilarityResults.get('results')):
-        similarMovies.append(movieSimilarityResults.get('results')[counter].get('title'))
+      while counter < MAX_RESULTS and counter < len(movieSimilarityInfo.get('results')):
+        similarMovies.append(movieSimilarityInfo.get('results')[counter].get('title'))
         counter += 1
     return similarMovies
 
   def encodeURLKeyValue(self, pair):
+    """Takes a tuple consisting of a key and a value and encodes it in a format
+    that is acceptable for a url string. This is useful for appending
+    parameters and their values to an API url."""
+
     if len(pair[1]) == 0 or len(pair[0]) == 0:
       return ""
     else:
@@ -78,9 +96,10 @@ class MovieDBApiClient:
         return ""
 
 class LearningAgentClient:
+  """This class abstracts API calls to our learning agent on Azure."""
 
-    def __init__(self, user):
-        self.user = user
+  def __init__(self, user):
+    self.user = user
 
-    def getRecommendedMovies(self):
-        pass
+  def getRecommendedMovies(self):
+    pass

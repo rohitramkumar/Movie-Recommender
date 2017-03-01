@@ -13,6 +13,9 @@ def index():
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
+  """This Flask route receives all requests from API.ai and processes these
+  requests according to the action specified by the user"""
+
   req = request.get_json(force=True)
   action = req.get('result').get('action')
   if action == "movie.filtering":
@@ -24,37 +27,44 @@ def webhook():
   return r
 
 def processFilteringRequest(req):
-    # Init client which helps process information from themoviedb.
-    client = MovieDBApiClient()
-    finalDiscoveryURL = MOVIE_DISCOVERY_URL
-    # Get all filters specified by user on api.ai.
-    userSpecifiedGenres = req.get('result').get('contexts')[0].get('parameters').get('genre')
-    userSpecifiedCastFirstName = req.get('result').get('contexts')[0].get('parameters').get('cast-first-name')
-    userSpecifiedCastLastName = req.get('result').get('contexts')[0].get('parameters').get('cast-last-name')
-    # Chat agent only allows us to parse out first and last names seperately
-    # so we need to merge these to get a list of full names.
-    userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(userSpecifiedCastFirstName, userSpecifiedCastLastName)]
-    userSpecifiedRating = req.get('result').get('contexts')[0].get('parameters').get('rating')
-    # Get corresponding information from themoviedb.
-    genreIds = client.getGenresIds(userSpecifiedGenres)
-    castIds = client.getCastIds(userSpecifiedCast)
-    # Construct movie discovery URL.
-    finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_genres', genreIds))
-    finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_people', castIds))
-    finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('certification', userSpecifiedRating))
-    movies = client.getDiscoveredMovies(finalDiscoveryURL)
-    return prepareResponse(similarMovies)
+  """This function deals with processing the movie filters provided by a user
+  and feeding these filters into api calls for a movie database. The filtered
+  movies returned from these api calls are returned to the user."""
+
+  client = MovieDBApiClient()
+  finalDiscoveryURL = MOVIE_DISCOVERY_URL
+  userSpecifiedData = req.get('result').get('contexts')[0]
+  # Get all filters specified by user on api.ai.
+  userSpecifiedGenres = userSpecifedData.get('parameters').get('genre')
+  userSpecifiedCastFirstName = userSpecifedData.get('parameters').get('cast-first-name')
+  userSpecifiedCastLastName = userSpecifedData.get('parameters').get('cast-last-name')
+  # Chat agent only allows us to parse out first and last names seperately
+  # so we need to merge these to get a list of full names.
+  userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(userSpecifiedCastFirstName, userSpecifiedCastLastName)]
+  userSpecifiedRating = userSpecifedData.get('parameters').get('rating')
+  # Get movie database information using previously instantiated API client.
+  genreIds = client.getGenresIds(userSpecifiedGenres)
+  castIds = client.getCastIds(userSpecifiedCast)
+  # Construct movie discovery URL.
+  finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_genres', genreIds))
+  finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_people', castIds))
+  finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('certification', userSpecifiedRating))
+  movies = client.getDiscoveredMovies(finalDiscoveryURL)
+  return prepareResponse(similarMovies)
 
 def processSimilarityRequest(req):
-  # Init client which helps process information from themoviedb.
+  """The function deals with processing a single movie provided by the user and
+  returning a list of movies which are similar."""
   client = MovieDBApiClient()
   benchmarkMovie = req.get('result').get('contexts')[0].get('parameters').get('benchmark')
   similarMovies = client.getSimilarMovies(benchmarkMovie)
   return prepareResponse(similarMovies)
 
 def prepareResponse(movies):
+  """Helper function that prepares the return object we send to the user
+   given a list of movies."""
   if len(movies) > 0:
-    speech = "I recommend the following movies:" + ', '.join(similarMovies)
+    speech = "I recommend the following movies:" + ', '.join(movies)
   else:
     speech = "Sorry there are no movies that match your request"
   return {
