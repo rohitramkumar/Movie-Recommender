@@ -57,7 +57,7 @@ class MovieDBApiClient:
     benchmarkMovieIdRequest = requests.get(MOVIE_SEARCH_URL.format(API_KEY, urllib.quote_plus(benchmarkMovie)))
     benchmarkMovieIdResponse = json.loads(benchmarkMovieIdRequest.text)
     if len(benchmarkMovieIdResponse.get('results')) > 0:
-      bechmarkMovieId = benchmarkMovieIdResponse.get('results')[0].get('id')
+      benchmarkMovieId = benchmarkMovieIdResponse.get('results')[0].get('id')
       movieSimilarityRequest = requests.get(MOVIE_SIMILARITY_URL.format(benchmarkMovieId, API_KEY))
       movieSimilarityResults = json.loads(movieSimilarityRequest.text)
       counter = 0
