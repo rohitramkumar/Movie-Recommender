@@ -25,7 +25,7 @@ def webhook():
 def processFilteringRequest(req):
     # Init client which helps process information from themoviedb.
     client = MovieDBApiClient()
-    finalDiscoveryURL = ""
+    finalDiscoveryURL = client.MOVIE_DISCOVERY_URL
     # Get all filters specified by user on api.ai.
     userSpecifiedGenres = req.get('result').get('contexts')[0].get('parameters').get('genre')
     userSpecifiedCastFirstName = req.get('result').get('contexts')[0].get('parameters').get('cast-first-name')
