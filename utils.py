@@ -3,18 +3,18 @@ import json
 import urllib
 import os
 
-class MovieDBApiClient:
+API_KEY = os.environ['MOVIE_DB_API_KEY']
+# Database that provides simple filtering.
+MOVIE_DB_URL = 'https://api.themoviedb.org/3/'
+# URL Endpoints for different types of filtering data.
+GENRES_URL = (MOVIE_DB_URL + 'genre/movie/list?api_key={}&language=en-US').format(API_KEY)
+PEOPLE_SEARCH_URL = (MOVIE_DB_URL + 'search/person/?api_key={}&language=en-US&query={}&page1&include_adult=false')
+# URL Endpoint for movie discovery
+MOVIE_DISCOVERY_URL = (MOVIE_DB_URL + 'discover/movie?api_key={}&include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc').format(API_KEY)
+# TODO: maybe make this user configurable
+MAX_RESULTS = 5
 
-  API_KEY = os.environ['MOVIE_DB_API_KEY']
-  # Database that provides simple filtering.
-  MOVIE_DB_URL = 'https://api.themoviedb.org/3/'
-  # URL Endpoints for different types of filtering data.
-  GENRES_URL = (MOVIE_DB_URL + 'genre/movie/list?api_key={}&language=en-US').format(API_KEY)
-  PEOPLE_SEARCH_URL = (MOVIE_DB_URL + 'search/person/?api_key={}&language=en-US&query={}&page1&include_adult=false')
-  # URL Endpoint for movie discovery
-  MOVIE_DISCOVERY_URL = (MOVIE_DB_URL + 'discover/movie?api_key={}&include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc').format(API_KEY)
-  # TODO: maybe make this user configurable
-  MAX_RESULTS = 5
+class MovieDBApiClient:
 
   def __init__(self):
       pass
