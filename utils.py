@@ -11,6 +11,8 @@ GENRES_URL = (MOVIE_DB_URL + 'genre/movie/list?api_key={}&language=en-US').forma
 PEOPLE_SEARCH_URL = (MOVIE_DB_URL + 'search/person/?api_key={}&language=en-US&query={}&page1&include_adult=false')
 # URL Endpoint for movie discovery
 MOVIE_DISCOVERY_URL = (MOVIE_DB_URL + 'discover/movie?api_key={}&include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc').format(API_KEY)
+# URL Endpoint for movie similarity
+MOVIE_SIMILARITY_URL = (MOVIE_DB_URL + 'movie/{}/similar?api_key={}&language=en-US'
 # TODO: maybe make this user configurable
 MAX_RESULTS = 5
 
@@ -50,7 +52,14 @@ class MovieDBApiClient:
     return movies
 
   def getSimilarMovies(self, benchmarkMovie):
-      pass
+    movieSimilarityRequest = requests.get(MOVIE_SIMILARITY_URL.format(urllib.quote_plus(benchmarkMovie), API_KEY))
+    movieSimilarityResults = json.loads(movieSimilarityRequest.text)
+    similarMovies = []
+    counter = 0
+    while counter < MAX_RESULTS and counter < len(movieSimilarityResults.get('results')):
+      similarMovies.append(movieSimilarityResults.get('results')[counter].get('title'))
+      counter += 1
+    return similarMovies
 
   def encodeURLKeyValue(self, pair):
     if len(pair[1]) == 0 or len(pair[0]) == 0:
