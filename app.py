@@ -11,7 +11,7 @@ Bootstrap(app)
 
 # Database that provides simple filtering.
 MOVIE_DB_URL = 'https://api.themoviedb.org/3/'
-API_KEY = os.environ['MOVIE_DB_API_KEY']
+API_KEY = '207c3617b856ea5adac5ff6ad68b0bb7'
 
 # URL Endpoints for different types of filtering data.
 GENRES_URL = (MOVIE_DB_URL + 'genre/movie/list?api_key={}&language=en-US').format(API_KEY)
@@ -93,4 +93,4 @@ def processRequest(req):
     }
 
 if __name__ == '__main__':
-    app.run(debug=True, port='8888', host='0.0.0.0')
+    app.run(debug=True, port=1234, host='0.0.0.0')

@@ -10,9 +10,28 @@
 {% endblock %}
 
 {% block j_content %}
-<p class="lead">Talk to our chat agent!</p>
-<p><iframe width="350" height="430" src="https://console.api.ai/api-client/demo/embedded/4f8d9544-1d5d-4a0a-b308-7bb03eeeaee3"></iframe></p>
-</br>
+
+<div style="float: left">
+    <p class="lead" >Talk to our chat agent!</p>
+    <p><iframe width="350" height="430" src="https://console.api.ai/api-client/demo/embedded/4f8d9544-1d5d-4a0a-b308-7bb03eeeaee3"></iframe></p>
+</div>
+
+<div style="float: right">
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Movie Title</div>
+        <div class="panel-body" style="min-width: 500px; min-height: 300px">
+            <p>Overview</p>
+        </div>
+
+        <!-- List group -->
+        <ul class="list-group">
+            <li class="list-group-item">Top Billed Cast:</li>
+            <li class="list-group-item">Genres: </li>
+            <li class="list-group-item">Theatrical Release Year:</li>
+        </ul>
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
