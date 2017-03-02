@@ -35,14 +35,14 @@ def processFilteringRequest(req):
   finalDiscoveryURL = MOVIE_DISCOVERY_URL
   userSpecifiedData = req.get('result').get('contexts')[0]
   # Get all filters specified by user on api.ai.
-  userSpecifiedGenres = userSpecifedData.get('parameters').get('genre')
-  userSpecifiedCastFirstName = userSpecifedData.get('parameters').get('cast-first-name')
-  userSpecifiedCastLastName = userSpecifedData.get('parameters').get('cast-last-name')
+  userSpecifiedGenres = userSpecifiedData.get('parameters').get('genre')
+  userSpecifiedCastFirstName = userSpecifiedData.get('parameters').get('cast-first-name')
+  userSpecifiedCastLastName = userSpecifiedData.get('parameters').get('cast-last-name')
   # Chat agent only allows us to parse out first and last names seperately
   # so we need to merge these to get a list of full names.
   userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(userSpecifiedCastFirstName, userSpecifiedCastLastName)]
   userSpecifiedCast = map(spellCheck, userSpecifiedCast)
-  userSpecifiedRating = userSpecifedData.get('parameters').get('rating')
+  userSpecifiedRating = userSpecifiedData.get('parameters').get('rating')
   # Get movie database information using previously instantiated API client.
   genreIds = client.getGenresIds(userSpecifiedGenres)
   castIds = client.getCastIds(userSpecifiedCast)
