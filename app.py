@@ -51,7 +51,7 @@ def processFilteringRequest(req):
   finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_people', castIds))
   finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('certification', userSpecifiedRating))
   movies = client.getDiscoveredMovies(finalDiscoveryURL)
-  return prepareResponse(similarMovies)
+  return prepareResponse(movies)
 
 def processSimilarityRequest(req):
   """The function deals with processing a single movie provided by the user and
