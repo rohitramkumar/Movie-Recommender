@@ -42,9 +42,6 @@ class Movie(Base):
     id = Column(Integer, primary_key=True, index=True)
     movie_id = Column(Integer)
     name = Column(String(64))
-    user_id = Column(Integer, ForeignKey('users.id'))
-
-    teacher = relationship("User", backref=backref("cohorts", order_by=id))
 
     def __repr__(self):
         return '<Movie:{}>'.format(self.name)
