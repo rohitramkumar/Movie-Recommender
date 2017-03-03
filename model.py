@@ -14,7 +14,7 @@ session = scoped_session(sessionmaker(bind=engine, autocommit=False, autoflush=F
 Base = declarative_base()
 Base.query = session.query_property()
 
-user_movies_tbl = Table('user_movies',
+user_movies_tbl = Table('user_movies', Base.metadata
                         Column('user_id', Integer, ForeignKey('users.id')),
                         Column('movie_id', Integer, ForeignKey('movies.movie_id'))
                         )
