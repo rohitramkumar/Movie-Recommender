@@ -1,6 +1,6 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, Date, Text, Float
+from sqlalchemy import Table, Column, Integer, String, Date, Text, Float
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, backref
@@ -14,10 +14,10 @@ session = scoped_session(sessionmaker(bind=engine, autocommit=False, autoflush=F
 Base = declarative_base()
 Base.query = session.query_property()
 
-user_movies_tbl = db.Table('user_movies',
-                           Column('user_id', Integer, ForeignKey('users.id')),
-                           Column('movie_id', Integer, ForeignKey('movies.movie_id'))
-                           )
+user_movies_tbl = Table('user_movies',
+                        Column('user_id', Integer, ForeignKey('users.id')),
+                        Column('movie_id', Integer, ForeignKey('movies.movie_id'))
+                        )
 
 
 class User(Base):
