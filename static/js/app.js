@@ -16,7 +16,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         // nested list with custom controller
         .state('home.movie_detail', {
             url: '/movie_detail',
-            templateUrl: 'partial-movie-detail.html',
+            templateUrl: 'static/partials/partial-movie-detail.html',
             controller: function($scope) {
                         $scope.movies = ['Die Hard', 'Star Wars', 'The Hobbit'];
             }
