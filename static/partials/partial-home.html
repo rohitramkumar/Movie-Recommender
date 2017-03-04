@@ -17,4 +17,15 @@
         <div ui-view></div>
     </div>
 
+
+    <footer ng-show="userIsLoggedIn">
+        <!-- Info to show when user is logged in -->
+        <o> Click her to view your movie watchlist!!! </p>
+    </footer>
+
+    <footer ng-hide="userIsLoggedIn">
+        <!-- Info to show when user is NOT logged in -->
+        <p> You should sign in!</p>
+    </footer>
+
 </div>
