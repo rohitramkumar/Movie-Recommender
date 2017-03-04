@@ -19,7 +19,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: 'static/partials/partial-movie-detail.html',
             controller: function($scope, $rootScope) {
                         $scope.movies = ['Die Hard', 'Star Wars', 'The Hobbit'];
-                        $rootScope.userIsLoggedIn = true
+                        $rootScope.userIsLoggedIn = true;
             }
         })
 
