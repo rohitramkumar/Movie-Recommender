@@ -3,12 +3,7 @@
     <li ng-repeat="movie in movies">{{ movie }}</li>
 </ul>
 
-<p ng-show="userIsLoggedIn">
+<p ng-switch="userIsLoggedIn">
     <!-- Info to show when user is logged in -->
     <o> Hey man you are logged in NOW! </p>
-</p>
-
-<p ng-hide="userIsLoggedIn">
-    <!-- Info to show when user is NOT logged in -->
-    <p> You should sign in NOWWW!</p>
 </p>
