@@ -4,7 +4,7 @@ var movieApp = angular.module('myApp', [
  'ui.router',
 ]);
 
-routerApp.config(function($stateProvider, $urlRouterProvider) {
+movieApp.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/home');
     $stateProvider
         // HOME STATES AND NESTED VIEWS ========================================
