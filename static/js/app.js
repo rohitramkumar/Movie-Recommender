@@ -47,6 +47,11 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         templateUrl: 'static/partials/partial-home.html',
                         controller: function($scope, userService) {
                             $scope.bottles = true;
+                            $scope.$watch('$parent.user', function(newValue, oldValue) {
+                                    console.log('new user name is found');
+                                    console.log(newValue);
+                                    console.log(oldValue);
+                            });
                         }
                     }
                 }
@@ -59,9 +64,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         templateUrl: 'static/partials/partial-movie-detail.html',
                         controller: function($scope, userService) {
                             $scope.movies = ['Die Hard', 'Star Wars', 'Toy Story'];
-                            $scope.$watch('$parent.user', function(newValue, oldValue) {
-                                    console.log('new user name is found')
-                            });
                         }
                     }
                 }
