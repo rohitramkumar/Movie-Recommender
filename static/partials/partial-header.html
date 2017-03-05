@@ -3,7 +3,7 @@
         <nav>
           <ul class="nav nav-pills pull-right">
             <li role="presentation" class="active"><a ui-sref="root.home" href="#">Home</a></li>
-            <li role="presentation"><a ui-sref="root.sign_up" href="#">Sign Up</a></li>
+            <li role="presentation"><button ng-click="signup()">Sign Up</button></li>
             <li ng-if="user" role="presentation"><a ui-sref="root.restricted" href="#">View Profile</a></li>
           </ul>
         </nav>
