@@ -16,7 +16,7 @@ Base.query = session.query_property()
 
 user_movies_tbl = Table('user_movies', Base.metadata,
                         Column('user_id', Integer, ForeignKey('users.id')),
-                        Column('movie_id', Integer, ForeignKey('movies.id'))
+                        Column('movie_imdb_id', Integer, ForeignKey('movies.id'))
                         )
 
 
@@ -24,10 +24,10 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String(128), nullable=True)
-    password = Column(String(128), nullable=True)
-    first_name = Column(String(64))
-    last_name = Column(String(64), nullable=True)
+    email = Column(String(128))
+    password = Column(String(128))
+    first_name = Column(String(64), nullable=True, default="Bob")
+    last_name = Column(String(64), nullable=True, default="Bradley")
 
     movies = relationship("Movie", secondary=user_movies_tbl,
                           backref="users", lazy="dynamic")
@@ -40,7 +40,8 @@ class Movie(Base):
     __tablename__ = "movies"
 
     id = Column(Integer, primary_key=True, index=True)
-    movie_id = Column(Integer)
+    movie_imdb_id = Column(Integer)
+    user_rating = Column(Integer, default=5)
     name = Column(String(64))
 
     def __repr__(self):
