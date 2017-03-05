@@ -54,7 +54,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 views: {
                     'movie_detail': {
                         templateUrl: 'static/partials/partial-movie-detail.html',
-                        controller: function($scope) {
+                        controller: function($scope, user, userService) {
                             $scope.movies = ['Die Hard', 'Star Wars', 'Toy Story'];
                         }
                     }

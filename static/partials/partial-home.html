@@ -9,15 +9,11 @@
         <p><iframe width="350" height="430" src="https://console.api.ai/api-client/demo/embedded/4f8d9544-1d5d-4a0a-b308-7bb03eeeaee3"></iframe></p>
 
         <a ui-sref="root.home.movie_detail" class="btn btn-primary">Click For Movie Details</a>
+
+        <p ng-if="user">Click here to view your movie watchlist</p>
     </div>
 
     <!-- COLUMN TWO -->
     <div class="col-sm-6">
         <div ui-view="movie_detail"></div>
     </div>
-
-
-    <p ng-if="user">
-        <!-- Info to show when user is logged in -->
-        <p> Click here to view your movie watchlist!!! </p>
-    </p>
