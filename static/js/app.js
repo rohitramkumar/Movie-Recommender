@@ -43,9 +43,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         	.state('root.home', {
                 url: '/',
                 views: {
-                    'content': {
+                    'content@': {
                         templateUrl: 'static/partials/partial-home.html',
-                        controller: function($scope) {
+                        controller: function($scope, userService) {
                             $scope.bottles = true;
                         }
                     }
@@ -55,9 +55,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             .state('root.home.movie_detail', {
                 url: '/movie_detail',
                 views: {
-                    'movie_detail': {
+                    'movie_detail@': {
                         templateUrl: 'static/partials/partial-movie-detail.html',
-                        controller: function($scope) {
+                        controller: function($scope, userService) {
                             $scope.movies = ['Die Hard', 'Star Wars', 'Toy Story'];
                         }
                     }
@@ -67,8 +67,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             .state('root.about', {
             url: '/about',
             views: {
-                'content': {
-                    template: 'About view ... hmm'
+                'content@': {
+                    template: 'About view ... hmm! <p ng-if="user">A user is signed in!</p>'
                 }
             }
     	})
