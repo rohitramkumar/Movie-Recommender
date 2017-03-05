@@ -7,6 +7,7 @@ import requests
 import json
 import datetime
 import urllib
+import api
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -30,6 +31,19 @@ MOVIE_DISCOVERY_URL = (
 @app.route("/")
 def index():
     return render_template('index.html')
+
+
+@app.route("/api/signup/", methods=['POST'])
+def add_user():
+    new_user = json.loads(request.data)
+
+    first_name = new_user.get("firstname")
+    last_name = new_user.get("lastname")
+    email = new_user.get("username")
+    password = new_user.get("password")
+    api.create_user(email, password, first_name, last_name)
+
+    return "Success"
 
 
 @app.route('/webhook', methods=['POST'])

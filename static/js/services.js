@@ -1,4 +1,4 @@
-angular.module('myApp').service('userService', function($http) {
+angular.module('myApp').service('userService', function($http, $location) {
     var usersMock = {
     	'testUser': {
         	username: 'testUser',
@@ -27,12 +27,22 @@ angular.module('myApp').service('userService', function($http) {
         signup: function(userCredentials) {
             console.log("I'm inside signup!");
             console.log(userCredentials)
+            // Send user info to signup endpoint
+            $http({
+                url: "/api/signup/",
+                method: "POST",
+                data: userCredentials
+            }).success(function (data) {
+                // Redirect to login upon success
+                console.log("about to print response from api");
+                console.log(data);
 
-            var response = {
-                errorStatus: 'this is fine'
-            }
+                var response = {
+                    errorStatus: 'this is fine'
+                }
 
-            return response;
+                return response;
+            });
         }
     }
 
