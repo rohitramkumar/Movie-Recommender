@@ -10,6 +10,9 @@
 
         <a ui-sref="root.home.movie_detail" class="btn btn-primary">Click For Movie Details</a>
 
+        <p ng-if="user">User your username is: {{ user.username }}</p>
+        <p ng-if="bottles">Bottles is true</p>
+
         <p ng-if="user">Click here to view your movie watchlist</p>
     </div>
 
