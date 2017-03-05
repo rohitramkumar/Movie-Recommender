@@ -1,4 +1,4 @@
-'use strict';   // See note about 'use strict'; below
+'use strict';   // See note sign_up 'use strict'; below
 
 var movieApp = angular.module('myApp', [
  'ui.router'
@@ -32,6 +32,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             	userService.logout();
                                 $state.go('root.home', {}, {reload: true});
                             };
+                            $rootScope.signup = function() {
+                                $state.go('sign_up');
+                            };
                         }
                 	},
                     'footer@root': {
@@ -61,11 +64,11 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             })
 
-            .state('root.about', {
-            url: '/about',
+            .state('root.sign_up', {
+            url: '/sign_up',
             views: {
                 'content': {
-                    template: 'About view ... hmm! <p ng-if="user">A user is signed in!</p>'
+                    template: 'sign_up view ... hmm! <p ng-if="user">A user is signed in!</p>'
                 }
             }
     	})
@@ -117,6 +120,24 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     }
                     else {
                     	$state.go('root.restricted');
+                    }
+                };
+            }
+        })
+
+        .state('sign_up', {
+            url: '/signup',
+            templateUrl: 'static/partials/partial-signup.html',
+            controller: function($scope, $state, userService) {
+                $scope.signup = function(cred) {
+                    var response = userService.signup(cred);
+
+                    if (angular.isUndefined(response)) {
+                        alert('Incorrect details')
+                    }
+                    else {
+                        alert('Succesfuly signed up');
+                        $state.go('root.home');
                     }
                 };
             }
