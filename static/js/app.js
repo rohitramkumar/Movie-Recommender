@@ -47,7 +47,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         templateUrl: 'static/partials/partial-home.html',
                         controller: function($scope) {
                             $scope.bottles = true;
-                            $scope.user = $scope.$parent.user;
                         }
                     }
                 }
@@ -60,7 +59,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         templateUrl: 'static/partials/partial-movie-detail.html',
                         controller: function($scope) {
                             $scope.movies = ['Die Hard', 'Star Wars', 'Toy Story'];
-                            $scope.user = $scope.$parent.user;
                         }
                     }
                 }
