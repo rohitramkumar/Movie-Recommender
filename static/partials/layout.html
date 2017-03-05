@@ -1,7 +1,15 @@
-<h3> This my crazy layout </h3>
-<a ui-sref="root.home" href="#">home</a>
-<a ui-sref="root.about" href="#">about</a>
-<a ui-sref="root.restricted" href="#">restricted page</a>
+<div class="container">
+    <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a ui-sref="root.home" href="#">home</a></li>
+            <li role="presentation"><a ui-sref="root.about" href="#">about</a></li>
+            <li role="presentation"><a ui-sref="root.restricted" href="#">restricted page</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Movie Recommendation Engine</h3>
+    </div>
+</div>
 
 <div>
     <div ui-view="header"></div>

@@ -4,7 +4,6 @@ var movieApp = angular.module('myApp', [
  'ui.router'
 ]);
 
-
 movieApp.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
     $stateProvider
@@ -92,29 +91,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
     	})
-        /*
-        // HOME STATES AND NESTED VIEWS ========================================
-        .state('home', {
-            url: '/home',
-            templateUrl: 'static/partials/partial-home.html'
-        })
-
-        .state('home.movie_detail', {
-            url: '/movie_detail',
-            templateUrl: 'static/partials/partial-movie-detail.html',
-            controller: function($scope, $rootScope) {
-                        $scope.movies = ['Die Hard', 'Star Wars', 'The Hobbit'];
-                        $rootScope.userIsLoggedIn = true;
-            }
-        })
-
-        // nested list with just some random string data
-        .state('home.paragraph', {
-            url: '/paragraph',
-            template: 'I could sure use a glass of water right now.',
-        })
-        */
-
         .state('login', {
             url: '/login',
             templateUrl: 'static/partials/login.html',
@@ -126,13 +102,11 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     	alert('username or password incorrect.')
                     }
                     else {
-                    	$state.go('home.restricted');
+                    	$state.go('root.restricted');
                     }
                 };
             }
-        })
-
-
+        });
 });
 
 movieApp.run(function ($rootScope) {
