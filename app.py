@@ -18,6 +18,7 @@ def webhook():
 
   req = request.get_json(force=True)
   action = req.get('result').get('action')
+  res = None
   if action == "movie.filtering":
     res = processFilteringRequest(req)
   elif action == "movie.similar":
@@ -40,8 +41,11 @@ def processFilteringRequest(req):
   userSpecifiedCastLastName = userSpecifiedData.get('parameters').get('cast-last-name')
   # Chat agent only allows us to parse out first and last names seperately
   # so we need to merge these to get a list of full names.
-  userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(userSpecifiedCastFirstName, userSpecifiedCastLastName)]
-  userSpecifiedCast = map(spellCheck, userSpecifiedCast)
+  if len(userSpecifiedCastFirstName) == 0:
+      userSpecifiedCast = []
+  else:
+    userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(userSpecifiedCastFirstName, userSpecifiedCastLastName)]
+    userSpecifiedCast = map(spellCheck, userSpecifiedCast)
   userSpecifiedRating = userSpecifiedData.get('parameters').get('rating')
   # Get movie database information using previously instantiated API client.
   genreIds = client.getGenresIds(userSpecifiedGenres)
@@ -76,4 +80,4 @@ def prepareResponse(movies):
   }
 
 if __name__ == '__main__':
-  app.run(debug=True, port='8888', host='0.0.0.0')
+  app.run(debug=True, port=8888, host='0.0.0.0')
