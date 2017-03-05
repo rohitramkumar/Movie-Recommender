@@ -99,7 +99,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             views: {
                 'content': {
                     template: 'this is only visible after login. Hello {{user.username}}!',
-                    controller: function($scope, auth) {
+                    controller: function($scope, $rootScope, auth) {
                     	$rootScope.user = auth;
                     }
                 }
