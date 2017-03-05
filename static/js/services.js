@@ -6,7 +6,7 @@ angular.module('myApp').service('userService', function($http) {
         },
         'testUser2': {
         	username: 'testUser2',
-            password: '1234'
+            password: '12345'
         }
     };
 
