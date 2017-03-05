@@ -110,7 +110,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
     	})
         .state('login', {
             url: '/login',
-            templateUrl: 'static/partials/login.html',
+            templateUrl: 'static/partials/partial-login.html',
             controller: function($scope, $state, userService) {
             	$scope.login = function(cred) {
                 	var user = userService.login(cred);
@@ -130,15 +130,14 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: 'static/partials/partial-signup.html',
             controller: function($scope, $state, userService) {
                 $scope.signup = function(cred) {
-                    var response = userService.signup(cred);
-
-                    if (angular.isUndefined(response)) {
-                        alert('Incorrect details')
-                    }
-                    else {
-                        alert('Succesfuly signed up');
-                        $state.go('root.home');
-                    }
+                    userService.signup(cred).then(function(response) {
+                            if(response == "Success") {
+                                alert('Succesfuly signed up');
+                                $state.go('root.home');
+                            } else {
+                                alert(response);
+                            }
+                    });
                 };
             }
         });

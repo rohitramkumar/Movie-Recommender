@@ -41,9 +41,8 @@ def add_user():
     last_name = new_user.get("lastname")
     email = new_user.get("username")
     password = new_user.get("password")
-    api.create_user(email, password, first_name, last_name)
 
-    return "Success"
+    return api.create_user(email, password, first_name, last_name)
 
 
 @app.route('/webhook', methods=['POST'])
