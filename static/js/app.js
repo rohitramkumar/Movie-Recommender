@@ -59,6 +59,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         templateUrl: 'static/partials/partial-movie-detail.html',
                         controller: function($scope, userService) {
                             $scope.movies = ['Die Hard', 'Star Wars', 'Toy Story'];
+                            $scope.$watch('$parent.user', function(newValue, oldValue) {
+                                    console.log('new user name is found')
+                            });
                         }
                     }
                 }
@@ -101,7 +104,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             },
             views: {
                 'content': {
-                    template: 'this is only visible after login. Hello {{user.password}}!',
+                    template: 'this is only visible after login. Hello {{user.username}}!',
                     controller: function($scope, auth) {
                     	$scope.user = auth;
                     }
