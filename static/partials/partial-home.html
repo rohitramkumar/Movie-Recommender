@@ -1,33 +1,23 @@
 <div class="jumbotron text-center">
-    <h1>The Home Page</h1>
-    <p>This page demonstrates <span class="text-danger">nested</span> views.</p>
+    <h1>Movie Recommendation Service</h1>
+    <p>Talk to our chat agent to get a recommendation!</p>
 </div>
 
-<div class="row">
 
-    <!-- COLUMN ONE NAMED VIEW -->
+    <!-- COLUMN ONE -->
     <div class="col-sm-6">
-        <p>Check this cool chat agent out!</p>
         <p><iframe width="350" height="430" src="https://console.api.ai/api-client/demo/embedded/4f8d9544-1d5d-4a0a-b308-7bb03eeeaee3"></iframe></p>
 
-        <a ui-sref=".movie_detail" class="btn btn-primary">Click For Movie Details</a>
-        <a ui-sref=".paragraph" class="btn btn-danger">Paragraph</a>
+        <a ui-sref="root.home.movie_detail" class="btn btn-primary">Click For Movie Details</a>
     </div>
 
-    <!-- COLUMN TWO NAMED VIEW -->
+    <!-- COLUMN TWO -->
     <div class="col-sm-6">
-        <div ui-view></div>
+        <div ui-view="movie_detail"></div>
     </div>
 
 
-    <footer ng-show="userIsLoggedIn">
+    <p ng-if="user">
         <!-- Info to show when user is logged in -->
-        <p> Click her to view your movie watchlist!!! </p>
-    </footer>
-
-    <footer ng-hide="userIsLoggedIn">
-        <!-- Info to show when user is NOT logged in -->
-        <p> You should sign in!</p>
-    </footer>
-
-</div>
+        <p> Click here to view your movie watchlist!!! </p>
+    </p>

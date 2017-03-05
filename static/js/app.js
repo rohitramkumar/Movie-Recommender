@@ -21,7 +21,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     	templateUrl: 'static/partials/layout.html',
                     },
                 	'header@root': {
-                    	templateUrl: 'static/partials/nav.html',
+                    	templateUrl: 'static/partials/partial-header.html',
 
                         controller: function($scope, $state, user, userService) {
                         	$scope.user = user;
@@ -35,7 +35,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         }
                 	},
                     'footer@root': {
-                        template: '<p>footer view</p>'
+                        templateUrl: 'static/partials/partial-footer.html'
                     }
                 }
             })
@@ -44,7 +44,19 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 url: '/',
                 views: {
                     'content': {
-                        template: 'Hello at home. Maybe this is wheere I can fit my home-partial'
+                        templateUrl: 'static/partials/partial-home.html'
+                    }
+                }
+            })
+
+            .state('root.home.movie_detail', {
+                url: '/movie_detail',
+                views: {
+                    'movie_detail': {
+                        templateUrl: 'static/partials/partial-movie-detail.html',
+                        controller: function($scope) {
+                            $scope.movies = ['Die Hard', 'Star Wars', 'Toy Story'];
+                        }
                     }
                 }
             })
