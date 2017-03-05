@@ -23,12 +23,12 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 	'header@root': {
                     	templateUrl: 'static/partials/partial-header.html',
 
-                        controller: function($scope, $state, user, userService) {
-                        	$scope.user = user;
-                            $scope.login = function() {
+                        controller: function($scope, $rootScope, $state, user, userService) {
+                        	$rootScope.user = user;
+                            $rootScope.login = function() {
                             	$state.go('login');
                             };
-                            $scope.logout = function() {
+                            $rootScope.logout = function() {
                             	userService.logout();
                                 $state.go('root.home', {}, {reload: true});
                             };
@@ -44,15 +44,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 url: '/',
                 views: {
                     'content': {
-                        templateUrl: 'static/partials/partial-home.html',
-                        controller: function($scope, userService) {
-                            $scope.bottles = true;
-                            $scope.$watch('$parent.user', function(newValue, oldValue) {
-                                    console.log('new user name is found');
-                                    console.log(newValue);
-                                    console.log(oldValue);
-                            });
-                        }
+                        templateUrl: 'static/partials/partial-home.html'
                     }
                 }
             })
@@ -62,7 +54,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 views: {
                     'movie_detail': {
                         templateUrl: 'static/partials/partial-movie-detail.html',
-                        controller: function($scope, userService) {
+                        controller: function($scope, $rootScope, userService) {
                             $scope.movies = ['Die Hard', 'Star Wars', 'Toy Story'];
                         }
                     }
@@ -108,7 +100,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 'content': {
                     template: 'this is only visible after login. Hello {{user.username}}!',
                     controller: function($scope, auth) {
-                    	$scope.user = auth;
+                    	$rootScope.user = auth;
                     }
                 }
             }
