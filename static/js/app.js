@@ -21,7 +21,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     	templateUrl: 'static/partials/layout.html',
                     },
                 	'header@root': {
-                    	template: '<h1>header View<span ng-if="user"><button ng-click="logout()">logout</button></span><span ng-if="!user"><button ng-click="login()">login</button></span></h1>',
+                    	templateUrl: 'static/partials/nav.html',
 
                         controller: function($scope, $state, user, userService) {
                         	$scope.user = user;
@@ -39,6 +39,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     }
                 }
             })
+
         	.state('root.home', {
                 url: '/',
                 views: {
@@ -47,6 +48,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     }
                 }
             })
+
             .state('root.about', {
             url: '/about',
             views: {
