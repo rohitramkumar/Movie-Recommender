@@ -2,25 +2,6 @@
 
 {% block body_attribs %} ng-app="myApp" {% endblock body_attribs %}
 {% block body %}
-{% block navbar %}
-{% endblock navbar %}
-<div class="container">
-    <div class="header clearfix">
-        <nav>
-          <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="#">Home</a></li>
-            <li role="presentation"><a href="#">About</a></li>
-            <li role="presentation"><a href="#">Contact</a></li>
-          </ul>
-        </nav>
-        <h3 class="text-muted">Movie Recommendation Engine</h3>
-        <div class="panel panel-default">
-            <div class="panel panel-body" style="background-color: whitesmoke">
-    	       {% block j_content %}{% endblock j_content %}
-            </div>
-        </div>
-    </div>
-</div>
 
 {% block scripts %}
 {{ super() }}

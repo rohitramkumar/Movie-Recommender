@@ -3,8 +3,8 @@ import json
 import urllib
 import os
 
-BING_SC_API_KEY = os.environ['BING_SC_API_KEY']
-MOVIE_DB_API_KEY = os.environ['MOVIE_DB_API_KEY']
+BING_SC_API_KEY = '1c964897dce84d8cb04b5e8ff4634d48'
+MOVIE_DB_API_KEY = '207c3617b856ea5adac5ff6ad68b0bb7'
 # Database that provides simple filtering.
 MOVIE_DB_URL = 'https://api.themoviedb.org/3/'
 # URL Endpoints for different types of filtering data.

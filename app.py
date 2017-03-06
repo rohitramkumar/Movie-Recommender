@@ -13,7 +13,7 @@ from utils import MovieDBApiClient, MOVIE_DISCOVERY_URL, spellCheck
 
 app = Flask(__name__)
 Bootstrap(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://sibkuzvydevgqi:255578d74ecc93bc32ec26a19acd225e7651d9e8e0b640a176759d3c35037ed7@ec2-184-73-222-194.compute-1.amazonaws.com:5432/d4tqub1q54h1ug'
 db = SQLAlchemy(app)
 # ma = Marshmallow(app)
 
