@@ -58,13 +58,12 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     'movie_detail': {
                         templateUrl: 'static/partials/partial-movie-detail.html',
                         controller: function($scope, $rootScope, userService) {
-                            // TO-DO: Ask Rohit for API Call here
                             $scope.movies = ['Die Hard', 'Star Wars', 'Toy Story'];
                         }
                     }
                 }
             })
-    	})
+
 
         .state('root.restricted', {
             url: '/restricted',
