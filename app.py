@@ -6,12 +6,10 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 import requests
 import json
-import datetime
-import urllib
 import sys
 import logging
 import api
-import utils
+from utils import MovieDBApiClient, MOVIE_DISCOVERY_URL, spellCheck
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -21,19 +19,6 @@ db = SQLAlchemy(app)
 
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
-
-# Database that provides simple filtering.
-MOVIE_DB_URL = 'https://api.themoviedb.org/3/'
-API_KEY = os.environ['MOVIE_DB_API_KEY']
-
-# URL Endpoints for different types of filtering data.
-GENRES_URL = (MOVIE_DB_URL + 'genre/movie/list?api_key={}&language=en-US').format(API_KEY)
-PEOPLE_SEARCH_URL = (
-    MOVIE_DB_URL + 'search/person/?api_key={}&language=en-US&query={}&page1&include_adult=false')
-
-# URL Endpoint for movie discovery
-MOVIE_DISCOVERY_URL = (
-    MOVIE_DB_URL + 'discover/movie?api_key={}&include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc').format(API_KEY)
 
 
 @app.route("/")
