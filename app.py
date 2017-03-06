@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
 
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
-app.loger.setLevel(logging.ERROR)
+app.logger.setLevel(logging.ERROR)
 
 # Database that provides simple filtering.
 MOVIE_DB_URL = 'https://api.themoviedb.org/3/'
