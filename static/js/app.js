@@ -119,11 +119,14 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 	userService.login(cred).then(function(resp) {
                         console.log("Got a response");
                         console.log(resp);
-                        
+
                         if (angular.isUndefined(resp)) {
+                            console.log("Here");
+
                         	alert('username or password incorrect.')
                         }
                         else {
+                            console.log("There");
                             $scope.user = resp
                         	$state.go('root.restricted');
                         }
