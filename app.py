@@ -33,6 +33,22 @@ def index():
     return render_template('index.html')
 
 
+@app.route("/api/getuser/", methods=['POST'])
+def get_user():
+    console.log("This works too")
+
+    return "Hello"
+    """user_detail = json.loads(request.data)
+
+    username = user_detail.get("username")
+    password = user_detail.get("password")
+    console.log("noo")
+    # api.login(username, password)
+
+    return "Success"
+    """
+
+
 @app.route("/api/signup/", methods=['POST'])
 def add_user():
     """This function triggers an API call to add a new
@@ -45,18 +61,6 @@ def add_user():
     password = new_user.get("password")
 
     return api.create_user(username, password, first_name, last_name)
-
-
-@app.route("/api/getuser/", methods=['POST'])
-def get_user():
-    user_detail = json.loads(request.data)
-
-    username = user_detail.get("username")
-    password = user_detail.get("password")
-    console.log("noo")
-    # api.login(username, password)
-
-    return "Success"
 
 
 @app.route('/webhook', methods=['POST'])
