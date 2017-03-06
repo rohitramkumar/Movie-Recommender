@@ -109,6 +109,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
     	})
+
         .state('login', {
             url: '/login',
             templateUrl: 'static/partials/partial-login.html',
@@ -129,7 +130,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         .state('sign_up', {
             url: '/signup',
             templateUrl: 'static/partials/partial-signup.html',
-            controller: function($scope, $state, userService) {
+            controller: function($scope, $state, $q, userService) {
                 $scope.signup = function(cred) {
                     userService.signup(cred).then(function(response) {
                             if(response == "Success") {

@@ -47,6 +47,20 @@ def add_user():
     return api.create_user(email, password, first_name, last_name)
 
 
+@app.route("/api/login/", methods=['POST'])
+def get_user():
+    """This function triggers an API call to add a new
+    user into the database"""
+    new_user = json.loads(request.data)
+
+    first_name = new_user.get("firstname")
+    last_name = new_user.get("lastname")
+    email = new_user.get("username")
+    password = new_user.get("password")
+
+    return api.create_user(email, password, first_name, last_name)
+
+
 @app.route('/webhook', methods=['POST'])
 def webhook():
     """This Flask route receives all requests from API.ai and processes these
