@@ -26,7 +26,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         controller: function($scope, $rootScope, $state, user, userService) {
                         	$rootScope.user = user;
                             $rootScope.login = function() {
-                            	$state.go('login');
+                            	$state.go('root.login');
                             };
                             $rootScope.logout = function() {
                             	userService.logout();
@@ -74,7 +74,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                     $timeout(function() {
                         if ( angular.isUndefined(userService.user) ) {
-                            return deferred.reject({redirectTo: 'login'});
+                            return deferred.reject({redirectTo: 'root.login'});
                         }
                         else {
                             return deferred.resolve(userService.user);
@@ -94,7 +94,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             }
     	})
 
-        .state('login', {
+        .state('root.login', {
             url: '/login',
             views: {
                 'content': {
