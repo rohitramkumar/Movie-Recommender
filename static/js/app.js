@@ -130,9 +130,10 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             alert('username or password incorrect.')
                         }
                         else {
-                            console.log("There");
-                            $scope.user = resp
-                        	$state.go('root.restricted');
+                            console.log("Logged in app js");
+                            alert('Thanks for logging in!')
+                            
+                        	$state.go('root.home');
                         }
                     });
                 };

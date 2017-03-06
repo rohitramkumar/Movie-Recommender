@@ -23,6 +23,12 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
                 method: "POST",
                 data: userCredentials
             }).success(function (userObj) {
+                if(userObj == "Fail") {
+                    console.log("Uh Oh");
+                } else {
+                    userService.user = userObj;
+                }
+
                 def.resolve(userObj);
             });
             /*var user = usersMock[userCredentials.username]
