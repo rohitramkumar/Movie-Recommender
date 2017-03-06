@@ -1,5 +1,5 @@
 import model
-
+import json
 """Sign-up"""
 
 
@@ -35,8 +35,8 @@ def login(username, password):
 
     if user:
         if user.password == password:
-            myUser = {"username": user.user['email'], "password": user.user[
-                'password'], "firstname": user.user['first_name'], "lastname": user.user['last_name']}
-            return myUser
+            # myUser = {"username": user.user['email'], "password": user.user[
+            #    'password'], "firstname": user.user['first_name'], "lastname": user.user['last_name']}
+            return json.dumps(user.__dict__)
 
     return "Fail"

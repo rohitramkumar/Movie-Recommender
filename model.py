@@ -32,6 +32,12 @@ class User(Base):
     movies = relationship("Movie", secondary=user_movies_tbl,
                           backref="users", lazy="dynamic")
 
+    def __init__(self, email, password, first_name, last_name):
+        self.email = email
+        self.password = password
+        self.first_name = first_name
+        self.last_name = last_name
+
     def __repr__(self):
         return '<User Email:{}>'.format(self.email)
 
@@ -43,6 +49,11 @@ class Movie(Base):
     movie_imdb_id = Column(Integer)
     user_rating = Column(Integer, default=5)
     name = Column(String(64))
+
+    def __init__(self, movie_imdb_id, name, user_rating):
+        self.movie_imdb_id = movie_imdb_id
+        self.name = name
+        self.user_rating = user_rating
 
     def __repr__(self):
         return '<Movie:{}>'.format(self.name)
