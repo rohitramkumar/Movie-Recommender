@@ -40,18 +40,14 @@ def index():
 
 @app.route("/api/getuser/", methods=['POST'])
 def get_user():
-    console.log("This works too")
-
-    return "Hello"
-    """user_detail = json.loads(request.data)
+    user_detail = json.loads(request.data)
 
     username = user_detail.get("username")
     password = user_detail.get("password")
-    console.log("noo")
-    # api.login(username, password)
+
+    api.login(username, password)
 
     return "Success"
-    """
 
 
 @app.route("/api/signup/", methods=['POST'])

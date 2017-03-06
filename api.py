@@ -32,7 +32,6 @@ def login(username, password):
     """Check if user exists; if exists, authenticate pw and return success msg"""
 
     user = model.User.query.filter_by(email=username).first()
-    console.log("I got here")
 
     if user:
         if user.password == password:
