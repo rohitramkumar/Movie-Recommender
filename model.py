@@ -7,7 +7,6 @@ from sqlalchemy.orm import relationship, backref
 import os
 
 # Sessions
-
 engine = create_engine(os.environ['DATABASE_URL'], echo=False)
 session = scoped_session(sessionmaker(bind=engine, autocommit=False, autoflush=False))
 
@@ -18,6 +17,8 @@ user_movies_tbl = Table('user_movies', Base.metadata,
                         Column('user_id', Integer, ForeignKey('users.id')),
                         Column('movie_imdb_id', Integer, ForeignKey('movies.id'))
                         )
+
+# Models
 
 
 class User(Base):
@@ -57,6 +58,9 @@ class Movie(Base):
         self.movie_imdb_id = movie_imdb_id
         self.name = name
         self.user_rating = user_rating
+
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
     def __repr__(self):
         return '<Movie:{}>'.format(self.name)

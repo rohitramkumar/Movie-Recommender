@@ -1,4 +1,4 @@
-'use strict';   // See note sign_up 'use strict'; below
+'use strict';
 
 var movieApp = angular.module('myApp', [
  'ui.router'
@@ -58,37 +58,22 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     'movie_detail': {
                         templateUrl: 'static/partials/partial-movie-detail.html',
                         controller: function($scope, $rootScope, userService) {
+                            // TO-DO: Ask Rohit for API Call here
                             $scope.movies = ['Die Hard', 'Star Wars', 'Toy Story'];
                         }
                     }
                 }
             })
-
-            .state('root.sign_up', {
-            url: '/sign_up',
-            views: {
-                'content': {
-                    template: 'sign_up view ... hmm! <p ng-if="user">A user is signed in!</p>'
-                }
-            }
     	})
 
         .state('root.restricted', {
             url: '/restricted',
             resolve: {
             	auth: function(userService, $q, $timeout) {
+                    // TO-DO: Should this by async too?
+                    var deferred = $q.defer();
 
-                	var deferred = $q.defer();
-                	/* //with an async
-                    return UserService.load().then(function(user){
-                      if (permissionService.can(user, {goTo: state})) {
-                        return deferred.resolve({});
-                      } else {
-                        return deferred.reject({redirectTo: 'some_other_state'});
-                      }
-                    }*/
-
-                   $timeout(function() {
+                    $timeout(function() {
                         if ( angular.isUndefined(userService.user) ) {
                             return deferred.reject({redirectTo: 'login'});
                         }
@@ -112,48 +97,46 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
         .state('login', {
             url: '/login',
-            templateUrl: 'static/partials/partial-login.html',
-            controller: function($scope, $state, $q, userService) {
-            	$scope.login = function(cred) {
-                    console.log("Clicky happended");
-                	userService.login(cred).then(function(resp) {
-                        console.log("Got a response");
-                        console.log(resp);
-
-                        if (angular.isUndefined(resp)) {
-                            console.log("Here");
-
-                        	alert('username or password incorrect.')
-                        } else if (resp == "Fail") {
-                            console.log("Failing");
-
-                            alert('username or password incorrect.')
-                        }
-                        else {
-                            console.log("Logged in app js");
-                            alert('Thanks for logging in!')
-                            
-                        	$state.go('root.home');
-                        }
-                    });
-                };
+            views: {
+                'content': {
+                    templateUrl: 'static/partials/partial-login.html',
+                    controller: function($scope, $state, $q, userService) {
+                    	$scope.login = function(cred) {
+                        	userService.login(cred).then(function(resp) {
+                                if (angular.isUndefined(resp)) {
+                                	alert('Unhandled exception :|')
+                                } else if (resp == "Fail") {
+                                    alert('username or password incorrect.')
+                                }
+                                else {
+                                    alert('Thanks for logging in!')
+                                	$state.go('root.home');
+                                }
+                            });
+                        };
+                    }
+                }
             }
         })
 
         .state('sign_up', {
             url: '/signup',
-            templateUrl: 'static/partials/partial-signup.html',
-            controller: function($scope, $state, $q, userService) {
-                $scope.signup = function(cred) {
-                    userService.signup(cred).then(function(response) {
-                            if(response == "Success") {
-                                alert('Succesfuly signed up');
-                                $state.go('root.home');
-                            } else {
-                                alert(response);
-                            }
-                    });
-                };
+            views: {
+                'content': {
+                    templateUrl: 'static/partials/partial-signup.html',
+                    controller: function($scope, $state, $q, userService) {
+                        $scope.signup = function(cred) {
+                            userService.signup(cred).then(function(response) {
+                                    if(response == "Success") {
+                                        alert('Succesfuly signed up');
+                                        $state.go('root.home');
+                                    } else {
+                                        alert(response);
+                                    }
+                            });
+                        };
+                    }
+                }
             }
         });
 });

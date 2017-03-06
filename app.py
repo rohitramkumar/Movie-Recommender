@@ -41,7 +41,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/api/getuser/", methods=['POST'])
+@app.route("/api/login/", methods=['POST'])
 def get_user():
     user_detail = json.loads(request.data)
 
