@@ -47,7 +47,7 @@ def get_user():
     username = user_detail.get("username")
     password = user_detail.get("password")
 
-    return api.login(username, password)
+    return jsonify(api.login(username, password))
 
 
 @app.route("/api/signup/", methods=['POST'])
