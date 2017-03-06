@@ -35,6 +35,8 @@ def login(username, password):
 
     if user:
         if user.password == password:
-            return user
+            myUser = {"username": user['email'], "password": user[
+                'password'], "firstname": user['first_name'], "lastname": user['last_name']}
+            return myUser
 
     return "Fail"
