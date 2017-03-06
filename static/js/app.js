@@ -96,21 +96,25 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
         .state('login', {
             url: '/login',
-            templateUrl: 'static/partials/partial-login.html',
-            controller: function($scope, $state, $q, userService) {
-            	$scope.login = function(cred) {
-                	userService.login(cred).then(function(resp) {
-                        if (angular.isUndefined(resp)) {
-                        	alert('Unhandled exception :|')
-                        } else if (resp == "Fail") {
-                            alert('username or password incorrect.')
-                        }
-                        else {
-                            alert('Thanks for logging in!')
-                        	$state.go('root.home');
-                        }
-                    });
-                };
+            views: {
+                'content': {
+                    templateUrl: 'static/partials/partial-login.html',
+                    controller: function($scope, $state, $q, userService) {
+                    	$scope.login = function(cred) {
+                        	userService.login(cred).then(function(resp) {
+                                if (angular.isUndefined(resp)) {
+                                	alert('Unhandled exception :|')
+                                } else if (resp == "Fail") {
+                                    alert('username or password incorrect.')
+                                }
+                                else {
+                                    alert('Thanks for logging in!')
+                                	$state.go('root.home');
+                                }
+                            });
+                        };
+                    }
+                }
             }
         })
 
