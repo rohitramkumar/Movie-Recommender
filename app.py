@@ -35,6 +35,8 @@ def index():
 
 @app.route("/api/signup/", methods=['POST'])
 def add_user():
+    """This function triggers an API call to add a new
+    user into the database"""
     new_user = json.loads(request.data)
 
     first_name = new_user.get("firstname")
@@ -47,54 +49,75 @@ def add_user():
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
+    """This Flask route receives all requests from API.ai and processes these
+    requests according to the action specified by the user"""
+
     req = request.get_json(force=True)
-    res = processRequest(req)
+    action = req.get('result').get('action')
+    res = None
+    if action == "movie.filtering":
+        res = processFilteringRequest(req)
+    elif action == "movie.similar":
+        res = processSimilarityRequest(req)
     r = make_response(json.dumps(res))
     r.headers['Content-Type'] = 'application/json'
     return r
 
 
-def processRequest(req):
-    # The final URL which will allow us to retrieve recommendations based on
-    # filters. Initially it is just the base url.
+def processFilteringRequest(req):
+    """This function deals with processing the movie filters provided by a user
+    and feeding these filters into api calls for a movie database. The filtered
+    movies returned from these api calls are returned to the user."""
+
+    client = MovieDBApiClient()
     finalDiscoveryURL = MOVIE_DISCOVERY_URL
-    userSpecifiedGenres = req.get('result').get('contexts')[0].get('parameters').get('genre')
-    # If the user did not specify genre to chat agent, then do not bother get the genre id's.
-    if len(userSpecifiedGenres) != 0:
-        genreRequestResult = requests.get(GENRES_URL)
-        genres = json.loads(genreRequestResult.text)
-        # For each user specified genre, find its corresponding genre id
-        genreIds = []
-        for userSpecifiedGenre in userSpecifiedGenres:
-            for genre in genres['genres']:
-                if userSpecifiedGenre == genre['name']:
-                    genreIds.append(genre['id'])
-        finalDiscoveryURL = finalDiscoveryURL + '&with_genres=' + ''.join(str(g) for g in genreIds)
-    userSpecifiedCastFirstName = req.get('result').get(
-        'contexts')[0].get('parameters').get('cast-first-name')
-    userSpecifiedCastLastName = req.get('result').get(
-        'contexts')[0].get('parameters').get('cast-last-name')
+    userSpecifiedData = req.get('result').get('contexts')[0]
+    # Get all filters specified by user on api.ai.
+    userSpecifiedGenres = userSpecifiedData.get('parameters').get('genre')
+    userSpecifiedCastFirstName = userSpecifiedData.get('parameters').get('cast-first-name')
+    userSpecifiedCastLastName = userSpecifiedData.get('parameters').get('cast-last-name')
     # Chat agent only allows us to parse out first and last names seperately
     # so we need to merge these to get a list of full names.
-    userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(
-        userSpecifiedCastFirstName, userSpecifiedCastLastName)]
-    # If the user did not specify cast to the chat agent, then do not bother getting cast id's.
-    if len(userSpecifiedCast) != 0:
-        castIds = []
-        for cast in userSpecifiedCast:
-            castRequestResult = requests.get(
-                PEOPLE_SEARCH_URL.format(API_KEY, urllib.quote_plus(cast)))
-            castInfo = json.loads(castRequestResult.text)
-            if len(castInfo.get('results')) > 0:
-                castIds.append(castInfo.get('results')[0].get('id'))
-        finalDiscoveryURL = finalDiscoveryURL + '&with_people=' + ''.join(str(c) for c in castIds)
-    userSpecifiedRating = req.get('result').get('contexts')[0].get('parameters').get('rating')
-    # If the user did not specify an mpaa rating, then do not bother putting
-    # it in the final url string
-    if userSpecifiedRating != '':
-        finalDiscoveryURL = finalDiscoveryURL + '&certification=' + userSpecifiedRating
-    # Construct final URL.
-    movieDiscoveryRequest = requests.get(finalDiscoveryURL)
+    if len(userSpecifiedCastFirstName) == 0:
+        userSpecifiedCast = []
+    else:
+        userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(
+            userSpecifiedCastFirstName, userSpecifiedCastLastName)]
+        userSpecifiedCast = map(spellCheck, userSpecifiedCast)
+    userSpecifiedRating = userSpecifiedData.get('parameters').get('rating')
+    # Get movie database information using previously instantiated API client.
+    genreIds = client.getGenresIds(userSpecifiedGenres)
+    castIds = client.getCastIds(userSpecifiedCast)
+    # Construct movie discovery URL.
+    finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_genres', genreIds))
+    finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_people', castIds))
+    finalDiscoveryURL = finalDiscoveryURL + \
+        client.encodeURLKeyValue(('certification', userSpecifiedRating))
+    movies = client.getDiscoveredMovies(finalDiscoveryURL)
+    return prepareResponse(movies)
+
+
+def processSimilarityRequest(req):
+    """The function deals with processing a single movie provided by the user and
+    returning a list of movies which are similar."""
+    client = MovieDBApiClient()
+    benchmarkMovie = req.get('result').get('contexts')[0].get('parameters').get('benchmark')
+    benchmarkMovie = spellCheck(benchmarkMovie)
+    similarMovies = client.getSimilarMovies(benchmarkMovie)
+    return prepareResponse(similarMovies)
+
+
+def prepareResponse(movies):
+    """Helper function that prepares the return object we send to the user
+     given a list of movies."""
+    if len(movies) > 0:
+        speech = "I recommend the following movies: " + ', '.join(movies)
+    else:
+        speech = "Sorry there are no movies that match your request"
+    return {
+        "speech": speech,
+      "displayText": speech,      "source": "movie-recommendation-service"
+    }
 
 if __name__ == '__main__':
-    app.run(debug=True, port='8888', host='0.0.0.0')
+    app.run(debug=True, port=8888, host='0.0.0.0')

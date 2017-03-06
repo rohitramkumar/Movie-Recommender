@@ -72,6 +72,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
     	})
+
         .state('root.restricted', {
             url: '/restricted',
             resolve: {
@@ -101,7 +102,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             },
             views: {
                 'content': {
-                    template: 'this is only visible after login. Hello {{user.username}}!',
+                    templateUrl: 'static/partials/partial-profile.html',
                     controller: function($scope, $rootScope, auth) {
                     	$rootScope.user = auth;
                     }
