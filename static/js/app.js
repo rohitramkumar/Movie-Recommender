@@ -117,6 +117,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             	$scope.login = function(cred) {
                     console.log("Clicky happended");
                 	userService.login(cred).then(function(resp) {
+                        console.log("Got a response");
+                        console.log(resp);
+                        
                         if (angular.isUndefined(resp)) {
                         	alert('username or password incorrect.')
                         }

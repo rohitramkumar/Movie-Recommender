@@ -37,4 +37,4 @@ def login(username, password):
         if user.password == password:
             return user
 
-    return None
+    return undefined
