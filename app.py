@@ -41,24 +41,22 @@ def add_user():
 
     first_name = new_user.get("firstname")
     last_name = new_user.get("lastname")
-    email = new_user.get("username")
+    username = new_user.get("username")
     password = new_user.get("password")
 
-    return api.create_user(email, password, first_name, last_name)
+    return api.create_user(username, password, first_name, last_name)
 
 
 @app.route("/api/login/", methods=['POST'])
 def get_user():
     """This function triggers an API call to add a new
     user into the database"""
-    new_user = json.loads(request.data)
+    user_detail = json.loads(request.data)
 
-    first_name = new_user.get("firstname")
-    last_name = new_user.get("lastname")
-    email = new_user.get("username")
-    password = new_user.get("password")
+    username = user_detail.get("username")
+    password = user_detail.get("password")
 
-    return api.create_user(email, password, first_name, last_name)
+    return api.login(username, password)
 
 
 @app.route('/webhook', methods=['POST'])

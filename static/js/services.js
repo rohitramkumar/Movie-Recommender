@@ -14,19 +14,27 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
     	user: undefined,
         response: undefined,
     	login: function(userCredentials) {
-        	// later --> $http.post('auth', userCredentials).then(...)
-            // for demo use local data
-            var user = usersMock[userCredentials.username]
+            // Send user info to logni endpoint
+            var def = $q.defer();
+
+            $http({
+                url: "/api/login/",
+                method: "POST",
+                data: userCredentials
+            }).success(function (userObj) {
+                def.resolve(userObj);
+            });
+
+            return def.promise;
+            /*var user = usersMock[userCredentials.username]
             userService.user = ( user && ( user.password == userCredentials.password ) ) ?
             	user : undefined;
-            return user;
+            return user;*/
         },
         logout: function() {
         	userService.user = undefined;
         },
         signup: function(userCredentials) {
-            console.log("I'm inside signup!");
-            console.log(userCredentials)
             // Send user info to signup endpoint
             var def = $q.defer();
 
@@ -35,10 +43,6 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
                 method: "POST",
                 data: userCredentials
             }).success(function (response) {
-                // Redirect to login upon success
-                console.log("About to print response from api below");
-                console.log(response);
-
                 def.resolve(response);
             });
 

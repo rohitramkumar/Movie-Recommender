@@ -113,16 +113,16 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         .state('login', {
             url: '/login',
             templateUrl: 'static/partials/partial-login.html',
-            controller: function($scope, $state, userService) {
+            controller: function($scope, $state, $q, userService) {
             	$scope.login = function(cred) {
-                	var user = userService.login(cred);
-
-                    if (angular.isUndefined(user)) {
-                    	alert('username or password incorrect.')
-                    }
-                    else {
-                    	$state.go('root.restricted');
-                    }
+                	userService.login(cred).then(function(user) {
+                        if (angular.isUndefined(user)) {
+                        	alert('username or password incorrect.')
+                        }
+                        else {
+                        	$state.go('root.restricted');
+                        }
+                    });
                 };
             }
         })
