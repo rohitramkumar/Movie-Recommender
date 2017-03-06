@@ -7,12 +7,16 @@ import requests
 import json
 import datetime
 import urllib
+import logging
 import api
 
 app = Flask(__name__)
 Bootstrap(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 db = SQLAlchemy(app)
+
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.loger.setLevel(logging.ERROR)
 
 # Database that provides simple filtering.
 MOVIE_DB_URL = 'https://api.themoviedb.org/3/'
