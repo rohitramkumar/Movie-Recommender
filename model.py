@@ -38,6 +38,9 @@ class User(Base):
         self.first_name = first_name
         self.last_name = last_name
 
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
     def __repr__(self):
         return '<User Email:{}>'.format(self.email)
 

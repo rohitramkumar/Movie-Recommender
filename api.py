@@ -37,6 +37,6 @@ def login(username, password):
         if user.password == password:
             # myUser = {"username": user.user['email'], "password": user.user[
             #    'password'], "firstname": user.user['first_name'], "lastname": user.user['last_name']}
-            return json.dumps(user.__dict__)
+            return user.as_dict()
 
     return "Fail"
