@@ -49,14 +49,14 @@ def add_user():
 
 @app.route("/api/getuser/", methods=['POST'])
 def get_user():
-    """This function triggers an API call to query a user
-    from the database for login"""
     user_detail = json.loads(request.data)
 
     username = user_detail.get("username")
     password = user_detail.get("password")
+    console.log("noo")
+    # api.login(username, password)
 
-    return api.login(username, password)
+    return "Success"
 
 
 @app.route('/webhook', methods=['POST'])

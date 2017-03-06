@@ -15,21 +15,21 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
         response: undefined,
     	login: function(userCredentials) {
             // Send user info to logni endpoint
-            var def = $q.defer();
+            var def2 = $q.defer();
 
             $http({
                 url: "/api/getuser/",
                 method: "POST",
                 data: userCredentials
             }).success(function (userObj) {
-                def.resolve(userObj);
+                def2.resolve(userObj);
             });
-
-            return def.promise;
             /*var user = usersMock[userCredentials.username]
             userService.user = ( user && ( user.password == userCredentials.password ) ) ?
             	user : undefined;
             return user;*/
+            return def2.promise;
+
         },
         logout: function() {
         	userService.user = undefined;
