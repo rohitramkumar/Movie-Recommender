@@ -18,7 +18,7 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             var def = $q.defer();
 
             $http({
-                url: "/api/login/",
+                url: "/api/getuser/",
                 method: "POST",
                 data: userCredentials
             }).success(function (userObj) {

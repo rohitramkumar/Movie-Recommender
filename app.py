@@ -47,7 +47,7 @@ def add_user():
     return api.create_user(username, password, first_name, last_name)
 
 
-@app.route("/api/login/", methods=['POST'])
+@app.route("/api/getuser/", methods=['POST'])
 def get_user():
     """This function triggers an API call to query a user
     from the database for login"""
