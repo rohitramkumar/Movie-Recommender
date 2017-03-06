@@ -1,13 +1,10 @@
 {% extends "base.html" %}
 
+
 {% block body %}
 {{ super() }}
-    <hr>
-    <br>
-    <br>
-    <br>
-	<div ng-view></div>
-{% endblock %}
+ <div ui-view></div>
+ {% endblock %}
 
 {% block j_content %}
 
@@ -40,8 +37,9 @@
 {{ super() }}
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
-<script src="//code.angularjs.org/1.5.3/angular-route.min.js"></script>
+<script src="//unpkg.com/angular-ui-router@0.4.2/release/angular-ui-router.js"></script>
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script src="{{ url_for('static', filename='js/services.js') }}"></script>
 {% endblock %}
 
 {% block styles %}

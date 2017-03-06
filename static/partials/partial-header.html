@@ -1,0 +1,15 @@
+<div class="container">
+    <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a ui-sref="root.home" href="#">Home</a></li>
+            <li role="presentation"><button ng-click="signup()">Sign Up</button></li>
+            <li ng-if="user" role="presentation"><a ui-sref="root.restricted" href="#">View Profile</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Movie Recommendation Engine</h3>
+    </div>
+</div>
+
+<span ng-if="user"><button ng-click="logout()">logout</button></span>
+<span ng-if="!user"><button ng-click="login()">login</button></span>
