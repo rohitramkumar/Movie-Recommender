@@ -45,9 +45,7 @@ def get_user():
     username = user_detail.get("username")
     password = user_detail.get("password")
 
-    api.login(username, password)
-
-    return "Success"
+    return api.login(username, password)
 
 
 @app.route("/api/signup/", methods=['POST'])
