@@ -26,7 +26,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         controller: function($scope, $rootScope, $state, user, userService) {
                         	$rootScope.user = user;
                             $rootScope.login = function() {
-                            	$state.go('root.login');
+                            	$state.go('login');
                             };
                             $rootScope.logout = function() {
                             	userService.logout();
@@ -64,17 +64,33 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             })
 
+            .state('root.sign_up', {
+            url: '/sign_up',
+            views: {
+                'content': {
+                    template: 'sign_up view ... hmm! <p ng-if="user">A user is signed in!</p>'
+                }
+            }
+    	})
 
         .state('root.restricted', {
             url: '/restricted',
             resolve: {
             	auth: function(userService, $q, $timeout) {
-                    // TO-DO: Should this by async too?
-                    var deferred = $q.defer();
 
-                    $timeout(function() {
+                	var deferred = $q.defer();
+                	/* //with an async
+                    return UserService.load().then(function(user){
+                      if (permissionService.can(user, {goTo: state})) {
+                        return deferred.resolve({});
+                      } else {
+                        return deferred.reject({redirectTo: 'some_other_state'});
+                      }
+                    }*/
+
+                   $timeout(function() {
                         if ( angular.isUndefined(userService.user) ) {
-                            return deferred.reject({redirectTo: 'root.login'});
+                            return deferred.reject({redirectTo: 'login'});
                         }
                         else {
                             return deferred.resolve(userService.user);
@@ -94,27 +110,33 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             }
     	})
 
-        .state('root.login', {
+        .state('login', {
             url: '/login',
-            views: {
-                'content': {
-                    templateUrl: 'static/partials/partial-login.html',
-                    controller: function($scope, $state, $q, userService) {
-                    	$scope.login = function(cred) {
-                        	userService.login(cred).then(function(resp) {
-                                if (angular.isUndefined(resp)) {
-                                	alert('Unhandled exception :|')
-                                } else if (resp == "Fail") {
-                                    alert('username or password incorrect.')
-                                }
-                                else {
-                                    alert('Thanks for logging in!')
-                                	$state.go('root.home');
-                                }
-                            });
-                        };
-                    }
-                }
+            templateUrl: 'static/partials/partial-login.html',
+            controller: function($scope, $state, $q, userService) {
+            	$scope.login = function(cred) {
+                    console.log("Clicky happended");
+                	userService.login(cred).then(function(resp) {
+                        console.log("Got a response");
+                        console.log(resp);
+
+                        if (angular.isUndefined(resp)) {
+                            console.log("Here");
+
+                        	alert('username or password incorrect.')
+                        } else if (resp == "Fail") {
+                            console.log("Failing");
+
+                            alert('username or password incorrect.')
+                        }
+                        else {
+                            console.log("Logged in app js");
+                            alert('Thanks for logging in!')
+
+                        	$state.go('root.home');
+                        }
+                    });
+                };
             }
         })
 
