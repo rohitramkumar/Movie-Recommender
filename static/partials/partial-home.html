@@ -1,0 +1,22 @@
+<div class="jumbotron text-center">
+    <h1>Movie Recommendation Service</h1>
+    <p>Talk to our chat agent to get a recommendation!</p>
+</div>
+
+
+    <!-- COLUMN ONE -->
+    <div class="col-sm-6">
+        <p><iframe width="350" height="430" src="https://console.api.ai/api-client/demo/embedded/4f8d9544-1d5d-4a0a-b308-7bb03eeeaee3"></iframe></p>
+
+        <a ui-sref="root.home.movie_detail" class="btn btn-primary">Click For Movie Details</a>
+
+        <p ng-if="user">User your username is: {{ user.email }}</p>
+        <p ng-if="bottles">Bottles is true</p>
+
+        <p ng-if="$parent.user">Click here to view your movie watchlist</p>
+    </div>
+
+    <!-- COLUMN TWO -->
+    <div class="col-sm-6">
+        <div ui-view="movie_detail"></div>
+    </div>
