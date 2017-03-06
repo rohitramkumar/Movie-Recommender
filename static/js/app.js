@@ -115,11 +115,13 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: 'static/partials/partial-login.html',
             controller: function($scope, $state, $q, userService) {
             	$scope.login = function(cred) {
-                	userService.login(cred).then(function(user) {
-                        if (angular.isUndefined(user)) {
+                    console.log("Clicky happended");
+                	userService.login(cred).then(function(resp) {
+                        if (angular.isUndefined(resp)) {
                         	alert('username or password incorrect.')
                         }
                         else {
+                            $scope.user = resp
                         	$state.go('root.restricted');
                         }
                     });
