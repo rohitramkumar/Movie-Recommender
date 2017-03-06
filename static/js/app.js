@@ -124,6 +124,10 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             console.log("Here");
 
                         	alert('username or password incorrect.')
+                        } else if (resp == "Fail") {
+                            console.log("Failing");
+
+                            alert('username or password incorrect.')
                         }
                         else {
                             console.log("There");
