@@ -24,11 +24,11 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             }).success(function (userObj) {
                 if(userObj == "Fail") {
                     console.log("Uh Oh");
+                    def.reject("Incorrect credentials passed");
                 } else {
                     userService.user = userObj;
+                    def.resolve(userObj);
                 }
-
-                def.resolve(userObj);
             });
             /*var user = usersMock[userCredentials.username]
             userService.user = ( user && ( user.password == userCredentials.password ) ) ?
