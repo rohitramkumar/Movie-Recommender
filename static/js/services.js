@@ -16,7 +16,7 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
     	login: function(userCredentials) {
             // Send user info to logni endpoint
             var def = $q.defer();
-            console.log(usersMock[testUser2]);
+            console.log(usersMock['testUser2']);
 
             $http({
                 url: "/api/getuser/",
