@@ -65,8 +65,8 @@ def processFilteringRequest(req):
     movies returned from these api calls are returned to the user."""
 
     userSpecifiedData = req.get('result').get('contexts')[0].get('parameters')
-    maxResults = userSpecifiedData.get('max-results')
-    totalResultsGiven = userSpecifiedData.get('total-results-given')
+    maxResults = int(userSpecifiedData.get('max-results'))
+    totalResultsGiven = int(userSpecifiedData.get('total-results-given'))
     client = MovieDBApiClient(maxResults, totalResultsGiven)
     finalDiscoveryURL = MOVIE_DISCOVERY_URL
     # Get all filters specified by user on api.ai.
