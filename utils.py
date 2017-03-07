@@ -2,6 +2,7 @@ import requests
 import json
 import urllib
 import os
+import model
 
 BING_SC_API_KEY = os.environ['BING_SC_API_KEY']
 MOVIE_DB_API_KEY = os.environ['MOVIE_DB_API_KEY']
@@ -17,9 +18,39 @@ MOVIE_DISCOVERY_URL = (MOVIE_DB_URL + 'discover/movie?api_key={}&include_adult=f
 MOVIE_SIMILARITY_URL = (MOVIE_DB_URL + 'movie/{}/similar?api_key={}&language=en-US')
 # URL Endpoint for spell checking
 BING_SC_URL = 'https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/?mode=proof&mkt=en-us'
+# Learning Agent recommendation URL
+LEARNING_AGENT_REC_URL = "http://ec2-54-200-205-223.us-west-2.compute.amazonaws.com:5000/mrelearner/api/v1.0/recommender"
 # TODO: maybe make this user configurable
 MAX_RESULTS = 5
 
+def createUser(username, password, first_name, last_name):
+    """Used for sign-up. Get form data and add new user to users table"""
+
+    if not password:
+        return "Cannot leave password empty"
+    if not first_name:
+        return "Cannot have first name empty"
+    # Check if user exists
+    user = model.User.query.filter_by(email=username).first()
+    # If user doesn't exist, create user
+    if user == None:
+        user = model.User(email=username,password=password, first_name=first_name, last_name=last_name)
+        model.session.add(user)
+        model.session.commit()
+        return "Success"
+    return "Username already exits"
+
+def login(username, password):
+    """Used for login. Check if user exists; if exists,
+    authenticate pw and return success message."""
+
+    user = model.User.query.filter_by(email=username).first()
+    if user:
+        if user.password == password:
+            # myUser = {"username": user.user['email'], "password": user.user[
+            #    'password'], "firstname": user.user['first_name'], "lastname": user.user['last_name']}
+            return user.as_dict()
+    return "Fail"
 
 def spellCheck(query):
   """Given a potentially misspelled query, return the correct spelling with
@@ -41,7 +72,8 @@ def spellCheck(query):
 class MovieDBApiClient:
   """This class abstracts API calls for the api.themoviedb.org."""
 
-  def __init__(self):
+  def getIMDbId(self, movieName):
+    """Gets the IMDb id for a movie."""
     pass
 
   def getGenresIds(self, userSpecifiedGenres):
@@ -119,8 +151,9 @@ class MovieDBApiClient:
 class LearningAgentClient:
   """This class abstracts API calls to our learning agent on Azure."""
 
-  def __init__(self, user):
-    self.user = user
+  def getRecommendedMovies(self, userInfo):
+    # Convert user data in json
+    result = requests.post(LEARNING_AGENT_REC_URL, json=data)
 
-  def getRecommendedMovies(self):
-    pass
+  def addMovieToUserHistory(self, movieInfo):
+      pass

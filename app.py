@@ -3,52 +3,44 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 # from flask_marshmallow import Marshmallow
 
+from utils import MovieDBApiClient, LearningAgentClient, MOVIE_DISCOVERY_URL, spellCheck, createUser, login
 import os
 import requests
 import json
 import sys
 import logging
-import api
-from utils import MovieDBApiClient, MOVIE_DISCOVERY_URL, spellCheck
 
 app = Flask(__name__)
-Bootstrap(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-db = SQLAlchemy(app)
-# ma = Marshmallow(app)
-
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
-
+Bootstrap(app)
+db = SQLAlchemy(app)
+# ma = Marshmallow(app)
 
 @app.route("/")
 def index():
     return render_template('index.html')
 
-
 @app.route("/api/login/", methods=['POST'])
-def get_user():
+def login():
     user_detail = json.loads(request.data)
-
     username = user_detail.get("username")
     password = user_detail.get("password")
-
-    return jsonify(api.login(username, password))
-
+    return jsonify(login(username, password))
 
 @app.route("/api/signup/", methods=['POST'])
-def add_user():
-    """This function triggers an API call to add a new
-    user into the database"""
+def signup():
     new_user = json.loads(request.data)
-
     first_name = new_user.get("firstname")
     last_name = new_user.get("lastname")
     username = new_user.get("username")
     password = new_user.get("password")
+    return createUser(username, password, first_name, last_name)
 
-    return api.create_user(username, password, first_name, last_name)
-
+@app.route("/api/getMovieData", methods=['POST'])
+def getMovieData():
+    client = LearningAgentClient()
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -114,12 +106,14 @@ def prepareResponse(movies):
     """Helper function that prepares the return object we send to the user
      given a list of movies."""
     if len(movies) > 0:
-        speech = "I recommend the following movies: " + ', '.join(movies)
+        speech = "I found you the following movies: " + ', '.join(movies)
     else:
-        speech = "Sorry there are no movies that match your request"
+        speech = "Sorry, no movies available."
     return {
-        "speech": speech,
-      "displayText": speech,      "source": "movie-recommendation-service"
+      "speech": speech,
+      "displayText": speech,
+      "source": "movie-recommendation-service"
+      "contextOut" : ["name" : "results-info", "parameters" : {"count" : 1}, "lifespan" : 1 }]
     }
 
 if __name__ == '__main__':
