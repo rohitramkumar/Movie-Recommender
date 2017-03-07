@@ -114,7 +114,7 @@ class MovieDBApiClient:
     movieInfo = json.loads(movieDiscoveryResult.text)
     movies = []
     counter = 0
-    while counter < self.maxResults and counter < len(movieInfo.get('results')):
+    while counter < self.maxResults and counter + self.offset < len(movieInfo.get('results')):
       movies.append(movieInfo.get('results')[counter + self.offset].get('title'))
       counter += 1
     return movies
@@ -132,7 +132,7 @@ class MovieDBApiClient:
       movieSimilarityResult = requests.get(MOVIE_SIMILARITY_URL.format(benchmarkMovieId, MOVIE_DB_API_KEY))
       movieSimilarityInfo = json.loads(movieSimilarityResult.text)
       counter = 0
-      while counter < self.maxResults and counter < len(movieSimilarityInfo.get('results')):
+      while counter < self.maxResults and counter + self.offset < len(movieSimilarityInfo.get('results')):
         similarMovies.append(movieSimilarityInfo.get('results')[counter + self.offset].get('title'))
         counter += 1
     return similarMovies
