@@ -64,13 +64,15 @@ def processFilteringRequest(req):
     and feeding these filters into api calls for a movie database. The filtered
     movies returned from these api calls are returned to the user."""
 
-    client = MovieDBApiClient()
+    userSpecifiedData = req.get('result').get('contexts')[0].get('parameters')
+    maxResults = userSpecifiedData.get('max-results')
+    totalResultsGiven = userSpecifiedData.get('total-results-given')
+    client = MovieDBApiClient(maxResults, totalResultsGiven)
     finalDiscoveryURL = MOVIE_DISCOVERY_URL
-    userSpecifiedData = req.get('result').get('contexts')[0]
     # Get all filters specified by user on api.ai.
-    userSpecifiedGenres = userSpecifiedData.get('parameters').get('genre')
-    userSpecifiedCastFirstName = userSpecifiedData.get('parameters').get('cast-first-name')
-    userSpecifiedCastLastName = userSpecifiedData.get('parameters').get('cast-last-name')
+    userSpecifiedGenres = userSpecifiedData.get('genre')
+    userSpecifiedCastFirstName = userSpecifiedData.get('cast-first-name')
+    userSpecifiedCastLastName = userSpecifiedData.get('cast-last-name')
     # Chat agent only allows us to parse out first and last names seperately
     # so we need to merge these to get a list of full names.
     if len(userSpecifiedCastFirstName) == 0:
@@ -79,7 +81,7 @@ def processFilteringRequest(req):
         userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(
             userSpecifiedCastFirstName, userSpecifiedCastLastName)]
         userSpecifiedCast = map(spellCheck, userSpecifiedCast)
-    userSpecifiedRating = userSpecifiedData.get('parameters').get('rating')
+    userSpecifiedRating = userSpecifiedData.get('rating')
     # Get movie database information using previously instantiated API client.
     genreIds = client.getGenresIds(userSpecifiedGenres)
     castIds = client.getCastIds(userSpecifiedCast)
@@ -89,7 +91,7 @@ def processFilteringRequest(req):
     finalDiscoveryURL = finalDiscoveryURL + \
         client.encodeURLKeyValue(('certification', userSpecifiedRating))
     movies = client.getDiscoveredMovies(finalDiscoveryURL)
-    return prepareResponse(movies)
+    return prepareResponse(movies, "gathered-filters", maxResults + totalResultsGiven)
 
 
 def processSimilarityRequest(req):
@@ -99,10 +101,10 @@ def processSimilarityRequest(req):
     benchmarkMovie = req.get('result').get('contexts')[0].get('parameters').get('benchmark')
     benchmarkMovie = spellCheck(benchmarkMovie)
     similarMovies = client.getSimilarMovies(benchmarkMovie)
-    return prepareResponse(similarMovies)
+    return prepareResponse(similarMovies, "gathered-benchmark-movie")
 
 
-def prepareResponse(movies):
+def prepareResponse(movies, outboundContextName, outboundContextParam):
     """Helper function that prepares the return object we send to the user
      given a list of movies."""
     if len(movies) > 0:
@@ -113,7 +115,7 @@ def prepareResponse(movies):
       "speech": speech,
       "displayText": speech,
       "source": "movie-recommendation-service",
-      "contextOut" : [{"name" : "gathered-filters", "parameters" : {"total-results-given" : 1}, "lifespan" : 1 }]
+      "contextOut" : [{"name" : outboundContextName, "parameters" : {"total-results-given" : outboundContextParam}, "lifespan" : 1 }]
     }
 
 if __name__ == '__main__':

@@ -20,8 +20,8 @@ MOVIE_SIMILARITY_URL = (MOVIE_DB_URL + 'movie/{}/similar?api_key={}&language=en-
 BING_SC_URL = 'https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/?mode=proof&mkt=en-us'
 # Learning Agent recommendation URL
 LEARNING_AGENT_REC_URL = "http://ec2-54-200-205-223.us-west-2.compute.amazonaws.com:5000/mrelearner/api/v1.0/recommender"
-# TODO: maybe make this user configurable
-MAX_RESULTS = 5
+# Max possible number of results that can be returned
+MAX_RESULTS = 10
 
 def createUser(username, password, first_name, last_name):
     """Used for sign-up. Get form data and add new user to users table"""
@@ -72,6 +72,10 @@ def spellCheck(query):
 class MovieDBApiClient:
   """This class abstracts API calls for the api.themoviedb.org."""
 
+  def __init__(self, maxResults, offset):
+      self.maxResults = maxResults if maxResults > 0 and maxResults < MAX_RESULTS else MAX_RESULTS
+      self.offset = offset
+
   def getIMDbId(self, movieName):
     """Gets the IMDb id for a movie."""
     pass
@@ -110,8 +114,8 @@ class MovieDBApiClient:
     movieInfo = json.loads(movieDiscoveryResult.text)
     movies = []
     counter = 0
-    while counter < MAX_RESULTS and counter < len(movieInfo.get('results')):
-      movies.append(movieInfo.get('results')[counter].get('title'))
+    while counter < self.maxResults and counter < len(movieInfo.get('results')):
+      movies.append(movieInfo.get('results')[counter + self.offset].get('title'))
       counter += 1
     return movies
 
@@ -128,8 +132,8 @@ class MovieDBApiClient:
       movieSimilarityResult = requests.get(MOVIE_SIMILARITY_URL.format(benchmarkMovieId, MOVIE_DB_API_KEY))
       movieSimilarityInfo = json.loads(movieSimilarityResult.text)
       counter = 0
-      while counter < MAX_RESULTS and counter < len(movieSimilarityInfo.get('results')):
-        similarMovies.append(movieSimilarityInfo.get('results')[counter].get('title'))
+      while counter < self.maxResults and counter < len(movieSimilarityInfo.get('results')):
+        similarMovies.append(movieSimilarityInfo.get('results')[counter + self.offset].get('title'))
         counter += 1
     return similarMovies
 
