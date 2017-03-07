@@ -112,7 +112,7 @@ def prepareResponse(movies):
     return {
       "speech": speech,
       "displayText": speech,
-      "source": "movie-recommendation-service"
+      "source": "movie-recommendation-service",
       "contextOut" : ["name" : "results-info", "parameters" : {"count" : 1}, "lifespan" : 1 }]
     }
 
