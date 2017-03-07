@@ -113,7 +113,7 @@ def prepareResponse(movies):
       "speech": speech,
       "displayText": speech,
       "source": "movie-recommendation-service",
-      "contextOut" : [{"name" : "results", "parameters" : {"total-results-given" : 1}, "lifespan" : 1 }]
+      "contextOut" : [{"name" : "gathered-filters", "parameters" : {"total-results-given" : 1}, "lifespan" : 1 }]
     }
 
 if __name__ == '__main__':
