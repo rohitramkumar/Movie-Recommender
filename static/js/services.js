@@ -63,9 +63,10 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
                 url: "/api/add_movie/",
                 method: "POST",
                 data: userCredentials
-                }).success(function (response) {
+            }).success(function (response) {
+                    console.log("Here 3")
                     def.resolve(response);
-                });
+            });
 
             return def.promise;
         }

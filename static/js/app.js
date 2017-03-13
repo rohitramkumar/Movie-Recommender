@@ -51,6 +51,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         controller: function($scope, $rootScope, userService) {
                             $scope.add_movie = function(cred) {
                                 userService.add_movie(cred).then(function(response) {
+                                        console.log("pls work");
                                         if(response == "Success") {
                                             alert('Succesfuly added movie');
                                         } else {
