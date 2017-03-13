@@ -23,7 +23,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 	'header@root': {
                     	templateUrl: 'static/partials/partial-header.html',
 
-                        controller: function($scope, $rootScope, $state, user, userService) {
+                        controller: function($scope, $rootScope, $state, $q, user, userService) {
                         	$rootScope.user = user;
                             $rootScope.login = function() {
                             	$state.go('login');
@@ -35,6 +35,16 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             $rootScope.signup = function() {
                                 $state.go('sign_up');
                             };
+                            $rootScope.add_movie = function() {
+                                userService.add_movie(cred).then(function(response) {
+                                        console.log("pls work");
+                                        if(response == "Success") {
+                                            alert('Succesfuly added movie');
+                                        } else {
+                                            alert(response);
+                                        }
+                                });
+                            }
                         }
                 	},
                     'footer@root': {
@@ -47,19 +57,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 url: '/',
                 views: {
                     'content': {
-                        templateUrl: 'static/partials/partial-home.html',
-                        controller: function($scope, $rootScope, userService) {
-                            $scope.add_movie = function(cred) {
-                                userService.add_movie(cred).then(function(response) {
-                                        console.log("pls work");
-                                        if(response == "Success") {
-                                            alert('Succesfuly added movie');
-                                        } else {
-                                            alert(response);
-                                        }
-                                });
-                            };
-                        }
+                        templateUrl: 'static/partials/partial-home.html'
                     }
                 }
             })
