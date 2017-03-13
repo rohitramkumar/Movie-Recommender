@@ -54,7 +54,7 @@ class Movie(Base):
     user_rating = Column(Integer, default=5)
     name = Column(String(64))
 
-    def __init__(self, movie_imdb_id, name, user_rating):
+    def __init__(self, name, movie_imdb_id, user_rating):
         self.movie_imdb_id = movie_imdb_id
         self.name = name
         self.user_rating = user_rating

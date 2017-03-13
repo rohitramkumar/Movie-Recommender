@@ -11,9 +11,16 @@
         <a ui-sref="root.home.movie_detail" class="btn btn-primary">Click For Movie Details</a>
 
         <p ng-if="user">User your username is: {{ user.email }}</p>
-        <p ng-if="bottles">Bottles is true</p>
 
-        <p ng-if="$parent.user">Click here to view your movie watchlist</p>
+        <div ng-if="$parent.user"
+            ><p>Add a movie to your movie watchlist</p>
+
+            <label>Username</label><input ng-model="movieCred.username"/>
+            <label>Movie Name</label><input type="password" ng-model="movieCred.movie_name"/>
+
+            <button ng-click="add_movie(movieCred)">Add Movie</button>
+
+        </div>
     </div>
 
     <!-- COLUMN TWO -->

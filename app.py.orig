@@ -50,20 +50,6 @@ def add_user():
     return api.create_user(username, password, first_name, last_name)
 
 
-@app.route("/api/add_movie/", methods=['POST'])
-def add_movie():
-    """This function triggers an API call to add a new
-    movie into the watchlist for a user"""
-    movie_detail = json.loads(request.data)
-
-    username = movie_detail.get("username")
-    password = movie_detail.get("movieName")
-    movieImdbId = movie_detail.get("movieImdbId")
-    movieRating = movie_detail.get("movieRating")
-
-    return api.add_movie(username, movieName, movieImdbID, movieRating)
-
-
 @app.route('/webhook', methods=['POST'])
 def webhook():
     """This Flask route receives all requests from API.ai and processes these

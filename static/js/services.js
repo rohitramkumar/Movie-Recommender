@@ -54,6 +54,20 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             });
 
             return def.promise;
+        },
+        add_movie: function(userCredentials) {
+
+            var def = $q.defer();
+
+            $http({
+                url: "/api/add_movie/",
+                method: "POST",
+                data: userCredentials
+                }).success(function (response) {
+                    def.resolve(response);
+                });
+
+            return def.promise;
         }
     }
 

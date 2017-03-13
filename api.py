@@ -40,3 +40,24 @@ def login(username, password):
             return user.as_dict()
 
     return "Fail"
+
+
+def add_movie(username, movieName):
+    """Check if user exists; if exists, authenticate pw and return success msg"""
+
+    user = model.User.query.filter_by(email=username).first()
+
+    if not user:
+        return "Fail: Cannot find user!"
+
+    movieItem = model.Movie(name=movieName, movie_imdb_id=99, rating=5)
+
+    print 'here in addMovie()'
+
+    for movieTemp in user.movies:
+        print movieTemp
+
+    user.movies.append(movieItem)
+    model.session.commit()
+
+    return "Success"
