@@ -35,7 +35,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             $rootScope.signup = function() {
                                 $state.go('sign_up');
                             };
-                            $rootScope.add_movie = function() {
+                            $rootScope.add_movie = function(cred) {
                                 userService.add_movie(cred).then(function(response) {
                                         console.log("pls work");
                                         if(response == "Success") {
