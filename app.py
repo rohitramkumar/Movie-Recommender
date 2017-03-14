@@ -3,7 +3,8 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 # from flask_marshmallow import Marshmallow
 
-from utils import MovieDBApiClient, LearningAgentClient, MOVIE_DISCOVERY_URL, spellCheck, createUser, login
+from utils import APIAI_KEY, MovieDBApiClient, LearningAgentClient, MOVIE_DISCOVERY_URL, spellCheck, createUser, login
+import apiai
 import os
 import requests
 import json
@@ -40,7 +41,13 @@ def signup():
 
 @app.route("/api/getMovieData", methods=['POST'])
 def getMovieData():
-    client = LearningAgentClient()
+    """ Get the imdb id, cast, title, and picture for each of the movies given."""
+    ai = apiai.ApiAI(APIAI_KEY)
+    request = ai.event_request(apiai.events.Event("get-full-movie-data-event"))
+    response = request.getresponse()
+    apiaiData = json.loads(response.read())
+    contextData = apiaiData['result']['contexts'][0]['parameters']
+    movieList = contextData['returned-movie-list']
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -115,7 +122,9 @@ def prepareResponse(movies, outboundContextName, outboundContextParam):
       "speech": speech,
       "displayText": speech,
       "source": "movie-recommendation-service",
-      "contextOut" : [{"name" : outboundContextName, "parameters" : {"total-results-given" : outboundContextParam}, "lifespan" : 1 }]
+      "contextOut" : [
+          {"name" : outboundContextName, "parameters" : {"total-results-given" : outboundContextParam, "returned-movie-list" : movies}, "lifespan" : 1 }
+      ]
     }
 
 if __name__ == '__main__':

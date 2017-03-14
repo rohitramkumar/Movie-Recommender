@@ -4,6 +4,7 @@ import urllib
 import os
 import model
 
+APIAI_KEY = os.environ['APIAI_KEY']
 BING_SC_API_KEY = os.environ['BING_SC_API_KEY']
 MOVIE_DB_API_KEY = os.environ['MOVIE_DB_API_KEY']
 # Database that provides simple filtering.
@@ -16,6 +17,12 @@ MOVIE_SEARCH_URL = (MOVIE_DB_URL + 'search/movie?api_key={}&language=en-US&query
 MOVIE_DISCOVERY_URL = (MOVIE_DB_URL + 'discover/movie?api_key={}&include_adult=false&include_video=false&language=en-US&sort_by=popularity.desc').format(MOVIE_DB_API_KEY)
 # URL Endpoint for movie similarity
 MOVIE_SIMILARITY_URL = (MOVIE_DB_URL + 'movie/{}/similar?api_key={}&language=en-US')
+# URL Endpoint for movie info
+MOVIE_INFO_URL = (MOVIE_DB_URL + 'movie/{}?api_key={}&language=en-US')
+# URL Endpoint for movie info (credits)
+MOVIE_CREDITS_URL = (MOVIE_DB_URL + 'movie/{}/credits?api_key={}')
+# URL Endpoint for fetching movie posters
+MOVIE_POSTER_URL = 'http://image.tmdb.org/t/p/w185/'
 # URL Endpoint for spell checking
 BING_SC_URL = 'https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/?mode=proof&mkt=en-us'
 # Learning Agent recommendation URL
@@ -76,9 +83,30 @@ class MovieDBApiClient:
       self.maxResults = maxResults if maxResults > 0 and maxResults < MAX_RESULTS else MAX_RESULTS
       self.offset = offset
 
-  def getIMDbId(self, movieName):
-    """Gets the IMDb id for a movie."""
-    pass
+  def getFullMovieDetails(self, movieList):
+    """Gets the imdb id, cast, title, overview and picture for each movie."""
+    movieIds = []
+    for movie in movieList:
+      movieIdResult = requests.get(MOVIE_SEARCH_URL.format(MOVIE_DB_API_KEY, urllib.quote_plus(movie)))
+      movieIdInfo = json.loads(movieIdResult.text)
+      if len(movieIdInfo.get('results')) > 0:
+        movieId = movieIdInfo.get('results')[0].get('id')
+        movieIds.append(movieId)
+    fullMovieDetails = []
+    counter = 0
+    for movieId in movieIds:
+      fullMovieDetails.append({})
+      movieInfoResult = requests.get(MOVIE_INFO_URL.format(movieId, MOVIE_DB_API_KEY))
+      castInfoResult = requests.get(MOVIE_CREDITS_URL.format(movieId, MOVIE_DB_API_KEY))
+      movieInfo = json.loads(movieInfoResult.text)
+      castInfo = json.loads(castInfoResult.text)
+      fullMovieDetails[counter]['imdb_id'] = movieInfo['imdb_id']
+      fullMovieDetails[counter]['overview'] = movieInfo['overview']
+      fullMovieDetails[counter]['original_title'] = movieInfo['original_title']
+      fullMovieDetails[counter]['poster'] = MOVIE_POSTER_URL + movieInfo['poster_path']
+      fullMovieDetails[counter]['cast'] = [item['name'] for item in castInfo['cast'][:5]]
+      counter += 1
+    return fullMovieDetails
 
   def getGenresIds(self, userSpecifiedGenres):
     """Gets a list of genre id's corresponding to the names of the genres
