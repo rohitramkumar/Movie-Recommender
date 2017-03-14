@@ -69,7 +69,7 @@ def get_all_movies():
     return jsonify(utils.get_movie_all(user_id))
 
 
-@app.route("/api/getFullMovieDetails", methods=['POST'])
+@app.route("/api/getFullMovieDetails/", methods=['POST'])
 def getFullMovieDetails():
     """ Get the imdb id, cast, title, and picture for each of the movies given.
     Also query the learning agent for the history-based recommendation."""
