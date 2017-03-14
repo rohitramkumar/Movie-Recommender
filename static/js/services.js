@@ -62,7 +62,7 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             $http({
                 url: "/api/get_movie_all/",
                 method: "POST",
-                data: user.email
+                data: userService.user.email
             }).success(function (response) {
                     def.resolve(response);
             });
