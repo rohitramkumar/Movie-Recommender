@@ -20,19 +20,12 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
 
                 def.resolve(userObj);
             });
-            /*var user = usersMock[userCredentials.username]
-            userService.user = ( user && ( user.password == userCredentials.password ) ) ?
-            	user : undefined;
-            return user;*/
 
             return def.promise;
 
         },
         logout: function() {
         	userService.user = undefined;
-        },
-        getuser: function() {
-            return userService.user;
         },
         signup: function(userCredentials) {
             // Send user info to signup endpoint

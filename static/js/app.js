@@ -32,9 +32,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $state.go('sign_up');
                             };
                             $rootScope.add_movie = function(cred) {
-                                //console.log('Recvd POST params: ' + cred);
-                                //cred.username = userService.getuser().username;
-                                console.log('Trying to add movie for user: ' + cred.username);
                                 userService.add_movie(cred).then(function(response) {
                                     if(response == "Success") {
                                         alert('Succesfuly added movie');
@@ -47,7 +44,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     },
                 	'header@root': {
                     	templateUrl: 'static/partials/partial-header.html',
-
                         controller: function($scope, $rootScope, $state, $q, user, userService) {
                         }
                 	},
@@ -129,22 +125,14 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: 'static/partials/partial-login.html',
             controller: function($scope, $state, $q, userService) {
             	$scope.login = function(cred) {
-                    console.log("Clicky happended");
                 	userService.login(cred).then(function(resp) {
-                        console.log("Got a response");
-                        console.log(resp);
 
                         if (angular.isUndefined(resp)) {
-                            console.log("Here");
-
                         	alert('username or password incorrect.')
                         } else if (resp == "Fail") {
-                            console.log("Failing");
-
-                            alert('username or password incorrect.')
+                            alert('Username or password incorrect.')
                         }
                         else {
-                            console.log("Logged in app js");
                             alert('Thanks for logging in!')
 
                         	$state.go('root.home');
