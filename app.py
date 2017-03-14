@@ -19,9 +19,11 @@ Bootstrap(app)
 db = SQLAlchemy(app)
 # ma = Marshmallow(app)
 
+
 @app.route("/")
 def index():
     return render_template('index.html')
+
 
 @app.route("/api/login/", methods=['POST'])
 def login():
@@ -29,6 +31,7 @@ def login():
     username = user_detail.get("username")
     password = user_detail.get("password")
     return jsonify(login(username, password))
+
 
 @app.route("/api/signup/", methods=['POST'])
 def signup():
@@ -39,20 +42,6 @@ def signup():
     password = new_user.get("password")
     return createUser(username, password, first_name, last_name)
 
-@app.route("/api/getFullMovieDetails", methods=['POST'])
-def getFullMovieDetails():
-    """ Get the imdb id, cast, title, and picture for each of the movies given.
-    Also query the learning agent for the history-based recommendation."""
-    req = request.get_json(force=True)
-    ai = apiai.ApiAI(APIAI_KEY)
-    movieDBClient = MovieDBApiClient(0,0)
-    eventRequest = ai.event_request(apiai.events.Event("get-full-movie-data-event"))
-    eventResponse = eventRequest.getresponse()
-    apiaiData = json.loads(eventResponse.read())
-    contextData = apiaiData['result']['contexts'][0]['parameters']
-    movieList = contextData['returned-movie-list']
-    fullMovieDetails = movieDBClient.getMovieDetails(movieList)
-    return jsonify(fullMovieDetails)
 
 @app.route("/api/add_movie/", methods=['POST'])
 def add_movie():
@@ -65,7 +54,7 @@ def add_movie():
     movieImdbID = movie_detail.get("movieImdbId")
     movieRating = movie_detail.get("movieRating")
 
-    return api.add_movie(username, movieName, movieImdbID, movieRating)
+    return utils.add_movie(username, movieName, movieImdbID, movieRating)
 
 
 @app.route("/api/get_movie_all/", methods=['POST'])
@@ -74,7 +63,23 @@ def get_all_movies():
     movie into the watchlist for a user"""
     user_id = request.data
 
-    return jsonify(api.get_movie_all(user_id))
+    return jsonify(utlis.get_movie_all(user_id))
+
+
+@app.route("/api/getFullMovieDetails", methods=['POST'])
+def getFullMovieDetails():
+    """ Get the imdb id, cast, title, and picture for each of the movies given.
+    Also query the learning agent for the history-based recommendation."""
+    req = request.get_json(force=True)
+    ai = apiai.ApiAI(APIAI_KEY)
+    movieDBClient = MovieDBApiClient(0, 0)
+    eventRequest = ai.event_request(apiai.events.Event("get-full-movie-data-event"))
+    eventResponse = eventRequest.getresponse()
+    apiaiData = json.loads(eventResponse.read())
+    contextData = apiaiData['result']['contexts'][0]['parameters']
+    movieList = contextData['returned-movie-list']
+    fullMovieDetails = movieDBClient.getMovieDetails(movieList)
+    return jsonify(fullMovieDetails)
 
 
 @app.route('/webhook', methods=['POST'])
@@ -147,11 +152,12 @@ def prepareResponse(movies, outboundContextName, outboundContextParam):
     else:
         speech = "Sorry, no movies available."
     return {
-      "speech": speech,
+        "speech": speech,
       "displayText": speech,
       "source": "movie-recommendation-service",
-      "contextOut" : [
-          {"name" : outboundContextName, "parameters" : {"total-results-given" : outboundContextParam, "returned-movie-list" : movies}, "lifespan" : 1 }
+      "contextOut": [
+          {"name": outboundContextName, "parameters": {"total-results-given":
+           outboundContextParam, "returned-movie-list": movies}, "lifespan": 1}
       ]
     }
 
