@@ -64,7 +64,6 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
                 method: "POST",
                 data: userCredentials
             }).success(function (response) {
-                    console.log("Here 3")
                     def.resolve(response);
             });
 

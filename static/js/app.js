@@ -20,9 +20,21 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 	'': {
                     	templateUrl: 'static/partials/layout.html',
                         controller: function($scope, $rootScope, $state, $q, userService) {
+                            $rootScope.user = user;
+                            $rootScope.login = function() {
+                                $state.go('login');
+                            };
+                            $rootScope.logout = function() {
+                                userService.logout();
+                                $state.go('root.home', {}, {reload: true});
+                            };
+                            $rootScope.signup = function() {
+                                $state.go('sign_up');
+                            };
                             $rootScope.add_movie = function(cred) {
+                                cred.username = $rootScope.user.username;
+
                                 userService.add_movie(cred).then(function(response) {
-                                    console.log("pls work");
                                     if(response == "Success") {
                                         alert('Succesfuly added movie');
                                     } else {
@@ -36,17 +48,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     	templateUrl: 'static/partials/partial-header.html',
 
                         controller: function($scope, $rootScope, $state, $q, user, userService) {
-                        	$rootScope.user = user;
-                            $rootScope.login = function() {
-                            	$state.go('login');
-                            };
-                            $rootScope.logout = function() {
-                            	userService.logout();
-                                $state.go('root.home', {}, {reload: true});
-                            };
-                            $rootScope.signup = function() {
-                                $state.go('sign_up');
-                            };
                         }
                 	},
                     'footer@root': {
