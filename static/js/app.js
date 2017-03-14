@@ -33,7 +33,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             };
                             $rootScope.add_movie = function(cred) {
                                 cred.username = $rootScope.user.username;
-
+                                console.log('Trying to add movie for user: ' + cred.username);
                                 userService.add_movie(cred).then(function(response) {
                                     if(response == "Success") {
                                         alert('Succesfuly added movie');
