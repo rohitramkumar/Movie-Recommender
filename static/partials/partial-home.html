@@ -15,8 +15,12 @@
         <div ng-if="$parent.user"
             ><p>Add a movie to your movie watchlist</p>
 
-            <label>Username</label><input type="hidden" ng-model="$parent.user.username"/>
-            <label>Movie Name</label><input ng-model="movieCred.movie_name"/>
+            <input style="display: none" ng-model="movieCred.username" ng-init="movieCred.username=user.username"/>
+
+
+            <label>Movie Name</label><input ng-model="movieCred.movieName"/>
+            <label>IMDB ID</label><input ng-model="movieCred.movieImdbId"/>
+            <label>Rating</label><input ng-model="movieCred.movieRating"/>
 
             <button ng-click="add_movie(movieCred)" class="btn btn-primary">Add Movie</button>
         </div>
