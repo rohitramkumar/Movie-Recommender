@@ -78,7 +78,7 @@ def getFullMovieDetails():
 
     # req = request.get_json(force=True)
     # print req
-
+    """
     ai = apiai.ApiAI(utils.APIAI_KEY)
     movieDBClient = utils.MovieDBApiClient(0, 0)
     eventRequest = ai.event_request(apiai.events.Event("get-full-movie-data-event"))
@@ -88,11 +88,13 @@ def getFullMovieDetails():
     movieList = contextData['returned-movie-list']
     fullMovieDetails = movieDBClient.getMovieDetails(movieList)
 
+    """
     print contextData
     print fullMovieDetails
     print 'Exiting'
+    return "Hello"
 
-    return jsonify(fullMovieDetails)
+    # return jsonify(fullMovieDetails)
 
 
 @app.route('/webhook', methods=['POST'])
