@@ -63,7 +63,7 @@ def get_all_movies():
     movie into the watchlist for a user"""
     user_id = request.data
 
-    return jsonify(utlis.get_movie_all(user_id))
+    return jsonify(utils.get_movie_all(user_id))
 
 
 @app.route("/api/getFullMovieDetails", methods=['POST'])
