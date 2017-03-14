@@ -68,6 +68,20 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             });
 
             return def.promise;
+        },
+        getMovieData: function() {
+
+            var def = $q.defer();
+
+            $http({
+                url: "/api/getFullMovieDetails/",
+                method: "POST",
+                data: userService.user.email
+            }).success(function (response) {
+                    def.resolve(response);
+            });
+
+            return def.promise;
         }
     }
 
