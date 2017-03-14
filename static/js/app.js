@@ -99,7 +99,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     }*/
 
                    $timeout(function() {
-                        if ( angular.isUndefined(userService.user) ) {
+                        if (angular.isUndefined(userService.user) ) {
                             return deferred.reject({redirectTo: 'login'});
                         }
                         else {
@@ -113,8 +113,22 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             views: {
                 'content': {
                     templateUrl: 'static/partials/partial-profile.html',
-                    controller: function($scope, $rootScope, auth) {
+                    controller: function($scope, $rootScope, auth, userServce) {
                     	$rootScope.user = auth;
+                        console.log("I hit the profile controller!");
+                        
+                        userService.getUserMovies().then(function(resp)) {
+
+                            if (angular.isUndefined(resp)) {
+                                console.log('Could not retrieve movies')
+                            } else if (resp == "Fail") {
+                                console.log('Could not retrieve movies')
+                            } else {
+                                console.log($scope.user)
+                                $state.go('root.home');
+                            }
+
+                        };
                     }
                 }
             }

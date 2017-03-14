@@ -64,6 +64,18 @@ def add_movie():
     return api.add_movie(username, movieName, movieImdbID, movieRating)
 
 
+@app.route("/api/get_movie_all/", methods=['POST'])
+def get_all_movies():
+    """This function triggers an API call to add a new
+    movie into the watchlist for a user"""
+    username = json.loads(request.data)
+    print 'I got the raw JSON: ' + request.data
+    print 'I got the JSON parsed data: ' + username
+
+    return "Test Resp Obj"
+    # return api.add_movie(username, movieName, movieImdbID, movieRating)
+
+
 @app.route('/webhook', methods=['POST'])
 def webhook():
     """This Flask route receives all requests from API.ai and processes these
