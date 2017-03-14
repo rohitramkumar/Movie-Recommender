@@ -50,7 +50,7 @@ def add_movie(username, movieName, movieImdbId, movieRating):
     if not user:
         return "Fail: Cannot find user!"
 
-    movieItem = model.Movie(name=movieName, movie_imdb_id=99, rating=5)
+    movieItem = model.Movie(name=movieName, movie_imdb_id=movieImdbId, user_rating=movieRating)
 
     print 'here in addMovie()'
 
