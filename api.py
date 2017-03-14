@@ -44,7 +44,7 @@ def login(username, password):
 
 def add_movie(username, movieName, movieImdbId, movieRating):
     """Check if user exists; if exists, authenticate pw and return success msg"""
-
+    print 'Hey Now!'
     user = model.User.query.filter_by(email=username).first()
 
     if not user:
