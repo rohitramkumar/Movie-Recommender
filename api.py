@@ -42,7 +42,7 @@ def login(username, password):
     return "Fail"
 
 
-def add_movie(username, movieName):
+def add_movie(username, movieName, movieImdbId, movieRating):
     """Check if user exists; if exists, authenticate pw and return success msg"""
 
     user = model.User.query.filter_by(email=username).first()

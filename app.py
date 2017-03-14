@@ -57,7 +57,7 @@ def add_movie():
     movie_detail = json.loads(request.data)
 
     username = movie_detail.get("username")
-    password = movie_detail.get("movieName")
+    movieName = movie_detail.get("movieName")
     movieImdbId = movie_detail.get("movieImdbId")
     movieRating = movie_detail.get("movieRating")
 
