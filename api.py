@@ -25,26 +25,9 @@ def create_user(username, password, first_name, last_name):
 
     return "Username already exits"
 
-"""Login"""
-
 
 def login(username, password):
     """Check if user exists; if exists, authenticate pw and return success msg"""
-
-    user = model.User.query.filter_by(email=username).first()
-    movie_list = []
-
-    if not user:
-        return "Fail"
-
-    for movie in user.movies:
-        movie_list.append(movie.as_dict())
-
-    return movie_list
-
-
-def get_all_movies(username):
-    """Check if user exists and return all movies in watchlist"""
 
     user = model.User.query.filter_by(email=username).first()
 
@@ -55,6 +38,22 @@ def get_all_movies(username):
             return user.as_dict()
 
     return "Fail"
+
+
+def get_movie_all(username):
+    """Check if user exists and return all movies in watchlist"""
+
+    user = model.User.query.filter_by(email=username).first()
+
+    if not user:
+        return "Fail"
+
+    movie_list = []
+
+    for movie in user.movies:
+        movie_list.append(movie.as_dict())
+
+    return movie_list
 
 
 def add_movie(username, movieName, movieImdbId, movieRating):
