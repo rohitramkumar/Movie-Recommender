@@ -1,14 +1,4 @@
 angular.module('myApp').service('userService', function($http, $location, $q) {
-    var usersMock = {
-    	'testUser': {
-        	username: 'testUser',
-            password: '1234'
-        },
-        'testUser2': {
-        	username: 'testUser2',
-            password: '12345'
-        }
-    };
 
 	var userService = {
     	user: undefined,
@@ -40,6 +30,9 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
         },
         logout: function() {
         	userService.user = undefined;
+        },
+        getuser: function() {
+            return userService.user;
         },
         signup: function(userCredentials) {
             // Send user info to signup endpoint
