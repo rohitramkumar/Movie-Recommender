@@ -1,14 +1,17 @@
 <h1> Profile </h1>
 
 <p>This page is only visible after login. Hello {{user.email}}!</p>
-<p> Test: {{ user }} </p>
 <h2> Your Movie Watchlist </h2>
 <hr>
 <div class="container">
     <div class="row">
+        <div ng-if="userMovies.length == 0">
+            You do not have any movies in your watchlist :(
+        </div>
+
         <div data-ng-repeat="movie in userMovies" div="col-md-5">
-            Movie Name: {{ movie.name }}
-            Your Rating: {{ movie.user_rating }}
+            <b>Movie Name</b>: {{ movie.name }} <br>
+            <b>User Rating</b>: {{ movie.user_rating }}
             <hr>
         </div>
     </div>
