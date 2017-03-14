@@ -68,12 +68,9 @@ def add_movie():
 def get_all_movies():
     """This function triggers an API call to add a new
     movie into the watchlist for a user"""
-    username = request.data
-    print 'I got the raw JSON: ' + request.data
-    print 'I got the JSON parsed data: ' + username
+    user_id = request.data
 
-    return "Test Resp Obj"
-    # return api.add_movie(username, movieName, movieImdbID, movieRating)
+    return jsonify(api.get_movie_all(user_id))
 
 
 @app.route('/webhook', methods=['POST'])

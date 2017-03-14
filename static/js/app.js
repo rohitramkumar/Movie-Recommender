@@ -124,8 +124,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             } else if (resp == "Fail") {
                                 console.log('Could not retrieve movies')
                             } else {
-                                console.log($scope.user)
-                                $state.go('root.home');
+                                console.log(resp)
+                                // $scope.userMovies = resp;
                             }
 
                         });
