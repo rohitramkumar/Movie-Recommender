@@ -3,7 +3,7 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 # from flask_marshmallow import Marshmallow
 
-from utils import APIAI_KEY, MovieDBApiClient, LearningAgentClient, MOVIE_DISCOVERY_URL, spellCheck, createUser, login
+import utils
 import apiai
 import os
 import requests
@@ -30,7 +30,7 @@ def login():
     user_detail = json.loads(request.data)
     username = user_detail.get("username")
     password = user_detail.get("password")
-    return jsonify(login(username, password))
+    return jsonify(utils.login(username, password))
 
 
 @app.route("/api/signup/", methods=['POST'])
@@ -40,7 +40,7 @@ def signup():
     last_name = new_user.get("lastname")
     username = new_user.get("username")
     password = new_user.get("password")
-    return createUser(username, password, first_name, last_name)
+    return utils.createUser(username, password, first_name, last_name)
 
 
 @app.route("/api/add_movie/", methods=['POST'])
@@ -71,8 +71,8 @@ def getFullMovieDetails():
     """ Get the imdb id, cast, title, and picture for each of the movies given.
     Also query the learning agent for the history-based recommendation."""
     req = request.get_json(force=True)
-    ai = apiai.ApiAI(APIAI_KEY)
-    movieDBClient = MovieDBApiClient(0, 0)
+    ai = apiai.ApiAI(utils.APIAI_KEY)
+    movieDBClient = utils.MovieDBApiClient(0, 0)
     eventRequest = ai.event_request(apiai.events.Event("get-full-movie-data-event"))
     eventResponse = eventRequest.getresponse()
     apiaiData = json.loads(eventResponse.read())
@@ -107,8 +107,8 @@ def processFilteringRequest(req):
     userSpecifiedData = req.get('result').get('contexts')[0].get('parameters')
     maxResults = int(userSpecifiedData.get('max-results'))
     totalResultsGiven = int(userSpecifiedData.get('total-results-given'))
-    client = MovieDBApiClient(maxResults, totalResultsGiven)
-    finalDiscoveryURL = MOVIE_DISCOVERY_URL
+    client = utils.MovieDBApiClient(maxResults, totalResultsGiven)
+    finalDiscoveryURL = utils.MOVIE_DISCOVERY_URL
     # Get all filters specified by user on api.ai.
     userSpecifiedGenres = userSpecifiedData.get('genre')
     userSpecifiedCastFirstName = userSpecifiedData.get('cast-first-name')
@@ -120,7 +120,7 @@ def processFilteringRequest(req):
     else:
         userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(
             userSpecifiedCastFirstName, userSpecifiedCastLastName)]
-        userSpecifiedCast = map(spellCheck, userSpecifiedCast)
+        userSpecifiedCast = map(utils.spellCheck, userSpecifiedCast)
     userSpecifiedRating = userSpecifiedData.get('rating')
     # Get movie database information using previously instantiated API client.
     genreIds = client.getGenresIds(userSpecifiedGenres)
@@ -137,9 +137,9 @@ def processFilteringRequest(req):
 def processSimilarityRequest(req):
     """The function deals with processing a single movie provided by the user and
     returning a list of movies which are similar."""
-    client = MovieDBApiClient()
+    client = utils.MovieDBApiClient()
     benchmarkMovie = req.get('result').get('contexts')[0].get('parameters').get('benchmark')
-    benchmarkMovie = spellCheck(benchmarkMovie)
+    benchmarkMovie = utils.spellCheck(benchmarkMovie)
     similarMovies = client.getSimilarMovies(benchmarkMovie)
     return prepareResponse(similarMovies, "gathered-benchmark-movie")
 
