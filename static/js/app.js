@@ -20,7 +20,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 	'': {
                     	templateUrl: 'static/partials/layout.html',
                         controller: function($scope, $rootScope, $state, $q, userService) {
-                            $rootScope.add_movie = function() {
+                            $rootScope.add_movie = function(cred) {
                                 userService.add_movie(cred).then(function(response) {
                                     console.log("pls work");
                                     if(response == "Success") {
