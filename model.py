@@ -19,8 +19,6 @@ user_movies_tbl = Table('user_movies', Base.metadata,
                         )
 
 # Models
-
-
 class User(Base):
     __tablename__ = "users"
 
@@ -29,7 +27,6 @@ class User(Base):
     password = Column(String(128))
     first_name = Column(String(64), nullable=True, default="Bob")
     last_name = Column(String(64), nullable=True, default="Bradley")
-
     movies = relationship("Movie", secondary=user_movies_tbl,
                           backref="users", lazy="dynamic")
 
@@ -68,7 +65,6 @@ class Movie(Base):
 
 def create_tables():
     Base.metadata.create_all(engine)
-
 
 def main():
     create_tables()
