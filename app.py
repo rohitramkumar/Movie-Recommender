@@ -58,7 +58,7 @@ def add_movie():
 
     username = movie_detail.get("username")
     movieName = movie_detail.get("movieName")
-    movieImdbId = movie_detail.get("movieImdbId")
+    movieImdbID = movie_detail.get("movieImdbId")
     movieRating = movie_detail.get("movieRating")
 
     return api.add_movie(username, movieName, movieImdbID, movieRating)
