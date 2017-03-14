@@ -39,15 +39,20 @@ def signup():
     password = new_user.get("password")
     return createUser(username, password, first_name, last_name)
 
-@app.route("/api/getMovieData", methods=['POST'])
-def getMovieData():
-    """ Get the imdb id, cast, title, and picture for each of the movies given."""
+@app.route("/api/getFullMovieDetails", methods=['POST'])
+def getFullMovieDetails():
+    """ Get the imdb id, cast, title, and picture for each of the movies given.
+    Also query the learning agent for the history-based recommendation."""
+    req = request.get_json(force=True)
     ai = apiai.ApiAI(APIAI_KEY)
-    request = ai.event_request(apiai.events.Event("get-full-movie-data-event"))
-    response = request.getresponse()
-    apiaiData = json.loads(response.read())
+    movieDBClient = MovieDBApiClient(0,0)
+    eventRequest = ai.event_request(apiai.events.Event("get-full-movie-data-event"))
+    eventResponse = eventRequest.getresponse()
+    apiaiData = json.loads(eventResponse.read())
     contextData = apiaiData['result']['contexts'][0]['parameters']
     movieList = contextData['returned-movie-list']
+    fullMovieDetails = movieDBClient.getMovieDetails(movieList)
+    return jsonify(fullMovieDetails)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():

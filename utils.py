@@ -83,7 +83,7 @@ class MovieDBApiClient:
       self.maxResults = maxResults if maxResults > 0 and maxResults < MAX_RESULTS else MAX_RESULTS
       self.offset = offset
 
-  def getFullMovieDetails(self, movieList):
+  def getMovieDetails(self, movieList):
     """Gets the imdb id, cast, title, overview and picture for each movie."""
     movieIds = []
     for movie in movieList:
