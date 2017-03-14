@@ -76,8 +76,8 @@ def getFullMovieDetails():
 
     print 'I was entered'
 
-    # req = request.get_json(force=True)
-    # print req
+    req = request.get_json(force=True)
+    print req
 
     ai = apiai.ApiAI(utils.APIAI_KEY)
     movieDBClient = utils.MovieDBApiClient(0, 0)
