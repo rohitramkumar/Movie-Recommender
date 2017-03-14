@@ -117,7 +117,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     	$rootScope.user = auth;
                         console.log("I hit the profile controller!");
 
-                        userService.getUserMovies().then(function(resp)) {
+                        userService.getUserMovies().then(function(resp) {
 
                             if (angular.isUndefined(resp)) {
                                 console.log('Could not retrieve movies')
@@ -128,7 +128,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $state.go('root.home');
                             }
 
-                        };
+                        });
                     }
                 }
             }
