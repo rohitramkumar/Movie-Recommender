@@ -70,10 +70,11 @@ def get_all_movies():
 def getFullMovieDetails():
     """ Get the imdb id, cast, title, and picture for each of the movies given.
     Also query the learning agent for the history-based recommendation."""
+
     print 'I was entered'
 
-    req = request.get_json(force=True)
-    print req
+    # req = request.get_json(force=True)
+    # print req
 
     ai = apiai.ApiAI(utils.APIAI_KEY)
     movieDBClient = utils.MovieDBApiClient(0, 0)
