@@ -44,20 +44,21 @@ def login(username, password):
 
 def add_movie(username, movieName, movieImdbId, movieRating):
     """Check if user exists; if exists, authenticate pw and return success msg"""
-    print 'Hey Now!'
+
     user = model.User.query.filter_by(email=username).first()
 
     if not user:
         return "Fail: Cannot find user!"
 
-    movieItem = model.Movie(name=movieName, movie_imdb_id=movieImdbId, user_rating=movieRating)
+    newMovie = model.Movie(name=movieName, movie_imdb_id=movieImdbId, user_rating=movieRating)
 
     print 'here in addMovie()'
 
-    for movieTemp in user.movies:
-        print movieTemp
+    for movie in user.movies:
+        if movie.movie_imdb_id == newMovie.movie_imdb_id:
+            return "Movie already present in watchlist!"
 
-    user.movies.append(movieItem)
+    user.movies.append(newMovie)
     model.session.commit()
 
     return "Success"
