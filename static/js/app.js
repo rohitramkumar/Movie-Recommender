@@ -19,7 +19,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 views: {
                 	'': {
                     	templateUrl: 'static/partials/layout.html',
-                        controller: function($scope, $rootScope, $state, $q, userService) {
+                        controller: function($scope, $rootScope, $state, $q, user, userService) {
                             $rootScope.user = user;
                             $rootScope.login = function() {
                                 $state.go('login');
