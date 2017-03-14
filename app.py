@@ -27,6 +27,9 @@ def index():
 
 @app.route("/api/login/", methods=['POST'])
 def login():
+
+    print 'in login'
+
     user_detail = json.loads(request.data)
     username = user_detail.get("username")
     password = user_detail.get("password")
@@ -84,6 +87,7 @@ def getFullMovieDetails():
     contextData = apiaiData['result']['contexts'][0]['parameters']
     movieList = contextData['returned-movie-list']
     fullMovieDetails = movieDBClient.getMovieDetails(movieList)
+
     print contextData
     print fullMovieDetails
     print 'Exiting'
