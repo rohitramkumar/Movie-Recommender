@@ -69,7 +69,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         templateUrl: 'static/partials/partial-movie-detail.html',
                         controller: function($scope, $rootScope, userService) {
                             console.log("I was hit!");
-                            
+
                                                     userService.getMovieData().then(function(resp) {
 
                                                         if (angular.isUndefined(resp)) {
@@ -77,6 +77,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                                         } else if (resp == "Fail") {
                                                             console.log('Could not retrieve movies')
                                                         } else {
+                                                            
                                                             console.log(resp)
                                                             $scope.movies = resp;
                                                         }
