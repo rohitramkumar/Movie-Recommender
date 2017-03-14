@@ -58,7 +58,7 @@ def add_movie(username, movieName, movieImdbId, movieRating):
         print movie
         print 'now imdb ID'
         print movie.movie_imdb_id
-        if movie.movie_imdb_id == movieImdbID:
+        if movie.movie_imdb_id == movieImdbId:
             return "Movie already present in watchlist!"
 
     user.movies.append(newMovie)
