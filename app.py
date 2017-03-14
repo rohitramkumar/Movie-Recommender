@@ -89,8 +89,6 @@ def getFullMovieDetails():
     fullMovieDetails = movieDBClient.getMovieDetails(movieList)
 
     """
-    print contextData
-    print fullMovieDetails
     print 'Exiting'
     return "Hello"
 
