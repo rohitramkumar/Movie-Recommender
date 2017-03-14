@@ -71,6 +71,8 @@ def getFullMovieDetails():
     """ Get the imdb id, cast, title, and picture for each of the movies given.
     Also query the learning agent for the history-based recommendation."""
     req = request.get_json(force=True)
+    print req
+
     ai = apiai.ApiAI(utils.APIAI_KEY)
     movieDBClient = utils.MovieDBApiClient(0, 0)
     eventRequest = ai.event_request(apiai.events.Event("get-full-movie-data-event"))
@@ -79,6 +81,10 @@ def getFullMovieDetails():
     contextData = apiaiData['result']['contexts'][0]['parameters']
     movieList = contextData['returned-movie-list']
     fullMovieDetails = movieDBClient.getMovieDetails(movieList)
+    print contextData
+    print fullMovieDetails
+    print 'Exiting'
+
     return jsonify(fullMovieDetails)
 
 

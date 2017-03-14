@@ -68,7 +68,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     'movie_detail': {
                         templateUrl: 'static/partials/partial-movie-detail.html',
                         controller: function($scope, $rootScope, userService) {
-
+                            console.log("I was hit!");
+                            
                                                     userService.getMovieData().then(function(resp) {
 
                                                         if (angular.isUndefined(resp)) {
