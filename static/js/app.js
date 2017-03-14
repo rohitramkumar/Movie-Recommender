@@ -134,7 +134,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         }
                         else {
                             alert('Thanks for logging in!')
-
+                            console.log($scope.user)
                         	$state.go('root.home');
                         }
                     });
