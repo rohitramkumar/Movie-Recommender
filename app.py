@@ -70,7 +70,6 @@ def webhook():
     r.headers['Content-Type'] = 'application/json'
     return r
 
-
 def processFilteringRequest(req):
     """This function deals with processing the movie filters provided by a user
     and feeding these filters into api calls for a movie database. The filtered
