@@ -124,7 +124,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     templateUrl: 'static/partials/partial-profile.html',
                     controller: function($scope, $rootScope, auth, userService) {
                     	$rootScope.user = auth;
-                        console.log("I hit the profile controller!");
 
                         userService.getUserMovies().then(function(resp) {
 

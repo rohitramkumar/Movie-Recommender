@@ -106,6 +106,7 @@ def webhook():
         res = processSimilarityRequest(req)
     r = make_response(json.dumps(res))
     r.headers['Content-Type'] = 'application/json'
+
     return r
 
 
