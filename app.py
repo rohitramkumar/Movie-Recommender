@@ -17,7 +17,6 @@ app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
 Bootstrap(app)
 db = SQLAlchemy(app)
-# ma = Marshmallow(app)
 
 
 @app.route("/")
@@ -27,8 +26,6 @@ def index():
 
 @app.route("/api/login/", methods=['POST'])
 def login():
-
-    print 'in login'
 
     user_detail = json.loads(request.data)
     username = user_detail.get("username")
@@ -67,29 +64,6 @@ def get_all_movies():
     user_id = request.data
 
     return jsonify(utils.get_movie_all(user_id))
-
-
-@app.route("/api/getFullMovieDetails/", methods=['POST'])
-def getFullMovieDetails():
-    """ Get the imdb id, cast, title, and picture for each of the movies given.
-    Also query the learning agent for the history-based recommendation."""
-
-    print 'I was entered'
-
-    req = request.get_json(force=True)
-    print req
-
-    ai = apiai.ApiAI(utils.APIAI_KEY)
-    movieDBClient = utils.MovieDBApiClient(0, 0)
-    eventRequest = ai.event_request(apiai.events.Event("get-full-movie-data-event"))
-    eventResponse = eventRequest.getresponse()
-    apiaiData = json.loads(eventResponse.read())
-    contextData = apiaiData['result']['contexts'][0]['parameters']
-    movieList = contextData['returned-movie-list']
-    fullMovieDetails = movieDBClient.getMovieDetails(movieList)
-
-    print 'Exiting'
-    return jsonify(fullMovieDetails)
 
 
 @app.route('/webhook', methods=['POST'])
@@ -142,7 +116,8 @@ def processFilteringRequest(req):
     finalDiscoveryURL = finalDiscoveryURL + \
         client.encodeURLKeyValue(('certification', userSpecifiedRating))
     movies = client.getDiscoveredMovies(finalDiscoveryURL)
-    return prepareResponse(movies, "gathered-filters", maxResults + totalResultsGiven)
+    movieDetails = client.getMovieDetails(movies)
+    return prepareResponse(movies, movieDetails, "gathered-filters", maxResults + totalResultsGiven)
 
 
 def processSimilarityRequest(req):
@@ -152,10 +127,11 @@ def processSimilarityRequest(req):
     benchmarkMovie = req.get('result').get('contexts')[0].get('parameters').get('benchmark')
     benchmarkMovie = utils.spellCheck(benchmarkMovie)
     similarMovies = client.getSimilarMovies(benchmarkMovie)
-    return prepareResponse(similarMovies, "gathered-benchmark-movie")
+    movieDetails = client.getMovieDetails(similarMovies)
+    return prepareResponse(similarMovies, movieDetails, "gathered-benchmark-movie")
 
 
-def prepareResponse(movies, outboundContextName, outboundContextParam):
+def prepareResponse(movies, movieDetails, outboundContextName, outboundContextParam):
     """Helper function that prepares the return object we send to the user
      given a list of movies."""
     if len(movies) > 0:
@@ -167,9 +143,10 @@ def prepareResponse(movies, outboundContextName, outboundContextParam):
       "displayText": speech,
       "source": "movie-recommendation-service",
       "contextOut": [
-          {"name": outboundContextName, "parameters": {"total-results-given":
-           outboundContextParam, "returned-movie-list": movies}, "lifespan": 1}
-      ]
+          {"name": outboundContextName, "parameters":
+              {"total-results-given": outboundContextParam}, "lifespan": 1}
+      ],
+      "data": movieDetails
     }
 
 if __name__ == '__main__':
