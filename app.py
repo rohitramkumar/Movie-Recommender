@@ -39,21 +39,6 @@ def signup():
     password = new_user.get("password")
     return createUser(username, password, first_name, last_name)
 
-@app.route("/api/getFullMovieDetails", methods=['POST'])
-def getFullMovieDetails():
-    """ Get the imdb id, cast, title, and picture for each of the movies given.
-    Also query the learning agent for the history-based recommendation."""
-    req = request.get_json(force=True)
-    ai = apiai.ApiAI(APIAI_KEY)
-    movieDBClient = MovieDBApiClient(0,0)
-    eventRequest = ai.event_request(apiai.events.Event("get-full-movie-data-event"))
-    eventResponse = eventRequest.getresponse()
-    apiaiData = json.loads(eventResponse.read())
-    contextData = apiaiData['result']['contexts'][0]['parameters']
-    movieList = contextData['returned-movie-list']
-    fullMovieDetails = movieDBClient.getMovieDetails(movieList)
-    return jsonify(fullMovieDetails)
-
 @app.route('/webhook', methods=['POST'])
 def webhook():
     """This Flask route receives all requests from API.ai and processes these
@@ -102,8 +87,8 @@ def processFilteringRequest(req):
     finalDiscoveryURL = finalDiscoveryURL + \
         client.encodeURLKeyValue(('certification', userSpecifiedRating))
     movies = client.getDiscoveredMovies(finalDiscoveryURL)
-    return prepareResponse(movies, "gathered-filters", maxResults + totalResultsGiven)
-
+    movieDetails = client.getMovieDetails(movies)
+    return prepareResponse(movies, movieDetails, "gathered-filters", maxResults + totalResultsGiven)
 
 def processSimilarityRequest(req):
     """The function deals with processing a single movie provided by the user and
@@ -112,10 +97,10 @@ def processSimilarityRequest(req):
     benchmarkMovie = req.get('result').get('contexts')[0].get('parameters').get('benchmark')
     benchmarkMovie = spellCheck(benchmarkMovie)
     similarMovies = client.getSimilarMovies(benchmarkMovie)
-    return prepareResponse(similarMovies, "gathered-benchmark-movie")
+    movieDetails = client.getMovieDetails(similarMovies)
+    return prepareResponse(similarMovies, movieDetails, "gathered-benchmark-movie")
 
-
-def prepareResponse(movies, outboundContextName, outboundContextParam):
+def prepareResponse(movies, movieDetails, outboundContextName, outboundContextParam):
     """Helper function that prepares the return object we send to the user
      given a list of movies."""
     if len(movies) > 0:
@@ -127,8 +112,9 @@ def prepareResponse(movies, outboundContextName, outboundContextParam):
       "displayText": speech,
       "source": "movie-recommendation-service",
       "contextOut" : [
-          {"name" : outboundContextName, "parameters" : {"total-results-given" : outboundContextParam, "returned-movie-list" : movies}, "lifespan" : 1 }
-      ]
+          {"name" : outboundContextName, "parameters" : {"total-results-given" : outboundContextParam}, "lifespan" : 1 }
+      ],
+      "data" : movieDetails
     }
 
 if __name__ == '__main__':
