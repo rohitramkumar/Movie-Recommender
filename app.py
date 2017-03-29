@@ -99,7 +99,6 @@ def processFilteringRequest(req):
     movies = client.getDiscoveredMovies(finalDiscoveryURL)
     return prepareResponse(movies)
 
-
 def processSimilarityRequest(req):
     """The function deals with processing a single movie provided by the user and
     returning a list of movies which are similar."""
@@ -108,7 +107,6 @@ def processSimilarityRequest(req):
     benchmarkMovie = spellCheck(benchmarkMovie)
     similarMovies = client.getSimilarMovies(benchmarkMovie)
     return prepareResponse(similarMovies)
-
 
 def prepareResponse(movies):
     """Helper function that prepares the return object we send to the user
@@ -121,6 +119,7 @@ def prepareResponse(movies):
         "speech": speech,
       "displayText": speech,      "source": "movie-recommendation-service"
     }
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=8888, host='0.0.0.0')
