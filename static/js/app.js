@@ -61,13 +61,43 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         controller: function ($scope, $rootScope) {
                             angular.element(document).ready(function () {
                                 console.log("Here I am!");
+                                var accessToken = "d9854338952446d589f83e6a575e0ba4";
+                                var baseUrl = "https://api.api.ai/v1/";
+
                                 document.getElementById('response').value = 'Hello This is From App.js';
                                 $("#input").keypress(function(event) {
                                     if (event.which == 13) {
-                                        event.preventDefault();
-                                        document.getElementById('response').value = 'You pressed enter!';
+                                        if (event.originalEvent.defaultPrevented) return;
+
+                                        send();
                                     }
                                 });
+
+                                function send() {
+                                    var text = $("#input").val();
+                                    $.ajax({
+                                        type: "POST",
+                                        url: baseUrl + "query?v=20150910",
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "json",
+                                        headers: {
+                                            "Authorization": "Bearer " + accessToken
+                                        },
+                                        data: JSON.stringify({ query: text, lang: "en", sessionId: "somerandomthing" }),
+                                        success: function(data) {
+                                            setResponse(JSON.stringify(data, undefined, 2));
+                                        },
+                                        error: function() {
+                                            setResponse("Internal Server Error");
+                                        }
+                                    });
+                                    setResponse("Loading...");
+                                }
+
+                                function setResponse(val) {
+                                    $("#response").text(val);
+                                }
+
                             });
                         }
                     }
