@@ -35,6 +35,7 @@
     <script type="text/javascript">
     		var accessToken = "d9854338952446d589f83e6a575e0ba4";
     		var baseUrl = "https://api.api.ai/v1/";
+
     		$(document).ready(function() {
     			$("#input").keypress(function(event) {
     				if (event.which == 13) {
@@ -88,6 +89,7 @@
     		function updateRec() {
     			$("#rec").text(recognition ? "Stop" : "Speak");
     		}
+
     		function send() {
     			var text = $("#input").val();
     			$.ajax({
@@ -108,6 +110,7 @@
     			});
     			setResponse("Loading...");
     		}
+
     		function setResponse(val) {
     			$("#response").text(val);
     		}

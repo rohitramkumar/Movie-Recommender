@@ -57,7 +57,12 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 url: '/',
                 views: {
                     'content': {
-                        templateUrl: 'static/partials/partial-home.html'
+                        templateUrl: 'static/partials/partial-home.html',
+                        controller: function ($scope, $rootScope) {
+                            angular.element(document).ready(function () {
+                                document.getElementById('response').text = 'Hello This is From App.js';
+                            });
+                        }
                     }
                 }
             })
@@ -68,6 +73,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     'movie_detail': {
                         templateUrl: 'static/partials/partial-movie-detail.html',
                         controller: function($scope, $rootScope, userService) {
+
                             userService.getMovieData().then(function(resp) {
                                 if (angular.isUndefined(resp)) {
                                     console.log('Could not retrieve movies')
