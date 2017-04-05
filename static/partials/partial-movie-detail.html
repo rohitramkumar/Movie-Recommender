@@ -1,18 +1,20 @@
 <div style="float: right">
     <div class="panel panel-default">
         <!-- Default panel contents -->
-        <div class="panel-heading">Movie Title</div>
+        <div class="panel-heading">{{movies[0].Movie.Title}}</div>
         <div class="panel-body" style="min-width: 500px; min-height: 300px">
-            <p>Overview</p>
+            <p><b>Overview</b></p>
+            <p>{{movies[0].Movie.Overview}}</p>
         </div>
 
         <!-- List group -->
         <ul class="list-group">
-            <li class="list-group-item">Top Billed Cast:</li>
-            <li class="list-group-item">Genres: </li>
-            <li class="list-group-item">Theatrical Release Year:</li>
-            <li class="list-group-item">Ratings:</li>
-            <li class="list-group-item">Other Recommendations:</li>
+            <li class="list-group-item"><b>Top Billed Cast:</b> {{movies[0].Movie.Top_Billed_Cast}}</li>
+            <li class="list-group-item"><b>Genres:</b> {{movies[0].Movie.Genres}} </li>
+            <li class="list-group-item"><b>Theatrical Release Year:</b> {{movies[0].Movie.Theatrical_Release_Year}}</li>
+            <li class="list-group-item"><b>Ratings:</b></li>
+            <li class="list-group-item"><b>Other Recommendations:</b></li>
+            <li class="list-group-item"><button type="button" class="btn btn-default" ng-click="movies[0] = movies[1]">Next Result</button></li>
         </ul>
     </div>
 </div>
