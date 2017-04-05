@@ -100,7 +100,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             }
 
                             function setResponse(val) {
-                                $("#response").text(val);
+                                $("#response").val(val);
+                                console.log("Should have changed resp to");
+                                console.log(val);
                             }
 
                         }
