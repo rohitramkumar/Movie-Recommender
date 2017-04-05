@@ -62,15 +62,12 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             angular.element(document).ready(function () {
                                 console.log("Here I am!");
                                 document.getElementById('response').value = 'Hello This is From App.js';
-                                var inputElem = document.getElementById('input');
-                                inputElem.keypress(function(event) {
-                    				if (event.which == 13) {
+                                $("#input").keypress(function(event) {
+                                    if (event.which == 13) {
                                         event.preventDefault();
                                         document.getElementById('response').value = 'You pressed enter!';
-
-                    					//send();
-                    				}
-                    			});
+                                    }
+                                });
                             });
                         }
                     }
