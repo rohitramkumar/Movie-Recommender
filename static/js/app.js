@@ -97,7 +97,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             }
 
                             function setResponse(val) {
-                                $("#response").val(val.fulfillment.speech);
+                                var respObject = JSON.parse(val)
+                                $("#response").val(respObject.fulfillment.speech);
                                 console.log(val);
                             }
 
