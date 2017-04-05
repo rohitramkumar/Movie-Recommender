@@ -60,6 +60,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         templateUrl: 'static/partials/partial-home.html',
                         controller: function ($scope, $rootScope) {
                             angular.element(document).ready(function () {
+                                console.log("Here I am!");
                                 document.getElementById('response').text = 'Hello This is From App.js';
                             });
                         }
