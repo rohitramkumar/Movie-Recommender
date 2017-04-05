@@ -70,15 +70,12 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     if (event.which == 13) {
                                         //if (event.originalEvent.defaultPrevented) return;
                                         event.preventDefault();
-                                        console.log('Something!?');
                                         send();
-                                        console.log("called send!");
                                     }
                                 });
                             });
 
                             function send() {
-                                console.log("Inside send!");
                                 var text = $("#input").val();
                                 $.ajax({
                                     type: "POST",
@@ -100,8 +97,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             }
 
                             function setResponse(val) {
-                                $("#response").val(val);
-                                console.log("Should have changed resp to");
+                                $("#response").val(val.fulfillment.speech);
                                 console.log(val);
                             }
 
