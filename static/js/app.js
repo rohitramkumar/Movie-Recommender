@@ -71,11 +71,13 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                         if (event.originalEvent.defaultPrevented) return;
 
                                         send();
+                                        console.log("called send!");
                                     }
                                 });
                             });
 
                             function send() {
+                                console.log("Inside send!");
                                 var text = $("#input").val();
                                 $.ajax({
                                     type: "POST",
