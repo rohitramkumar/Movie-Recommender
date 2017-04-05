@@ -68,8 +68,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 document.getElementById('response').value = 'Hello This is From App.js';
                                 $("#input").keypress(function(event) {
                                     if (event.which == 13) {
-                                        if (event.originalEvent.defaultPrevented) return;
-
+                                        //if (event.originalEvent.defaultPrevented) return;
+                                        event.preventDefault();
+                                        console.log('Something!?');
                                         send();
                                         console.log("called send!");
                                     }
