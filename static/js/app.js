@@ -61,7 +61,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         controller: function ($scope, $rootScope) {
                             angular.element(document).ready(function () {
                                 console.log("Here I am!");
-                                document.getElementById('response').text = 'Hello This is From App.js';
+                                document.getElementById('response').value = 'Hello This is From App.js';
                             });
                         }
                     }
