@@ -65,14 +65,17 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             angular.element(document).ready(function () {
                                 console.log("Here I am!");
 
-                                document.getElementById('response').value = 'Hello This is From App.js';
+                                document.getElementById('response').value = 'Hello! Ask our agent something to get started!!';
                                 $("#input").keypress(function(event) {
                                     if (event.which == 13) {
-                                        //if (event.originalEvent.defaultPrevented) return;
                                         event.preventDefault();
                                         send();
                                     }
                                 });
+
+                    			$("#rec").click(function(event) {
+                    				send();
+                    			});
                             });
 
                             function send() {
@@ -85,7 +88,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     headers: {
                                         "Authorization": "Bearer " + accessToken
                                     },
-                                    data: JSON.stringify({ query: text, lang: "en", sessionId: "somerandomthing" }),
+                                    data: JSON.stringify({ query: text, lang: "en", sessionId: "a_session" }),
                                     success: function(data) {
                                         setResponse(JSON.stringify(data, undefined, 2));
                                     },
@@ -98,10 +101,10 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                             function setResponse(val) {
                                 var respObject = JSON.parse(val);
-                                console.log(respObject);
+                                //console.log(respObject);
                                 $("#response").val(respObject.result.fulfillment.speech);
+                                $("#input").val('');
                             }
-
                         }
                     }
                 }
