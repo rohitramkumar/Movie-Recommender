@@ -14,18 +14,17 @@
             <li class="list-group-item">Ratings:</li>
             <li class="list-group-item">Other Recommendations:</li>
         </ul>
-
-
-        <p ng-if="user">Yo man your username is: {{ user.email }}</p>
-
-        <div ng-if="$parent.user"
-        ><p>Add a movie to your movie watchlist</p>
-        <input type="hidden" ng-model="movieCred.username" ng-init="movieCred.username=user.email"/>
-        <label>Movie Name</label><input ng-model="movieCred.movieName"/>
-        <label>IMDB ID</label><input ng-model="movieCred.movieImdbId"/>
-        <label>Rating</label><input ng-model="movieCred.movieRating"/>
-
-        <button ng-click="add_movie(movieCred)" class="btn btn-primary">Add Movie</button>
     </div>
-    </div>
+    
+    <p ng-if="user">Yo man your username is: {{ user.email }}</p>
+
+    <div ng-if="$parent.user"
+    ><p>Add a movie to your movie watchlist</p>
+    <input type="hidden" ng-model="movieCred.username" ng-init="movieCred.username=user.email"/>
+    <label>Movie Name</label><input ng-model="movieCred.movieName"/>
+    <label>IMDB ID</label><input ng-model="movieCred.movieImdbId"/>
+    <label>Rating</label><input ng-model="movieCred.movieRating"/>
+
+    <button ng-click="add_movie(movieCred)" class="btn btn-primary">Add Movie</button>
+</div>
 </div>
