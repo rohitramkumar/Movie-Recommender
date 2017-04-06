@@ -52,17 +52,27 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             })
 
-            .state('root.home.movie_detail', {
-                url: '/movie_detail',
-                views: {
-                    'movie_detail': {
-                        templateUrl: 'static/partials/partial-movie-detail.html',
-                        controller: function($scope, $rootScope, userService) {
-                            $scope.movies = ['Die Hard', 'Star Wars', 'Toy Story'];
-                        }
+        .state('root.home.movie_detail', {
+            url: '/movie_detail',
+            views: {
+                'movie_detail': {
+                    templateUrl: 'static/partials/partial-movie-detail.html',
+                    controller: function($scope, $rootScope, userService) {
+
+                        userService.getMovieData().then(function(resp) {
+                            if (angular.isUndefined(resp)) {
+                                console.log('Could not retrieve movies')
+                            } else if (resp == "Fail") {
+                                console.log('Could not retrieve movies')
+                            } else {
+                                console.log(resp)
+                                $scope.movies = resp;
+                            }
+                        });
                     }
                 }
-            })
+            }
+        })
 
             .state('root.sign_up', {
             url: '/sign_up',
