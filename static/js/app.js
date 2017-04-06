@@ -122,18 +122,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 views: {
                     'movie_detail': {
                         templateUrl: 'static/partials/partial-movie-detail.html',
-                        controller: function($scope, $rootScope, userService) {
-
-                            userService.getMovieData().then(function(resp) {
-                                if (angular.isUndefined(resp)) {
-                                    console.log('Could not retrieve movies')
-                                } else if (resp == "Fail") {
-                                    console.log('Could not retrieve movies')
-                                } else {
-                                    console.log(resp)
-                                    $scope.movies = resp;
-                                }
-                            });
+                        controller: function($scope, $rootScope) {
+                            console.log("get me the movie array");
                         }
                     }
                 }
