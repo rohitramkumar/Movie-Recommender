@@ -1,11 +1,10 @@
-
 {% extends "base.html" %}
 
 
 {% block body %}
 {{ super() }}
-<div ui-view></div>
-{% endblock %}
+ <div ui-view></div>
+ {% endblock %}
 
 {% block scripts %}
 {{ super() }}
@@ -18,5 +17,6 @@
 
 {% block styles %}
 {{ super() }}
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"></script>
 <link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/ui-darkness/jquery-ui.min.css" rel="stylesheet">
 {% endblock %}

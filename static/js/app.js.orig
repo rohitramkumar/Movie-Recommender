@@ -19,32 +19,22 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 views: {
                 	'': {
                     	templateUrl: 'static/partials/layout.html',
-                        controller: function($scope, $rootScope, $state, $q, user, userService) {
-                            $rootScope.user = user;
+                    },
+                	'header@root': {
+                    	templateUrl: 'static/partials/partial-header.html',
+
+                        controller: function($scope, $rootScope, $state, user, userService) {
+                        	$rootScope.user = user;
                             $rootScope.login = function() {
-                                $state.go('login');
+                            	$state.go('login');
                             };
                             $rootScope.logout = function() {
-                                userService.logout();
+                            	userService.logout();
                                 $state.go('root.home', {}, {reload: true});
                             };
                             $rootScope.signup = function() {
                                 $state.go('sign_up');
                             };
-                            $rootScope.add_movie = function(cred) {
-                                userService.add_movie(cred).then(function(response) {
-                                    if(response == "Success") {
-                                        alert('Succesfuly added movie');
-                                    } else {
-                                        alert(response);
-                                    }
-                                });
-                            };
-                        }
-                    },
-                	'header@root': {
-                    	templateUrl: 'static/partials/partial-header.html',
-                        controller: function($scope, $rootScope, $state, $q, user, userService) {
                         }
                 	},
                     'footer@root': {
@@ -57,52 +47,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 url: '/',
                 views: {
                     'content': {
-                        templateUrl: 'static/partials/partial-home.html',
-                        controller: function ($scope, $rootScope) {
-                            var accessToken = "d9854338952446d589f83e6a575e0ba4";
-                            var baseUrl = "https://api.api.ai/v1/";
-
-                            angular.element(document).ready(function () {
-                                console.log("Here I am!");
-
-                                document.getElementById('response').value = 'Hello This is From App.js';
-                                $("#input").keypress(function(event) {
-                                    if (event.which == 13) {
-                                        //if (event.originalEvent.defaultPrevented) return;
-                                        event.preventDefault();
-                                        send();
-                                    }
-                                });
-                            });
-
-                            function send() {
-                                var text = $("#input").val();
-                                $.ajax({
-                                    type: "POST",
-                                    url: baseUrl + "query?v=20150910",
-                                    contentType: "application/json; charset=utf-8",
-                                    dataType: "json",
-                                    headers: {
-                                        "Authorization": "Bearer " + accessToken
-                                    },
-                                    data: JSON.stringify({ query: text, lang: "en", sessionId: "somerandomthing" }),
-                                    success: function(data) {
-                                        setResponse(JSON.stringify(data, undefined, 2));
-                                    },
-                                    error: function() {
-                                        setResponse("Internal Server Error");
-                                    }
-                                });
-                                setResponse("Loading...");
-                            }
-
-                            function setResponse(val) {
-                                var respObject = JSON.parse(val);
-                                console.log(respObject);
-                                $("#response").val(respObject.result.fulfillment.speech);
-                            }
-
-                        }
+                        templateUrl: 'static/partials/partial-home.html'
                     }
                 }
             })
@@ -113,17 +58,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     'movie_detail': {
                         templateUrl: 'static/partials/partial-movie-detail.html',
                         controller: function($scope, $rootScope, userService) {
-
-                            userService.getMovieData().then(function(resp) {
-                                if (angular.isUndefined(resp)) {
-                                    console.log('Could not retrieve movies')
-                                } else if (resp == "Fail") {
-                                    console.log('Could not retrieve movies')
-                                } else {
-                                    console.log(resp)
-                                    $scope.movies = resp;
-                                }
-                            });
+                            $scope.movies = ['Die Hard', 'Star Wars', 'Toy Story'];
                         }
                     }
                 }
@@ -154,7 +89,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     }*/
 
                    $timeout(function() {
-                        if (angular.isUndefined(userService.user) ) {
+                        if ( angular.isUndefined(userService.user) ) {
                             return deferred.reject({redirectTo: 'login'});
                         }
                         else {
@@ -168,20 +103,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             views: {
                 'content': {
                     templateUrl: 'static/partials/partial-profile.html',
-                    controller: function($scope, $rootScope, auth, userService) {
+                    controller: function($scope, $rootScope, auth) {
                     	$rootScope.user = auth;
-
-                        userService.getUserMovies().then(function(resp) {
-
-                            if (angular.isUndefined(resp)) {
-                                console.log('Could not retrieve movies')
-                            } else if (resp == "Fail") {
-                                console.log('Could not retrieve movies')
-                            } else {
-                                console.log(resp)
-                                $scope.userMovies = resp;
-                            }
-                        });
                     }
                 }
             }
@@ -192,16 +115,24 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             templateUrl: 'static/partials/partial-login.html',
             controller: function($scope, $state, $q, userService) {
             	$scope.login = function(cred) {
+                    console.log("Clicky happended");
                 	userService.login(cred).then(function(resp) {
+                        console.log("Got a response");
+                        console.log(resp);
 
                         if (angular.isUndefined(resp)) {
+                            console.log("Here");
+
                         	alert('username or password incorrect.')
                         } else if (resp == "Fail") {
-                            alert('Username or password incorrect.')
+                            console.log("Failing");
+
+                            alert('username or password incorrect.')
                         }
                         else {
+                            console.log("Logged in app js");
                             alert('Thanks for logging in!')
-                            console.log($scope.user)
+
                         	$state.go('root.home');
                         }
                     });

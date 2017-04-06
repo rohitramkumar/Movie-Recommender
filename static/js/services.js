@@ -1,14 +1,4 @@
 angular.module('myApp').service('userService', function($http, $location, $q) {
-    var usersMock = {
-    	'testUser': {
-        	username: 'testUser',
-            password: '1234'
-        },
-        'testUser2': {
-        	username: 'testUser2',
-            password: '12345'
-        }
-    };
 
 	var userService = {
     	user: undefined,
@@ -30,10 +20,6 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
 
                 def.resolve(userObj);
             });
-            /*var user = usersMock[userCredentials.username]
-            userService.user = ( user && ( user.password == userCredentials.password ) ) ?
-            	user : undefined;
-            return user;*/
 
             return def.promise;
 
@@ -54,8 +40,51 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             });
 
             return def.promise;
+        },
+        add_movie: function(userCredentials) {
+
+            var def = $q.defer();
+
+            $http({
+                url: "/api/add_movie/",
+                method: "POST",
+                data: userCredentials
+            }).success(function (response) {
+                    def.resolve(response);
+            });
+
+            return def.promise;
+        },
+        getUserMovies: function() {
+
+            var def = $q.defer();
+
+            $http({
+                url: "/api/get_movie_all/",
+                method: "POST",
+                data: userService.user.email
+            }).success(function (response) {
+                    def.resolve(response);
+            });
+
+            return def.promise;
+        },
+        getMovieData: function() {
+
+            var def = $q.defer();
+
+            $http({
+                url: "/api/getFullMovieDetails/",
+                method: "POST",
+                data: userService.user.email
+            }).success(function (response) {
+                    def.resolve(response);
+            });
+
+            return def.promise;
         }
     }
+
 
     return userService;
 })

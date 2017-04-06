@@ -1,0 +1,9 @@
+{% extends "bootstrap/base.html" %}
+
+{% block body_attribs %} ng-app="myApp" {% endblock body_attribs %}
+{% block body %}
+
+{% block scripts %}
+{{ super() }}
+{% endblock scripts %}
+{% endblock body %}
