@@ -101,8 +101,15 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                             function setResponse(val) {
                                 var respObject = JSON.parse(val);
+                                var respStr = respObject.result.fulfillment.speech;
                                 //console.log(respObject);
-                                $("#response").val(respObject.result.fulfillment.speech);
+                                $("#response").val(respStr);
+
+                                if (respStr.includes("I found you the following movies")) {
+                                    console.log("Display movie details!!");
+                                    console.log(respObject.result.fulfillment.data);
+                                }
+
                                 $("#input").val('');
                             }
                         }
