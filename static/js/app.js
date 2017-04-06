@@ -100,9 +100,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             }
 
                             function setResponse(val) {
-                                //var respObject = JSON.parse(val);
+                                var respObject = JSON.parse(val);
                                 //console.log(respObject);
-                                $("#response").val(val.result.fulfillment.speech);
+                                $("#response").val(respObject.result.fulfillment.speech);
                                 $("#input").val('');
                             }
                         }
