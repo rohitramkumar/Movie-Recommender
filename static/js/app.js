@@ -65,7 +65,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             angular.element(document).ready(function () {
                                 console.log("Here I am!");
 
-                                document.getElementById('response').value = 'Hello! Ask our agent something to get started!!';
+                                //document.getElementById('response').value = 'Hello! Ask our agent something to get started!!';
+                                $("#spokenResponse").addClass("is-active").find(".spoken-response__text").html('Hello! Ask our agent something to get started!!');
+
                                 $("#input").keypress(function(event) {
                                     if (event.which == 13) {
                                         event.preventDefault();
