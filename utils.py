@@ -29,7 +29,7 @@ MOVIE_POSTER_URL = 'http://image.tmdb.org/t/p/w185/'
 # URL Endpoint for spell checking
 BING_SC_URL = 'https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/?mode=proof&mkt=en-us'
 # Learning Agent recommendation URL
-LEARNING_AGENT_REC_URL = "http://ec2-54-200-205-223.us-west-2.compute.amazonaws.com:5000/mrelearner/api/v1.0/recommender"
+LEARNING_AGENT_REC_URL = "https://52.165.149.158/mrelearner/api/v1.0/recommender"
 # Max possible number of results that can be returned
 MAX_RESULTS = 10
 
@@ -66,7 +66,7 @@ def login(username, password):
     return "Fail"
 
 
-def get_movie_all(username):
+def get_watchlist(username):
     """Check if user exists and return all movies in watchlist"""
 
     user = model.User.query.filter_by(email=username).first()
@@ -82,7 +82,7 @@ def get_movie_all(username):
     return movie_list
 
 
-def add_movie(username, movieName, movieImdbId, movieRating):
+def add_movie_to_watchlist(username, movieName, movieImdbId, movieRating):
     """Check if user exists; if exists, authenticate pw and return success msg"""
 
     user = model.User.query.filter_by(email=username).first()
@@ -153,6 +153,7 @@ class MovieDBApiClient:
             fullMovieDetails[counter]['original_title'] = movieInfo['original_title']
             fullMovieDetails[counter]['poster'] = MOVIE_POSTER_URL + movieInfo['poster_path']
             fullMovieDetails[counter]['cast'] = [item['name'] for item in castInfo['cast'][:5]]
+            fullMovieDetails[counter]['release_date'] = movieInfo['release_date']
             counter += 1
         return fullMovieDetails
 
@@ -237,9 +238,9 @@ class LearningAgentClient:
 
     """This class abstracts API calls to our learning agent on Azure."""
 
-    def getRecommendedMovies(self, userInfo):
-        # Convert user data in json
-        result = requests.post(LEARNING_AGENT_REC_URL, json=data)
+    def getRecommendedMovies(self, data):
+        result = requests.post(LEARNING_AGENT_REC_URL, json=data, auth=("movierecommender","vast_seas_of_infinity"), verify=False)
+        print(result.json())
 
     def addMovieToUserHistory(self, movieInfo):
         pass

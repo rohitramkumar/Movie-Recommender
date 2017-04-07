@@ -44,8 +44,8 @@ def signup():
     password = new_user.get("password")
     return utils.createUser(username, password, first_name, last_name)
 
-@app.route("/api/add_movie/", methods=['POST'])
-def add_movie():
+@app.route("/api/add_movie_to_watchlist/", methods=['POST'])
+def add_movie_to_watchlist():
     """Api endpoint which adds a new movie into the watchlist for a user."""
 
     movie_detail = json.loads(request.data)
@@ -55,8 +55,8 @@ def add_movie():
     movie_rating = movie_detail.get("movieRating")
     return utils.add_movie(username, movie_name, movie_imdb_id, movie_rating)
 
-@app.route("/api/get_movie_all/", methods=['POST'])
-def get_all_movies():
+@app.route("/api/get_watchlist/", methods=['POST'])
+def get_watchlist():
     """Api endpoint which gets all movies in a user's watchlist."""
 
     user_id = request.data
@@ -65,7 +65,11 @@ def get_all_movies():
 @app.route("/api/get_learning_recommendation/", methods=['POST'])
 def get_learning_recommendation():
     """Api endpoint which gets a movie recommendation based on a user's watchlist."""
-    pass
+
+    req = json.loads(request.data)
+    data = {"user_id" : req.get("username"), "candidate_list" : req.get("candidateList")}
+    client = utils.LearningAgentClient()
+    result = client.getRecommendedMovies(data)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -99,7 +103,7 @@ def processFilteringRequest(req):
     userSpecifiedCastLastName = userSpecifiedData.get('cast-last-name')
     # Chat agent only allows us to parse out first and last names seperately
     # so we need to merge these to get a list of full names.
-    if len(userSpecifiedCastFirstName) == 0:
+    if len(userSpecifiedCastFirstName) == 0 and len(userSpecifiedCastLastName) == 0:
         userSpecifiedCast = []
     else:
         userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(
