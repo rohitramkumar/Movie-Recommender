@@ -58,7 +58,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 views: {
                     'content': {
                         templateUrl: 'static/partials/partial-home.html',
-                        controller: function ($scope, $rootScope) {
+                        controller: function ($scope, $rootScope, $state) {
                             var accessToken = "d9854338952446d589f83e6a575e0ba4";
                             var baseUrl = "https://api.api.ai/v1/";
 
@@ -108,6 +108,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 if (respStr.includes("I found you the following movies")) {
                                     console.log("Display movie details!!");
                                     console.log(respObject.result.fulfillment.data);
+                                    $scope.movies = respObject.result.fulfillment.data;
+                                    $state.go('root.home.movie_detail');
                                 }
 
                                 $("#input").val('');
