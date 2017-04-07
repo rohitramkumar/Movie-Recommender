@@ -116,7 +116,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     $state.go('root.home.movie_detail');
                                 }
 
-                                //$("#input").val('');
+                                $("#input").val('');
                             }
                         }
                     }

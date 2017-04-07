@@ -11,13 +11,13 @@
             <br>Response<br> <textarea id="response" cols="40" rows="20"></textarea> -->
 
             <input id="input" type="text">
-            <button id="rec" class="btn btn-primary">Submit</button>
+
             <div id="spokenResponse" class="spoken-response">
                 <div class="spoken-response__text"></div>
             </div>
         </div>
         <br>
-        <a ui-sref="root.home.movie_detail" class="btn btn-primary">Update Movie Details</a>
+        <a ng-if="movies" ui-sref="root.home.movie_detail" class="btn btn-primary">Update Movie Details</a>
     </div>
 
     <!-- COLUMN TWO -->
