@@ -121,12 +121,25 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     console.log('Could not retrieve movies')
                                 } else {
                                     console.log(resp)
-                                    $scope.movies = resp;
+
                                 }
                             });
+                            var movie_array = [{original_title:"Logan","poster":"http://image.tmdb.org/t/p/w185//45Y1G5FEgttPAwjTYic6czC9xCn.jpg",
+                                "cast":["Hugh Jackman","Patrick Stewart","Dafne Keen","Boyd Holbrook","Stephen Merchant"],
+                                "imdb_id":"tt3315342","overview":"In the near future, a weary Logan cares for an ailing Professor X in a hide out on the Mexican border. But Logan's attempts to hide from the world and his legacy are up-ended when a young mutant arrives, being pursued by dark forces."},
+                                {original_title:"Ghost in the Shell","poster":"http://image.tmdb.org/t/p/w185//myRzRzCxdfUWjkJWgpHHZ1oGkJd.jpg",
+                                    "cast":["Scarlett Johansson","Pilou Asbæk","Takeshi Kitano","Juliette Binoche","Michael Pitt"],
+                                    "imdb_id":"tt1219827","overview":"In the near future, Major is the first of her kind: a human saved from a terrible crash, who is cyber-enhanced to be a perfect soldier devoted to stopping the world's most dangerous criminals."},
+                                {original_title:"Kong: Skull Island","poster":"http://image.tmdb.org/t/p/w185//5wBbdNb0NdGiZQJYoKHRv6VbiOr.jpg",
+                                    "cast":["Tom Hiddleston","Samuel L. Jackson","John Goodman","Brie Larson","Jing Tian"],"imdb_id":"tt3731562",
+                                    "overview":"Explore the mysterious and dangerous home of the king of the apes as a team of explorers ventures deep inside the treacherous, primordial island."}];
+                            var index = 0;
+                            var size = movie_array.size;
+                            $scope.movies = movie_array[index];
                         }
                     }
                 }
+
             })
 
             .state('root.sign_up', {
