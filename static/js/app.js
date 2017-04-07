@@ -40,6 +40,18 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     }
                                 });
                             };
+
+                            $rootScope.open = function() {
+                                $rootScope.showModal = true;
+                            };
+
+                            $rootScope.ok = function() {
+                                $rootScope.showModal = false;
+                            };
+
+                            $rootScope.cancel = function() {
+                                $rootScope.showModal = false;
+                            };
                         }
                     },
                 	'header@root': {
