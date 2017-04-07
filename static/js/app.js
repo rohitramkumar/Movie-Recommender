@@ -63,11 +63,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             var baseUrl = "https://api.api.ai/v1/";
 
                             angular.element(document).ready(function () {
-                                console.log("Here I am!");
 
                                 //document.getElementById('response').value = 'Hello! Ask our agent something to get started!!';
-                                document.getElementById('input').value = 'Hello! Ask our agent something to get started!!';
-                                //$("#spokenResponse").addClass("is-active").find(".spoken-response__text").html('Hello! Ask our agent something to get started!!');
+                                //document.getElementById('input').value = 'Type here to get started';
 
                                 $("#input").keypress(function(event) {
                                     if (event.which == 13) {
