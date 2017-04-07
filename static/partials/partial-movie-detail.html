@@ -1,19 +1,16 @@
 <div style="float: right">
     <div class="panel panel-default">
         <!-- Default panel contents -->
-        <div class="panel-heading">Movie Title</div>
+        <div class="panel-heading">{{ movies[0].original_title }}</div>
         <div class="panel-body" style="min-width: 500px; min-height: 300px">
-            <p>Overview</p>
+            <p><img src={{ movies[0].poster }} alt="No Poster Available"></p>
         </div>
 
         <!-- List group -->
         <ul class="list-group">
-            <li class="list-group-item">Movie Name: {{ movies[0].original_title }}</li>
-            <li class="list-group-item">Top Billed Cast:</li>
-            <li class="list-group-item">Genres: </li>
-            <li class="list-group-item">Theatrical Release Year:</li>
-            <li class="list-group-item">Ratings:</li>
-            <li class="list-group-item">Other Recommendations:</li>
+            <li class="list-group-item">Top Billed Cast: {{ movies[0].cast[0] }}</li>
+            <li class="list-group-item">Overview: {{ movies[0].overview }} </li>
+            <li class="list-group-item">Release Year:</li>
         </ul>
     </div>
 
