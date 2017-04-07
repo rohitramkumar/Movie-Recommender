@@ -20,9 +20,11 @@ app.logger.setLevel(logging.ERROR)
 Bootstrap(app)
 db = SQLAlchemy(app)
 
+
 @app.route("/")
 def index():
     return render_template('index.html')
+
 
 @app.route("/api/login/", methods=['POST'])
 def login():
@@ -32,6 +34,7 @@ def login():
     username = user_detail.get("username")
     password = user_detail.get("password")
     return jsonify(utils.login(username, password))
+
 
 @app.route("/api/signup/", methods=['POST'])
 def signup():
@@ -44,6 +47,7 @@ def signup():
     password = new_user.get("password")
     return utils.createUser(username, password, first_name, last_name)
 
+
 @app.route("/api/add_movie_to_watchlist/", methods=['POST'])
 def add_movie_to_watchlist():
     """Api endpoint which adds a new movie into the watchlist for a user."""
@@ -55,6 +59,7 @@ def add_movie_to_watchlist():
     movie_rating = movie_detail.get("movieRating")
     return utils.add_movie(username, movie_name, movie_imdb_id, movie_rating)
 
+
 @app.route("/api/get_watchlist/", methods=['POST'])
 def get_watchlist():
     """Api endpoint which gets all movies in a user's watchlist."""
@@ -62,14 +67,16 @@ def get_watchlist():
     user_id = request.data
     return jsonify(utils.get_movie_all(user_id))
 
+
 @app.route("/api/get_learning_recommendation/", methods=['POST'])
 def get_learning_recommendation():
     """Api endpoint which gets a movie recommendation based on a user's watchlist."""
 
     req = json.loads(request.data)
-    data = {"user_id" : req.get("username"), "candidate_list" : req.get("candidateList")}
+    data = {"user_id": req.get("username"), "candidate_list": req.get("candidateList")}
     client = utils.LearningAgentClient()
     result = client.getRecommendedMovies(data)
+
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -86,6 +93,7 @@ def webhook():
     r = make_response(json.dumps(res))
     r.headers['Content-Type'] = 'application/json'
     return r
+
 
 def processFilteringRequest(req):
     """Deals with processing the movie filters provided by a user and feeding
@@ -122,6 +130,7 @@ def processFilteringRequest(req):
     movieDetails = client.getMovieDetails(movies)
     return prepareResponse(movies, movieDetails, "gathered-filters", maxResults + totalResultsGiven)
 
+
 def processSimilarityRequest(req):
     """Deals with processing a single movie provided by the user and returning
     a list of movies which are similar."""
@@ -133,6 +142,7 @@ def processSimilarityRequest(req):
     similarMovies = client.getSimilarMovies(benchmarkMovie)
     movieDetails = client.getMovieDetails(similarMovies)
     return prepareResponse(similarMovies, movieDetails, "gathered-benchmark-movie")
+
 
 def prepareResponse(movies, movieDetails, outboundContextName, outboundContextParam):
     """Helper function that prepares the return object we send to the user
@@ -148,8 +158,8 @@ def prepareResponse(movies, movieDetails, outboundContextName, outboundContextPa
         "source": "movie-recommendation-service",
         "contextOut": [
             {
-            "name": outboundContextName,
-            "parameters": {"total-results-given": outboundContextParam}, "lifespan": 1
+                "name": outboundContextName,
+                "parameters": {"total-results-given": outboundContextParam}, "lifespan": 1
             }
         ],
         "data": movieDetails

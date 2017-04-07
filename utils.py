@@ -239,7 +239,8 @@ class LearningAgentClient:
     """This class abstracts API calls to our learning agent on Azure."""
 
     def getRecommendedMovies(self, data):
-        result = requests.post(LEARNING_AGENT_REC_URL, json=data, auth=("movierecommender","vast_seas_of_infinity"), verify=False)
+        result = requests.post(LEARNING_AGENT_REC_URL, json=data, auth=(
+            "movierecommender", "vast_seas_of_infinity"), verify=False)
         print(result.json())
 
     def addMovieToUserHistory(self, movieInfo):
