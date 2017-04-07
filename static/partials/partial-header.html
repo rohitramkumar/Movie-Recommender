@@ -17,14 +17,37 @@
 <button class="btn" ng-click="open()">Open Modal</button>
 
 <div modal="showModal" close="cancel()">
-  <div class="modal-header">
-      <h4>Modal Dialog</h4>
+<div class="modal fade">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">{{title}}</h4>
+      </div>
+      <div class="modal-body">
+        <p>Login Here</p>
+
+		<form class="form-horizontal" role="form">
+		  <div class="form-group">
+		    <label for="name" class="col-sm-2 control-label">Username</label>
+		    <div class="col-sm-10">
+		      <input type="text" class="form-control" id="name" placeholder="Username" ng-model="userCred.username">
+		    </div>
+		  </div>
+		  <div class="form-group">
+		    <label for="age" class="col-sm-2 control-label">Password</label>
+		    <div class="col-sm-10">
+		      <input type="password" class="form-control" id="inputPassword3" placeholder="Password" ng-model="userCred.password">
+		    </div>
+		  </div>
+		</form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" ng-click="login(userCred)" class="btn btn-primary" data-dismiss="modal">Login</button>
+        <button type="button" ng-click="cancel()" class="btn">Cancel</button>
+      </div>
+    </div>
   </div>
-  <div class="modal-body">
-      <p>Example paragraph with some text.</p>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-success" ng-click="ok()">Okay</button>
-    <button class="btn" ng-click="cancel()">Cancel</button>
-  </div>
+</div>
 </div>

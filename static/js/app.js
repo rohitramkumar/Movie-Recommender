@@ -22,6 +22,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         controller: function($scope, $rootScope, $state, $q, user, userService) {
                             $rootScope.user = user;
                             $rootScope.login = function() {
+                                $rootScope.showModal = false;
                                 $state.go('login');
                             };
                             $rootScope.logout = function() {
