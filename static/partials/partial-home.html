@@ -8,8 +8,14 @@
     <div class="col-sm-6">
         <!-- <p><iframe width="350" height="430" src="https://console.api.ai/api-client/demo/embedded/4f8d9544-1d5d-4a0a-b308-7bb03eeeaee3"></iframe></p> -->
         <div>
-            <input id="input" type="text"> <button id="rec">Submit</button>
-            <br>Response<br> <textarea id="response" cols="40" rows="20"></textarea>
+            <!--<input id="input" type="text"> <button id="rec">Submit</button>
+            <br>Response<br> <textarea id="response" cols="40" rows="20"></textarea> -->
+
+            <input id="speech" type="text">
+            <button id="rec" class="btn">Submit</button>
+            <div id="spokenResponse" class="spoken-response">
+                <div class="spoken-response__text"></div>
+            </div>
         </div>
 
         <a ui-sref="root.home.movie_detail" class="btn btn-primary">Click For Movie Details</a>
@@ -19,3 +25,67 @@
     <div class="col-sm-6">
         <div ui-view="movie_detail"></div>
     </div>
+
+    <style type="text/css">
+      html {
+        box-sizing: border-box;
+      }
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+      input {
+        background-color: #126077;
+        border: 1px solid #3F7F93;
+        color: #A6CAE6;
+        font-family: "Titillium Web";
+        font-size: 20px;
+        line-height: 43px;
+        padding: 0 0.75em;
+        width: 400px;
+        -webkit-transition: all 0.35s ease-in;
+      }
+
+      textarea {
+        background-color: #070F24;
+        border: 1px solid #122435;
+        color: #606B88;
+        padding: 0.5em;
+        width: 100%;
+        -webkit-transition: all 0.35s ease-in;
+      }
+
+      input:active, input:focus, textarea:active, textarea:focus {
+        outline: 1px solid #48788B;
+      }
+      .btn {
+        background-color: #126178;
+        border: 1px solid #549EAF;
+        color: #549EAF;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Titillium Web";
+        font-size: 20px;
+        line-height: 43px;
+        padding: 0 0.75em;
+        text-align: center;
+        text-transform: uppercase;
+        -webkit-transition: all 0.35s ease-in;
+      }
+      .btn:hover {
+        background-color: #1888A9;
+        color: #183035;
+      }
+      .spoken-response {
+        max-height: 0;
+        overflow: hidden;
+        -webkit-transition: all 0.35s ease-in;
+      }
+      .spoken-response.is-active {
+        max-height: 400px;
+      }
+      .spoken-response__text {
+        background-color: #040E23;
+        color: #7584A2;
+        padding: 1em;
+      }
+    </style>

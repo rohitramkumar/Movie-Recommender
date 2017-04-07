@@ -96,14 +96,15 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                         setResponse("Internal Server Error");
                                     }
                                 });
-                                setResponse("Loading...");
+                                //setResponse("Loading...");
                             }
 
                             function setResponse(val) {
                                 var respObject = JSON.parse(val);
                                 var respStr = respObject.result.fulfillment.speech;
                                 //console.log(respObject);
-                                $("#response").val(respStr);
+                                //$("#response").val(respStr);
+                                $("#spokenResponse").addClass("is-active").find(".spoken-response__text").html(respStr);
 
                                 if (respStr.includes("I found you the following movies")) {
                                     console.log("Display movie details!!");
@@ -112,7 +113,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     $state.go('root.home.movie_detail');
                                 }
 
-                                $("#input").val('');
+                                //$("#input").val('');
                             }
                         }
                     }
