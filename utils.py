@@ -209,6 +209,7 @@ class MovieDBApiClient:
             # Get the similar movies given the movie id.
             movieSimilarityResult = requests.get(
                 MOVIE_SIMILARITY_URL.format(benchmarkMovieId, MOVIE_DB_API_KEY))
+            print(movieSimilarityResult.text)
             movieSimilarityInfo = json.loads(movieSimilarityResult.text)
             counter = 0
             while counter < self.maxResults and counter + self.offset < len(movieSimilarityInfo.get('results')):
