@@ -123,9 +123,7 @@ def processSimilarityRequest(req):
     a list of movies which are similar."""
 
     userSpecifiedData = req.get('result').get('contexts')[0].get('parameters')
-    maxResults = int(userSpecifiedData.get('max-results'))
-    totalResultsGiven = int(userSpecifiedData.get('total-results-given'))
-    client = utils.MovieDBApiClient(maxResults, totalResultsGiven)
+    client = utils.MovieDBApiClient(0, 0)
     benchmarkMovie = userSpecifiedData.get('benchmark')
     benchmarkMovie = utils.spellCheck(benchmarkMovie)
     similarMovies = client.getSimilarMovies(benchmarkMovie)
