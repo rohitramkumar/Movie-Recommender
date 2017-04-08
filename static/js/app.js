@@ -23,6 +23,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             $rootScope.user = user;
                             $rootScope.login = function(cred) {
                                 userService.login(cred).then(function(resp) {
+                                    console.log("Inside here!11");
+                                    console.log(cred);
 
                                     if (angular.isUndefined(resp)) {
                                         alert('username or password incorrect.')
@@ -31,8 +33,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     }
                                     else {
                                         alert('Thanks for logging in!')
-                                        console.log($scope.user)
-                                        $state.go('root.home');
+                                        console.log($rootScope.user)
+                                        $state.go('root.home', {}, {reload: true});
                                     }
                                 });
                             };
