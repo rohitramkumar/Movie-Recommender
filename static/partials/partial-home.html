@@ -6,25 +6,18 @@
 
     <!-- COLUMN ONE -->
     <div class="col-sm-6">
-        <!-- <p><iframe width="350" height="430" src="https://console.api.ai/api-client/demo/embedded/4f8d9544-1d5d-4a0a-b308-7bb03eeeaee3"></iframe></p> -->
         <div>
-            <input id="input" type="text"> <button id="rec">Speak</button>
-            <br>Response<br> <textarea id="response" cols="40" rows="20"></textarea>
+            <!--<input id="input" type="text"> <button id="rec">Submit</button>
+            <br>Response<br> <textarea id="response" cols="40" rows="20"></textarea> -->
+
+            <input id="input" type="text" placeholder="Type here to get started..">
+
+            <div id="spokenResponse" class="spoken-response">
+                <div class="spoken-response__text"></div>
+            </div>
         </div>
-
-        <a ui-sref="root.home.movie_detail" class="btn btn-primary">Click For Movie Details</a>
-
-        <p ng-if="user">User your username is: {{ user.email }}</p>
-
-        <div ng-if="$parent.user"
-            ><p>Add a movie to your movie watchlist</p>
-            <input type="hidden" ng-model="movieCred.username" ng-init="movieCred.username=user.email"/>
-            <label>Movie Name</label><input ng-model="movieCred.movieName"/>
-            <label>IMDB ID</label><input ng-model="movieCred.movieImdbId"/>
-            <label>Rating</label><input ng-model="movieCred.movieRating"/>
-
-            <button ng-click="add_movie(movieCred)" class="btn btn-primary">Add Movie</button>
-        </div>
+        <br>
+        <a ng-if="movies" ui-sref="root.home.movie_detail" class="btn btn-primary">Update Movie Details</a>
     </div>
 
     <!-- COLUMN TWO -->
@@ -32,86 +25,49 @@
         <div ui-view="movie_detail"></div>
     </div>
 
-    <!--<script type="text/javascript">
-    		var accessToken = "d9854338952446d589f83e6a575e0ba4";
-    		var baseUrl = "https://api.api.ai/v1/";
-
-    		$(document).ready(function() {
-    			$("#input").keypress(function(event) {
-    				if (event.which == 13) {
-    					event.preventDefault();
-    					send();
-    				}
-    			});
-    			$("#rec").click(function(event) {
-    				switchRecognition();
-    			});
-    		});
-    		var recognition;
-    		function startRecognition() {
-    			recognition = new webkitSpeechRecognition();
-    			recognition.onstart = function(event) {
-    				updateRec();
-    			};
-    			recognition.onresult = function(event) {
-    				var text = "";
-    			    for (var i = event.resultIndex; i < event.results.length; ++i) {
-    			    	text += event.results[i][0].transcript;
-    			    }
-    			    setInput(text);
-    				stopRecognition();
-    			};
-    			recognition.onend = function() {
-    				stopRecognition();
-    			};
-    			recognition.lang = "en-US";
-    			recognition.start();
-    		}
-
-    		function stopRecognition() {
-    			if (recognition) {
-    				recognition.stop();
-    				recognition = null;
-    			}
-    			updateRec();
-    		}
-    		function switchRecognition() {
-    			if (recognition) {
-    				stopRecognition();
-    			} else {
-    				startRecognition();
-    			}
-    		}
-    		function setInput(text) {
-    			$("#input").val(text);
-    			send();
-    		}
-    		function updateRec() {
-    			$("#rec").text(recognition ? "Stop" : "Speak");
-    		}
-
-    		function send() {
-    			var text = $("#input").val();
-    			$.ajax({
-    				type: "POST",
-    				url: baseUrl + "query?v=20150910",
-    				contentType: "application/json; charset=utf-8",
-    				dataType: "json",
-    				headers: {
-    					"Authorization": "Bearer " + accessToken
-    				},
-    				data: JSON.stringify({ query: text, lang: "en", sessionId: "somerandomthing" }),
-    				success: function(data) {
-    					setResponse(JSON.stringify(data, undefined, 2));
-    				},
-    				error: function() {
-    					setResponse("Internal Server Error");
-    				}
-    			});
-    			setResponse("Loading...");
-    		}
-
-    		function setResponse(val) {
-    			$("#response").text(val);
-    		}
-    	</script>-->
+    <style type="text/css">
+      html {
+        box-sizing: border-box;
+      }
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+      input {
+        background-color: #FFFFFF;
+        border: 1px solid #3F7F93;
+        color: #000000;
+        font-family: "Titillium Web";
+        font-size: 20px;
+        line-height: 43px;
+        padding: 0 0.75em;
+        width: 500px;
+        -webkit-transition: all 0.35s ease-in;
+      }
+      textarea {
+        background-color: #070F24;
+        border: 1px solid #122435;
+        color: #606B88;
+        padding: 0.5em;
+        width: 100%;
+        -webkit-transition: all 0.35s ease-in;
+      }
+      input:active, input:focus, textarea:active, textarea:focus {
+        outline: 2px solid #48788B;
+      }
+      .spoken-response {
+        max-height: 0;
+        overflow: hidden;
+        -webkit-transition: all 0.35s ease-in;
+      }
+      .spoken-response.is-active {
+        max-height: 400px;
+      }
+      .spoken-response__text {
+        background-color: #FFFFFF;
+        border: 1px solid #3F7F93;
+        color: #000000;
+        font-family: "Titillium Web";
+        font-size: 20px;
+        padding: 2em;
+      }
+    </style>

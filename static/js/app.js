@@ -58,21 +58,25 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 views: {
                     'content': {
                         templateUrl: 'static/partials/partial-home.html',
-                        controller: function ($scope, $rootScope) {
+                        controller: function ($scope, $rootScope, $state) {
                             var accessToken = "d9854338952446d589f83e6a575e0ba4";
                             var baseUrl = "https://api.api.ai/v1/";
 
                             angular.element(document).ready(function () {
-                                console.log("Here I am!");
 
-                                document.getElementById('response').value = 'Hello This is From App.js';
+                                //document.getElementById('response').value = 'Hello! Ask our agent something to get started!!';
+                                //document.getElementById('input').value = 'Type here to get started';
+
                                 $("#input").keypress(function(event) {
                                     if (event.which == 13) {
-                                        //if (event.originalEvent.defaultPrevented) return;
                                         event.preventDefault();
                                         send();
                                     }
                                 });
+
+                    			$("#rec").click(function(event) {
+                    				send();
+                    			});
                             });
 
                             function send() {
@@ -85,7 +89,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     headers: {
                                         "Authorization": "Bearer " + accessToken
                                     },
-                                    data: JSON.stringify({ query: text, lang: "en", sessionId: "somerandomthing" }),
+                                    data: JSON.stringify({ query: text, lang: "en", sessionId: "a_session" }),
                                     success: function(data) {
                                         setResponse(JSON.stringify(data, undefined, 2));
                                     },
@@ -93,15 +97,25 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                         setResponse("Internal Server Error");
                                     }
                                 });
-                                setResponse("Loading...");
+                                //setResponse("Loading...");
                             }
 
                             function setResponse(val) {
                                 var respObject = JSON.parse(val);
-                                console.log(respObject);
-                                $("#response").val(respObject.result.fulfillment.speech);
-                            }
+                                var respStr = respObject.result.fulfillment.speech;
+                                //console.log(respObject);
+                                //$("#response").val(respStr);
+                                $("#spokenResponse").addClass("is-active").find(".spoken-response__text").html(respStr);
 
+                                if (respStr.includes("I found you the following movies")) {
+                                    console.log("Display movie details!!");
+                                    console.log(respObject.result.fulfillment.data);
+                                    $scope.movies = respObject.result.fulfillment.data;
+                                    $state.go('root.home.movie_detail');
+                                }
+
+                                $("#input").val('');
+                            }
                         }
                     }
                 }
@@ -112,34 +126,11 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 views: {
                     'movie_detail': {
                         templateUrl: 'static/partials/partial-movie-detail.html',
-                        controller: function($scope, $rootScope, userService) {
-
-                            userService.getMovieData().then(function(resp) {
-                                if (angular.isUndefined(resp)) {
-                                    console.log('Could not retrieve movies')
-                                } else if (resp == "Fail") {
-                                    console.log('Could not retrieve movies')
-                                } else {
-                                    console.log(resp)
-
-                                }
-                            });
-                            var movie_array = [{original_title:"Logan","poster":"http://image.tmdb.org/t/p/w185//45Y1G5FEgttPAwjTYic6czC9xCn.jpg",
-                                "cast":["Hugh Jackman","Patrick Stewart","Dafne Keen","Boyd Holbrook","Stephen Merchant"],
-                                "imdb_id":"tt3315342","overview":"In the near future, a weary Logan cares for an ailing Professor X in a hide out on the Mexican border. But Logan's attempts to hide from the world and his legacy are up-ended when a young mutant arrives, being pursued by dark forces."},
-                                {original_title:"Ghost in the Shell","poster":"http://image.tmdb.org/t/p/w185//myRzRzCxdfUWjkJWgpHHZ1oGkJd.jpg",
-                                    "cast":["Scarlett Johansson","Pilou Asbæk","Takeshi Kitano","Juliette Binoche","Michael Pitt"],
-                                    "imdb_id":"tt1219827","overview":"In the near future, Major is the first of her kind: a human saved from a terrible crash, who is cyber-enhanced to be a perfect soldier devoted to stopping the world's most dangerous criminals."},
-                                {original_title:"Kong: Skull Island","poster":"http://image.tmdb.org/t/p/w185//5wBbdNb0NdGiZQJYoKHRv6VbiOr.jpg",
-                                    "cast":["Tom Hiddleston","Samuel L. Jackson","John Goodman","Brie Larson","Jing Tian"],"imdb_id":"tt3731562",
-                                    "overview":"Explore the mysterious and dangerous home of the king of the apes as a team of explorers ventures deep inside the treacherous, primordial island."}];
-                            var index = 0;
-                            var size = movie_array.size;
-                            $scope.movies = movie_array[index];
+                        controller: function($scope, $rootScope) {
+                            console.log("get me the movie array");
                         }
                     }
                 }
-
             })
 
             .state('root.sign_up', {
