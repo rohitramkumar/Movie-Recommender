@@ -22,7 +22,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         controller: function($scope, $rootScope, $state, $q, user, userService) {
                             $rootScope.user = user;
                             $rootScope.login = function() {
-                                $rootScope.showModal = false;
                                 $state.go('login');
                             };
                             $rootScope.logout = function() {
@@ -40,18 +39,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                         alert(response);
                                     }
                                 });
-                            };
-
-                            $rootScope.open = function() {
-                                $rootScope.showModal = true;
-                            };
-
-                            $rootScope.ok = function() {
-                                $rootScope.showModal = false;
-                            };
-
-                            $rootScope.cancel = function() {
-                                $rootScope.showModal = false;
                             };
                         }
                     },
@@ -160,17 +147,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             resolve: {
             	auth: function(userService, $q, $timeout) {
 
-                	var deferred = $q.defer();
-                	/* //with an async
-                    return UserService.load().then(function(user){
-                      if (permissionService.can(user, {goTo: state})) {
-                        return deferred.resolve({});
-                      } else {
-                        return deferred.reject({redirectTo: 'some_other_state'});
-                      }
-                    }*/
+                    var deferred = $q.defer();
 
-                   $timeout(function() {
+                    $timeout(function() {
                         if (angular.isUndefined(userService.user) ) {
                             return deferred.reject({redirectTo: 'login'});
                         }
