@@ -1,7 +1,7 @@
 'use strict';   // See note sign_up 'use strict'; below
 
 var movieApp = angular.module('myApp', [
- 'ui.router', 'ui.bootstrap.modal'
+ 'ui.router'
 ]);
 
 movieApp.config(function($stateProvider, $urlRouterProvider) {
