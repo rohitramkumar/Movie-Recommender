@@ -57,7 +57,7 @@ def add_movie_to_watchlist():
     movie_name = movie_detail.get("movieName")
     movie_imdb_id = movie_detail.get("movieImdbId")
     movie_rating = movie_detail.get("movieRating")
-    return utils.add_movie(username, movie_name, movie_imdb_id, movie_rating)
+    return utils.add_movie_to_watchlist(username, movie_name, movie_imdb_id, movie_rating)
 
 
 @app.route("/api/get_watchlist/", methods=['POST'])
@@ -65,7 +65,7 @@ def get_watchlist():
     """Api endpoint which gets all movies in a user's watchlist."""
 
     user_id = request.data
-    return jsonify(utils.get_movie_all(user_id))
+    return jsonify(utils.get_watchlist(user_id))
 
 
 @app.route("/api/get_learning_recommendation/", methods=['POST'])

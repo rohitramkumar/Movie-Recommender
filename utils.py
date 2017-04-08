@@ -60,8 +60,6 @@ def login(username, password):
     user = model.User.query.filter_by(email=username).first()
     if user:
         if user.password == password:
-            # myUser = {"username": user.user['email'], "password": user.user[
-            #    'password'], "firstname": user.user['first_name'], "lastname": user.user['last_name']}
             return user.as_dict()
     return "Fail"
 
@@ -83,7 +81,7 @@ def get_watchlist(username):
 
 
 def add_movie_to_watchlist(username, movieName, movieImdbId, movieRating):
-    """Check if user exists; if exists, authenticate pw and return success msg"""
+    """Check if user exists and add movie to specified user's watchlist"""
 
     user = model.User.query.filter_by(email=username).first()
 
@@ -93,7 +91,6 @@ def add_movie_to_watchlist(username, movieName, movieImdbId, movieRating):
     newMovie = model.Movie(name=movieName, movie_imdb_id=movieImdbId, user_rating=movieRating)
 
     for movie in user.movies:
-        print movie
         if int(movie.movie_imdb_id) == int(movieImdbId):
             return "Movie already present in watchlist!"
 
