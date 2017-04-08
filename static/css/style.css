@@ -12,7 +12,7 @@ input {
   font-size: 20px;
   line-height: 43px;
   padding: 0 0.75em;
-  width: 550px;
+  width: 555px;
   -webkit-transition: all 0.35s ease-in;
 }
 input:active, input:focus, textarea:active, textarea:focus {
