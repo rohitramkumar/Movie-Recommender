@@ -46,7 +46,7 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             var def = $q.defer();
 
             $http({
-                url: "/api/add_movie/",
+                url: "/api/add_movie_to_watchlist/",
                 method: "POST",
                 data: userCredentials
             }).success(function (response) {
@@ -60,7 +60,7 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             var def = $q.defer();
 
             $http({
-                url: "/api/get_movie_all/",
+                url: "/api/get_watchlist/",
                 method: "POST",
                 data: userService.user.email
             }).success(function (response) {
