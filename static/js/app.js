@@ -21,9 +21,24 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     	templateUrl: 'static/partials/layout.html',
                         controller: function($scope, $rootScope, $state, $q, user, userService) {
                             $rootScope.user = user;
-                            $rootScope.login = function() {
-                                $state.go('login');
+                            $rootScope.login = function(cred) {
+                                userService.login(cred).then(function(resp) {
+
+                                    if (angular.isUndefined(resp)) {
+                                        alert('username or password incorrect.')
+                                    } else if (resp == "Fail") {
+                                        alert('Username or password incorrect.')
+                                    }
+                                    else {
+                                        alert('Thanks for logging in!')
+                                        console.log($scope.user)
+                                        $state.go('root.home');
+                                    }
+                                });
                             };
+                            //$rootScope.login = function() {
+                                //$state.go('login');
+                            //};
                             $rootScope.logout = function() {
                                 userService.logout();
                                 $state.go('root.home', {}, {reload: true});
