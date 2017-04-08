@@ -1,24 +1,21 @@
 <div style="float: right">
     <div class="panel panel-default">
         <!-- Default panel contents -->
-        <div class="panel-heading">Logan</div>
+        <div class="panel-heading" style="font-size: large">{{movies.currentMovie.original_title}}</div>
         <div class="panel-body" style="min-width: 500px; min-height: 300px">
             <p><b>Overview</b></p>
-            <p>In the near future, a weary Logan cares for an ailing Professor X in a hide out on the Mexican border. But Logan's attempts to hide from the world and his legacy are up-ended when a young mutant arrives, being pursued by dark forces.</p>
-            <img src="http://image.tmdb.org/t/p/w185//45Y1G5FEgttPAwjTYic6czC9xCn.jpg">
+            <p>{{movies.currentMovie.overview}}</p>
+            <img src={{movies.currentMovie.poster}}>
         </div>
 
         <!-- List group -->
         <ul class="list-group">
-            <li class="list-group-item"><b>Top Billed Cast:</b> Hugh Jackman, Patrick Stewart, Dafne Keen, Boyd Holbrook, Stephen Merchant</li>
-            <li class="list-group-item"><b>Genres:</b> </li>
-            <li class="list-group-item"><b>Theatrical Release Year:</b> </li>
-            <li class="list-group-item"><b>Ratings:</b></li>
-            <li class="list-group-item"><b>Other Recommendations:</b></li>
+            <li class="list-group-item"><b>Top Billed Cast:</b> {{(movies.currentMovie.cast).join(', ')}}</li>
+            <li class="list-group-item"><b>IMDB ID:</b> {{movies.currentMovie.imdb_id}}</li>
             <li class="list-group-item">
-
+                <button type="button" class="btn btn-default" ng-click="movies.prevMovie()">Previous Result</button>
+                <button type="button" class="btn btn-default" ng-click="movies.nextMovie()">Next Result</button>
             </li>
-            <li class="list-group-item"><button type="button" class="btn btn-default" ng-click="movies[0] = movies[1]">Next Result</button></li>
         </ul>
     </div>
 </div>
