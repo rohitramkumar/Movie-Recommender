@@ -3,6 +3,7 @@ import json
 import urllib
 import os
 import model
+import time
 
 APIAI_KEY = os.environ['APIAI_KEY']
 BING_SC_API_KEY = os.environ['BING_SC_API_KEY']
@@ -30,6 +31,8 @@ MOVIE_POSTER_URL = 'http://image.tmdb.org/t/p/w185/'
 BING_SC_URL = 'https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/?mode=proof&mkt=en-us'
 # Learning Agent recommendation URL
 LEARNING_AGENT_REC_URL = "https://52.165.149.158/mrelearner/api/v1.0/recommender"
+# Learning Agent history URL
+LEARNING_AGENT_HIST_URL = "https://52.165.149.158/mrelearner/api/v1.0/history"
 # Max possible number of results that can be returned
 MAX_RESULTS = 10
 
@@ -70,36 +73,34 @@ def get_watchlist(username):
     """Check if user exists and return all movies in watchlist"""
 
     user = model.User.query.filter_by(email=username).first()
-
     if not user:
         return "Fail"
-
     movie_list = []
-
     for movie in user.movies:
         movie_list.append(movie.as_dict())
-
     return movie_list
 
 
 def add_movie_to_watchlist(username, movieName, movieImdbId, movieRating):
-    """Check if user exists; if exists, authenticate pw and return success msg"""
+    """Check if user exists; if exists, authenticate pw and return success msg.
+    Also add movie to learning agent database"""
 
     user = model.User.query.filter_by(email=username).first()
-
     if not user:
         return "Fail: Cannot find user!"
-
     newMovie = model.Movie(name=movieName, movie_imdb_id=movieImdbId, user_rating=movieRating)
-
     for movie in user.movies:
         print movie
         if int(movie.movie_imdb_id) == int(movieImdbId):
             return "Movie already present in watchlist!"
-
     user.movies.append(newMovie)
     model.session.commit()
-
+    # Learning Agent watchlist.
+    client = LearningAgentClient()
+    client.addMovieToUserHistory({'user_id' : username,
+                                  'movie_imdb_id' : movieImdbId,
+                                  'user_rating' : movieRating,
+                                  'timestamp' : int(time.time())})
     return "Success"
 
 
@@ -242,5 +243,5 @@ class LearningAgentClient:
         result = requests.post(LEARNING_AGENT_REC_URL, json=data, auth=("movierecommender","vast_seas_of_infinity"), verify=False)
         print(result.json())
 
-    def addMovieToUserHistory(self, movieInfo):
-        pass
+    def addMovieToUserHistory(self, data):
+        requests.post(url1, json=data, auth=("movierecommender","vast_seas_of_infinity"), verify=False)
