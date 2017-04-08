@@ -13,8 +13,6 @@
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
 <script src="//unpkg.com/angular-ui-router@0.4.2/release/angular-ui-router.js"></script>
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>
-<script src="{{ url_for('static', filename='js/ui-bootstrap.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/angular-ui-bootstrap-modal.js') }}"></script>
 <script src="{{ url_for('static', filename='js/services.js') }}"></script>
 {% endblock %}
 
@@ -22,4 +20,6 @@
 {{ super() }}
 <link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/ui-darkness/jquery-ui.min.css" rel="stylesheet">
 <link href="//fonts.googleapis.com/css?family=Titillium+Web:200" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css">
+
 {% endblock %}
