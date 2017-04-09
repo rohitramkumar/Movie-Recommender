@@ -193,7 +193,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         userService.signup(cred).then(function(response) {
                             if(response == "Success") {
                                 alert('Succesfuly signed up');
-                                $state.go('root.home', {}, {reload: true});
+                                $state.go('root.home');
                             } else {
                                 alert(response);
                             }
