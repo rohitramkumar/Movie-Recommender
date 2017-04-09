@@ -3,6 +3,7 @@ import json
 import urllib
 import os
 import model
+import time
 
 APIAI_KEY = 'd9854338952446d589f83e6a575e0ba4'
 BING_SC_API_KEY = '1c964897dce84d8cb04b5e8ff4634d48'
@@ -30,12 +31,14 @@ MOVIE_POSTER_URL = 'http://image.tmdb.org/t/p/w185/'
 BING_SC_URL = 'https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/?mode=proof&mkt=en-us'
 # Learning Agent recommendation URL
 LEARNING_AGENT_REC_URL = "https://52.165.149.158/mrelearner/api/v1.0/recommender"
+# Learning Agent history URL
+LEARNING_AGENT_HIST_URL = "https://52.165.149.158/mrelearner/api/v1.0/history"
 # Max possible number of results that can be returned
 MAX_RESULTS = 10
 
 
 def createUser(username, password, first_name, last_name):
-    """Used for sign-up. Get form data and add new user to users table"""
+    """Used for sign-up. Gets form data and adds new user to users table"""
 
     if not password:
         return "Cannot leave password empty"
@@ -55,7 +58,7 @@ def createUser(username, password, first_name, last_name):
 
 def login(username, password):
     """Used for login. Check if user exists; if exists,
-    authenticate pw and return success message."""
+    authenticates credentials and returns success message."""
 
     user = model.User.query.filter_by(email=username).first()
     if user:
@@ -65,38 +68,36 @@ def login(username, password):
 
 
 def get_watchlist(username):
-    """Check if user exists and return all movies in watchlist"""
+    """Returns all movies in a user's watchlist"""
 
     user = model.User.query.filter_by(email=username).first()
-
     if not user:
         return "Fail"
-
     movie_list = []
-
     for movie in user.movies:
         movie_list.append(movie.as_dict())
-
     return movie_list
 
 
 def add_movie_to_watchlist(username, movieName, movieImdbId, movieRating):
-    """Check if user exists and add movie to specified user's watchlist"""
+    """Check if user exists; if exists, add movie to specified user's watchlist.
+    Also add movie to learning agent database"""
 
     user = model.User.query.filter_by(email=username).first()
-
     if not user:
         return "Fail: Cannot find user!"
-
     newMovie = model.Movie(name=movieName, movie_imdb_id=movieImdbId, user_rating=movieRating)
-
     for movie in user.movies:
         if int(movie.movie_imdb_id) == int(movieImdbId):
             return "Movie already present in watchlist!"
-
     user.movies.append(newMovie)
     model.session.commit()
-
+    # Learning Agent watchlist.
+    client = LearningAgentClient()
+    client.addMovieToUserHistory({'user_id': username,
+                                  'movie_imdb_id': movieImdbId,
+                                  'user_rating': movieRating,
+                                  'timestamp': int(time.time())})
     return "Success"
 
 
@@ -240,5 +241,6 @@ class LearningAgentClient:
             "movierecommender", "vast_seas_of_infinity"), verify=False)
         print(result.json())
 
-    def addMovieToUserHistory(self, movieInfo):
-        pass
+    def addMovieToUserHistory(self, data):
+        requests.post(url1, json=data, auth=(
+            "movierecommender", "vast_seas_of_infinity"), verify=False)

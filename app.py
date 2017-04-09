@@ -27,33 +27,31 @@ def index():
 
 @app.route("/api/login/", methods=['POST'])
 def login():
-    """Api endpoint which handles login authentication for the frontend."""
+    """API endpoint which handles login authentication for the frontend."""
 
-    if request.data:
-        user_detail = json.loads(request.data)
-        username = user_detail.get("username")
-        password = user_detail.get("password")
+    user_detail = json.loads(request.data)
+    username = user_detail.get("username")
+    password = user_detail.get("password")
 
-        return jsonify(utils.login(username, password))
-
-    return "Cannot leave all fields empty"
+    return jsonify(utils.login(username, password))
 
 
 @app.route("/api/signup/", methods=['POST'])
 def signup():
-    """Api endpoint which handles user signup."""
+    """API endpoint which handles user signup."""
 
     new_user = json.loads(request.data)
     first_name = new_user.get("firstname")
     last_name = new_user.get("lastname")
     username = new_user.get("username")
     password = new_user.get("password")
+
     return utils.createUser(username, password, first_name, last_name)
 
 
 @app.route("/api/add_movie_to_watchlist/", methods=['POST'])
 def add_movie_to_watchlist():
-    """Api endpoint which adds a new movie into the watchlist for a user."""
+    """API endpoint which adds a new movie into the watchlist for a user."""
 
     movie_detail = json.loads(request.data)
     username = movie_detail.get("username")
@@ -65,7 +63,7 @@ def add_movie_to_watchlist():
 
 @app.route("/api/get_watchlist/", methods=['POST'])
 def get_watchlist():
-    """Api endpoint which gets all movies in a user's watchlist."""
+    """API endpoint which gets all movies in a user's watchlist."""
 
     user_id = request.data
     return jsonify(utils.get_watchlist(user_id))
@@ -73,12 +71,16 @@ def get_watchlist():
 
 @app.route("/api/get_learning_recommendation/", methods=['POST'])
 def get_learning_recommendation():
-    """Api endpoint which gets a movie recommendation based on a user's watchlist."""
+    """API endpoint which gets a movie recommendation based on a user's watchlist."""
 
     req = json.loads(request.data)
     data = {"user_id": req.get("username"), "candidate_list": req.get("candidateList")}
     client = utils.LearningAgentClient()
     result = client.getRecommendedMovies(data)
+    if result['result'] == 'no model':
+        return jsonify("Watchlist is empty so no recommendation can be made")
+    else:
+        return jsonify(result['result'])
 
 
 @app.route('/webhook', methods=['POST'])
