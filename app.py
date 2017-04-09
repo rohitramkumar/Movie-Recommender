@@ -29,14 +29,16 @@ def index():
 def login():
     """Api endpoint which handles login authentication for the frontend."""
 
-    if not request.data:
-        return "Cannot leave all fields empty"
+    print request.data
 
-    user_detail = json.loads(request.data)
-    username = user_detail.get("username")
-    password = user_detail.get("password")
+    if request.data:
+        user_detail = json.loads(request.data)
+        username = user_detail.get("username")
+        password = user_detail.get("password")
 
-    return jsonify(utils.login(username, password))
+        return jsonify(utils.login(username, password))
+
+    return "Cannot leave all fields empty"
 
 
 @app.route("/api/signup/", methods=['POST'])
