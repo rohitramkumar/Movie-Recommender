@@ -41,7 +41,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     };
                     $rootScope.signup = function() {
                         console.log("What about this");
-                        $state.go('sign_up');
+                        $state.go('root.register');
                     };
                     $rootScope.add_movie = function(cred) {
                         userService.add_movie(cred).then(function(response) {
@@ -178,6 +178,18 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             $scope.userMovies = resp;
                         }
                     });
+                }
+            }
+        }
+    })
+
+    .state('root.register', {
+        url: '/register',
+        views: {
+            'content': {
+                templateUrl: 'static/partials/partial-signup.html',
+                controller: function($scope, $rootScope, $q, userService) {
+                    console.log("Inside this root.register");
                 }
             }
         }
