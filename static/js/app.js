@@ -136,7 +136,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             };
 
                             $scope.movies.prevMovie = function() {
-                                if (index <= 1 ){
+                                if (index < 1 ){
                                     index = movie_arr.length - 1;
                                 } else {
                                     index = index - 1;
