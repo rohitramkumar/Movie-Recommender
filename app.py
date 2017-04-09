@@ -29,8 +29,6 @@ def index():
 def login():
     """Api endpoint which handles login authentication for the frontend."""
 
-    print request.data
-
     if request.data:
         user_detail = json.loads(request.data)
         username = user_detail.get("username")

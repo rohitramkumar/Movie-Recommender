@@ -3,16 +3,16 @@
                 <div class="panel-heading">Register</div>
                 <div class="panel-body">
                         <label for="fname" class="m-t-10">First Name</label>
-                        <input type="text" ng-model="userCred.firstname" id="fname" class="form-control" name="fname" placeholder="Example: John">
+                        <input type="text" ng-model="userCred.firstname" id="fname" class="form-control" name="fname" placeholder="Example: John" required>
 
                         <label for="lname" class="m-t-10">Last Name</label>
                         <input type="text" ng-model="userCred.lastname" id="lname" class="form-control" name="lname" placeholder="Example: Smith">
 
                         <label for="emailaddr" class="m-t-10">Email Address</label>
-                        <input type="text" ng-model="userCred.username" id="emailaddr" class="form-control" name="email" placeholder="Example: john.smith@gmail.com">
+                        <input type="text" ng-model="userCred.username" id="emailaddr" class="form-control" name="email" placeholder="Example: john.smith@gmail.com" required>
 
                         <label for="password" class="m-t-10">Password</label>
-                        <input type="password" ng-model="userCred.password" id="password" class="form-control" name="password" placeholder="">
+                        <input type="password" ng-model="userCred.password" id="password" class="form-control" name="password" placeholder="" required>
 
                         <center><button class="btn btn-primary m-t-10" ng-click="signup(userCred)">Submit</center>
                 </div>

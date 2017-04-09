@@ -3,8 +3,8 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
 	var userService = {
     	user: undefined,
         response: undefined,
+        // Send user info to login API endpoint
     	login: function(userCredentials) {
-            // Send user info to logni endpoint
             var def = $q.defer();
 
             $http({
@@ -24,11 +24,14 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             return def.promise;
 
         },
+
+        // Destroy user session
         logout: function() {
         	userService.user = undefined;
         },
+
+        // Send user info to signup API endpoint
         signup: function(userCredentials) {
-            // Send user info to signup endpoint
             var def = $q.defer();
 
             $http({
