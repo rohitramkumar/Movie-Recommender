@@ -224,7 +224,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         }
-    });
+    })
 });
 
 movieApp.run(function ($rootScope) {
