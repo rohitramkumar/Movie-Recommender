@@ -182,7 +182,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         }
     })
 
-    .state('root.sigup', {
+    .state('root.signup', {
         url: '/signup',
         views: {
             'content': {
