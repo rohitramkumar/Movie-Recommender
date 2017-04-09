@@ -134,7 +134,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 templateUrl: 'static/partials/partial-movie-detail.html',
                 controller: function($scope, $rootScope) {
                     console.log("I am a placeholder function!");
-                    $window.location.reload()
+                    //$window.location.reload()
 
                 }
             }
