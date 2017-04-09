@@ -2,8 +2,9 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">Register</div>
                 <div class="panel-body">
+                    <form name="signupform" role="form">
                         <label for="fname" class="m-t-10">First Name</label>
-                        <input type="text" ng-model="userCred.firstname" id="fname" class="form-control" name="fname" placeholder="Example: John" required>
+                        <input type="text" ng-model="userCred.firstname" id="fname" class="form-control" name="fname" placeholder="Example: John" autofocus required>
 
                         <label for="lname" class="m-t-10">Last Name</label>
                         <input type="text" ng-model="userCred.lastname" id="lname" class="form-control" name="lname" placeholder="Example: Smith">
@@ -14,7 +15,8 @@
                         <label for="password" class="m-t-10">Password</label>
                         <input type="password" ng-model="userCred.password" id="password" class="form-control" name="password" placeholder="" required>
 
-                        <center><button class="btn btn-primary m-t-10" ng-click="signup(userCred)">Submit</center>
+                        <center><button class="btn btn-primary m-t-10" ng-disabled="signupform.$invalid" ng-click="signup(userCred)">Submit</center>
+                        </form>
                 </div>
             </div>
         </div>
