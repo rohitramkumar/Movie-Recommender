@@ -4,16 +4,16 @@
                 <div class="panel-body">
                     <form name="signupform" role="form">
                         <label for="fname" class="m-t-10">First Name</label>
-                        <input type="text" ng-model="userCred.firstname" id="fname" class="form-control" name="fname" placeholder="Example: John" autofocus>
+                        <input type="text" ng-model="userCred.firstname" id="fname" class="form-control" name="fname" placeholder="Example: John (Required)" autofocus>
 
                         <label for="lname" class="m-t-10">Last Name</label>
                         <input type="text" ng-model="userCred.lastname" id="lname" class="form-control" name="lname" placeholder="Example: Smith">
 
                         <label for="emailaddr" class="m-t-10">Email Address</label>
-                        <input type="text" ng-model="userCred.username" id="emailaddr" class="form-control" name="email" placeholder="Example: john.smith@gmail.com" required>
+                        <input type="text" ng-model="userCred.username" id="emailaddr" class="form-control" name="email" placeholder="Example: john.smith@gmail.com (Required)" required>
 
                         <label for="password" class="m-t-10">Password</label>
-                        <input type="password" ng-model="userCred.password" id="password" class="form-control" name="password" placeholder="" required>
+                        <input type="password" ng-model="userCred.password" id="password" class="form-control" name="password" placeholder="">
 
                         <label ng-disabled="signupform.$invalid" class="m-t-10">Please complete required fields</label>
                         <center><button class="btn btn-primary m-t-10" ng-disabled="signupform.$invalid" ng-click="signup(userCred)">Submit</center>
