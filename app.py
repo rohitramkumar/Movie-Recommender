@@ -1,7 +1,6 @@
 from flask import Flask, url_for, make_response, send_file, request, jsonify, render_template
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
-# from flask_marshmallow import Marshmallow
 
 import utils
 import apiai
