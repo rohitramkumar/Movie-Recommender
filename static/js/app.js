@@ -40,6 +40,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         $state.go('root.home', {}, {reload: true});
                     };
                     $rootScope.signup = function() {
+                        console.log("What about this");
                         $state.go('sign_up');
                     };
                     $rootScope.add_movie = function(cred) {
@@ -224,7 +225,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 }
             }
         }
-    })
+    });
 });
 
 movieApp.run(function ($rootScope) {
