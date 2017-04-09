@@ -40,7 +40,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         $state.go('root.home', {}, {reload: true});
                     };
                     $rootScope.signup = function() {
-                        console.log("What about this");
                         $state.go('root.register');
                     };
                     $rootScope.add_movie = function(cred) {
@@ -190,6 +189,16 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 templateUrl: 'static/partials/partial-signup.html',
                 controller: function($scope, $rootScope, $q, userService) {
                     console.log("Inside this root.register");
+                    $scope.signup = function(cred) {
+                        userService.signup(cred).then(function(response) {
+                            if(response == "Success") {
+                                alert('Succesfuly signed up');
+                                $state.go('root.home');
+                            } else {
+                                alert(response);
+                            }
+                        });
+                    };
                 }
             }
         }
@@ -214,28 +223,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     }
                 });
             };
-        }
-    })
-
-    .state('sign_up', {
-        url: '/signup',
-        views: {
-            'content': {
-                templateUrl: 'static/partials/partial-signup.html',
-                controller: function($scope, $state, $q, userService) {
-                    console.log("Inside sign up controller");
-                    $scope.signup = function(cred) {
-                        userService.signup(cred).then(function(response) {
-                            if(response == "Success") {
-                                alert('Succesfuly signed up');
-                                $state.go('root.home');
-                            } else {
-                                alert(response);
-                            }
-                        });
-                    };
-                }
-            }
         }
     });
 });
