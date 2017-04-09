@@ -40,7 +40,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         $state.go('root.home', {}, {reload: true});
                     };
                     $rootScope.signup_redirect = function() {
-                        $state.go('root.register');
+                        $state.go('root.register', {}, {reload: true});
                     };
                     $rootScope.add_movie = function(cred) {
                         userService.add_movie(cred).then(function(response) {
