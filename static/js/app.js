@@ -188,7 +188,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             'content': {
                 templateUrl: 'static/partials/partial-signup.html',
                 controller: function($scope, $rootScope, $q, $state, userService) {
-                    console.log("Inside this root.register");
                     $scope.signup = function(cred) {
                         userService.signup(cred).then(function(response) {
                             if(response == "Success") {
