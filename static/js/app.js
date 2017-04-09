@@ -23,8 +23,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             $rootScope.user = user;
                             $rootScope.login = function(cred) {
                                 userService.login(cred).then(function(resp) {
-                                    console.log("Inside here!11");
-                                    console.log(cred);
 
                                     if (angular.isUndefined(resp)) {
                                         alert('username or password incorrect.')
@@ -33,14 +31,10 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     }
                                     else {
                                         alert('Thanks for logging in!')
-                                        console.log($rootScope.user)
                                         $state.go('root.home', {}, {reload: true});
                                     }
                                 });
                             };
-                            //$rootScope.login = function() {
-                                //$state.go('login');
-                            //};
                             $rootScope.logout = function() {
                                 userService.logout();
                                 $state.go('root.home', {}, {reload: true});
@@ -81,9 +75,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                             angular.element(document).ready(function () {
 
-                                //document.getElementById('response').value = 'Hello! Ask our agent something to get started!!';
-                                //document.getElementById('input').value = 'Type here to get started';
-
                                 $("#input").keypress(function(event) {
                                     if (event.which == 13) {
                                         event.preventDefault();
@@ -120,15 +111,13 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             function setResponse(val) {
                                 var respObject = JSON.parse(val);
                                 var respStr = respObject.result.fulfillment.speech;
-                                //console.log(respObject);
-                                //$("#response").val(respStr);
+
                                 $("#spokenResponse").addClass("is-active").find(".spoken-response__text").html(respStr);
 
                                 if (respStr.includes("I found you the following movies")) {
-                                    console.log("Display movie details!!");
                                     console.log(respObject.result.fulfillment.data);
                                     $scope.movies = respObject.result.fulfillment.data;
-                                    $state.go('root.home.movie_detail');
+                                    $state.go('root.home.movie_detail', {}, {reload: true});
                                 }
 
                                 $("#input").val('');
@@ -144,7 +133,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     'movie_detail': {
                         templateUrl: 'static/partials/partial-movie-detail.html',
                         controller: function($scope, $rootScope) {
-                            console.log("get me the movie array");
+                            console.log("I am a placeholder function!");
                         }
                     }
                 }
@@ -160,7 +149,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
     	})
 
         .state('root.restricted', {
-            url: '/restricted',
+            url: '/profile',
             resolve: {
             	auth: function(userService, $q, $timeout) {
 
@@ -224,18 +213,22 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
         .state('sign_up', {
             url: '/signup',
-            templateUrl: 'static/partials/partial-signup.html',
-            controller: function($scope, $state, $q, userService) {
-                $scope.signup = function(cred) {
-                    userService.signup(cred).then(function(response) {
-                            if(response == "Success") {
-                                alert('Succesfuly signed up');
-                                $state.go('root.home');
-                            } else {
-                                alert(response);
-                            }
-                    });
-                };
+            views: {
+                'content': {
+                    templateUrl: 'static/partials/partial-signup.html',
+                    controller: function($scope, $state, $q, userService) {
+                        $scope.signup = function(cred) {
+                            userService.signup(cred).then(function(response) {
+                                    if(response == "Success") {
+                                        alert('Succesfuly signed up');
+                                        $state.go('root.home');
+                                    } else {
+                                        alert(response);
+                                    }
+                            });
+                        };
+                    }
+                }
             }
         });
 });
