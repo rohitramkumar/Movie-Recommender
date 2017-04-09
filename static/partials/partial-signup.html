@@ -15,7 +15,7 @@
                         <label for="password" class="m-t-10">Password</label>
                         <input type="password" ng-model="userCred.password" id="password" class="form-control" name="password" placeholder="" required>
 
-                        <label ng-disabled="true" class="m-t-10">Please complete required fields</label>
+                        <label ng-disabled="signupform.$invalid" class="m-t-10">Please complete required fields</label>
                         <center><button class="btn btn-primary m-t-10" ng-disabled="signupform.$invalid" ng-click="signup(userCred)">Submit</center>
                         </form>
                 </div>
