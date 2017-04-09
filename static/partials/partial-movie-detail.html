@@ -1,28 +1,31 @@
 <div style="float: right">
     <div class="panel panel-default">
         <!-- Default panel contents -->
-        <div class="panel-heading">{{ movies[0].original_title }}</div>
+        <div class="panel-heading" style="font-size: large">{{movies.currentMovie.original_title}}</div>
         <div class="panel-body" style="min-width: 500px; min-height: 300px">
-            <p><img ng-src="{{ movies[0].poster }}" alt="No Poster Available"></p>
+            <p><b>Overview</b></p>
+            <p>{{movies.currentMovie.overview}}</p>
+            <img src={{movies.currentMovie.poster}}>
         </div>
 
         <!-- List group -->
         <ul class="list-group">
-            <li class="list-group-item">Top Billed Cast: {{ movies[0].cast[0] }}</li>
-            <li class="list-group-item">Overview: {{ movies[0].overview }} </li>
-            <li class="list-group-item">Release Year:</li>
+            <li class="list-group-item"><b>Top Billed Cast:</b> {{(movies.currentMovie.cast).join(', ')}}</li>
+            <li class="list-group-item"><b>IMDB ID:</b> {{movies.currentMovie.imdb_id}}</li>
+            <li class="list-group-item">
+                <button type="button" class="btn btn-default" ng-click="movies.prevMovie()">Previous Result</button>
+                <button type="button" class="btn btn-default" ng-click="movies.nextMovie()">Next Result</button>
+            </li>
         </ul>
+
+        <div ng-if="$parent.user">
+            <p>Add a movie to your movie watchlist</p>
+            <input type="hidden" ng-model="movieCred.username" ng-init="movieCred.username=user.email"/>
+            <label>Movie Name</label><input ng-model="movieCred.movieName"/>
+            <label>IMDB ID</label><input ng-model="movieCred.movieImdbId"/>
+            <label>Rating</label><input ng-model="movieCred.movieRating"/>
+
+            <button ng-click="add_movie(movieCred)" class="btn btn-primary">Add Movie To Watchlist</button>
+        </div>
     </div>
-
-    <p ng-if="user">Your username is: {{ user.email }}</p>
-
-    <div ng-if="$parent.user"
-    ><p>Add a movie to your movie watchlist</p>
-    <input type="hidden" ng-model="movieCred.username" ng-init="movieCred.username=user.email"/>
-    <label>Movie Name</label><input ng-model="movieCred.movieName"/>
-    <label>IMDB ID</label><input ng-model="movieCred.movieImdbId"/>
-    <label>Rating</label><input ng-model="movieCred.movieRating"/>
-
-    <button ng-click="add_movie(movieCred)" class="btn btn-primary">Add Movie To Watchlist</button>
-</div>
 </div>

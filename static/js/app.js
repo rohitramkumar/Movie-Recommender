@@ -111,12 +111,40 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     function setResponse(val) {
                         var respObject = JSON.parse(val);
                         var respStr = respObject.result.fulfillment.speech;
-
+                        //console.log(respObject);
+                        //$("#response").val(respStr);
                         $("#spokenResponse").addClass("is-active").find(".spoken-response__text").html(respStr);
 
                         if (respStr.includes("I found you the following movies")) {
+                            console.log("Display movie details!!");
                             console.log(respObject.result.fulfillment.data);
-                            $scope.movies = respObject.result.fulfillment.data;
+                            var movie_arr = respObject.result.fulfillment.data;
+
+                            var index = 0;
+                            $scope.movies = movie_arr;
+                            $scope.movies.currentMovie = movie_arr[index];
+
+                            // Navigate movie array through nextMovie() and prevMovie()
+                            $scope.movies.nextMovie = function() {
+                                if (index >= (movie_arr.length - 1)){
+                                    index = 0;
+                                } else {
+                                    index = index + 1;
+                                }
+
+                                $scope.movies.currentMovie = movie_arr[index];
+                            };
+
+                            $scope.movies.prevMovie = function() {
+                                if (index <= 1 ){
+                                    index = movie_arr.length - 1;
+                                } else {
+                                    index = index - 1;
+                                }
+
+                                $scope.movies.currentMovie = movie_arr[index];
+                            };
+
                             $state.go('root.home.movie_detail');
                         }
 
