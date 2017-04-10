@@ -58,7 +58,7 @@ def add_movie_to_watchlist():
     user_id = movie_detail.get("user_id")
     movie_name = movie_detail.get("movieName")
     movie_imdb_id = movie_detail.get("movieImdbId")
-    movie_rating = movie_detail.get("movieRating")
+    movie_rating = movie_detail.get("rating")
     return utils.add_movie_to_watchlist(username, user_id, movie_name, movie_imdb_id, movie_rating)
 
 
