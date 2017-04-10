@@ -149,7 +149,8 @@ class MovieDBApiClient:
             castInfoResult = requests.get(MOVIE_CREDITS_URL.format(movieId, MOVIE_DB_API_KEY))
             movieInfo = json.loads(movieInfoResult.text)
             castInfo = json.loads(castInfoResult.text)
-            fullMovieDetails[counter]['imdb_id'] = movieInfo['imdb_id']
+            imdb_id_str = movieInfo['imdb_id'][2:]
+            fullMovieDetails[counter]['imdb_id'] = imdb_id_str
             fullMovieDetails[counter]['overview'] = movieInfo['overview']
             fullMovieDetails[counter]['original_title'] = movieInfo['original_title']
             fullMovieDetails[counter]['poster'] = MOVIE_POSTER_URL + movieInfo['poster_path']
