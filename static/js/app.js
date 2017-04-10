@@ -176,9 +176,14 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 console.log(resp)
                                 var userMovies = resp;
                                 var candidateList = []
+
                                 for (var movie in userMovies) {
                                     candidateList.push(movie.imdb_id);
                                 }
+
+                                console.log('About to print username');
+                                console.log(userService.user.email)
+
                                 console.log('About to print final candidate list');
                                 console.log(candidateList);
                             }
