@@ -78,14 +78,14 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             return def.promise;
         },
 
-        getLearningRecomendations: function() {
+        getLearningRecomendations: function(userProfile) {
 
             var def = $q.defer();
 
             $http({
-                url: "/api/getFullMovieDetails/",
+                url: "/api/get_learning_recommendation/",
                 method: "POST",
-                data: userService.user.email
+                data: userProfile
             }).success(function (response) {
                     def.resolve(response);
             });
