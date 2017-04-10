@@ -152,10 +152,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.movies.currentMovie = movieList[index];
                             };
 
-                            console.log('About to test userService.user');
-                            console.log(userService.user);
-
-                            // Get learning recommendations
+                            // Get learning recommendations if user is logged in
                             if (userService.user) {
                                 getRecommendations();
                             }
@@ -171,7 +168,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         console.log('in recomenndations');
 
                         userService.getUserMovies().then(function(resp) {
-
                             if (angular.isUndefined(resp)) {
                                 console.log('Could not retrieve movies')
                             } else if (resp == "Fail") {
@@ -180,12 +176,14 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 console.log(resp)
                                 var userMovies = resp;
                                 var candidateList = []
-                                for (movie in userMovies) {
+                                for (var movie in userMovies) {
                                     candidateList.push(movie.imdb_id);
                                 }
                                 console.log('About to print final candidate list');
                                 console.log(candidateList);
                             }
+                        }).then(function()) {
+                            console.log('I am in the next cascasde!');
                         });
                     }
                 }
@@ -233,7 +231,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     $rootScope.user = auth;
 
                     userService.getUserMovies().then(function(resp) {
-
                         if (angular.isUndefined(resp)) {
                             console.log('Could not retrieve movies')
                         } else if (resp == "Fail") {
@@ -281,7 +278,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         controller: function($scope, $state, $q, userService) {
             $scope.login = function(cred) {
                 userService.login(cred).then(function(resp) {
-
                     if (angular.isUndefined(resp)) {
                         alert('username or password incorrect.')
                     } else if (resp == "Fail") {
