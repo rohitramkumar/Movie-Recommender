@@ -4,6 +4,9 @@ html {
 *, *:before, *:after {
   box-sizing: inherit;
 }
+img {
+    box-shadow: 5px 5px 5px #888888;
+}
 input {
   background-color: #FFFFFF;
   border: 1px solid #3F7F93;

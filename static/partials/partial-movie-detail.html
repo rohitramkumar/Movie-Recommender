@@ -5,13 +5,13 @@
         <div class="panel-body" style="min-width: 500px; min-height: 300px">
             <p><b>Overview</b></p>
             <p>{{movies.currentMovie.overview}}</p>
-            <img src={{movies.currentMovie.poster}}>
+            <center><img src={{movies.currentMovie.poster}}></center>
         </div>
 
         <!-- List group -->
         <ul class="list-group">
             <li class="list-group-item"><b>Top Billed Cast:</b> {{(movies.currentMovie.cast).join(', ')}}</li>
-            <li class="list-group-item"><b>Release Year:</b> {{movies.currentMovie.release_date}}</li>
+            <li class="list-group-item"><b>Release Date:</b> {{movies.currentMovie.release_date}}</li>
             <li class="list-group-item">
                 <button type="button" class="btn btn-default" ng-click="movies.prevMovie()">Previous Result</button>
                 <button type="button" class="btn btn-default" ng-click="movies.nextMovie()">Next Result</button>

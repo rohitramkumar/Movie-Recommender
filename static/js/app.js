@@ -177,16 +177,11 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 var userMovies = resp;
                                 var candidateList = [];
 
-                                for (var movie in resp) {
-                                    console.log(resp[movie]);
+                                for (var index in userMovies) {
+                                    console.log(resp[index]);
+                                    var movieObject = userMovies[index];
 
-                                    //var output = '';
-                                    //for (var property in resp[movie]) {
-                                    //    console.log(movie[property]);
-                                    //}
-
-
-                                    //candidateList.push(movie[movie_imdb_id]);
+                                    candidateList.push(movieObject[movie_imdb_id]);
                                 }
 
                                 console.log('About to print username');
@@ -194,9 +189,12 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                 console.log('About to print final candidate list');
                                 console.log(candidateList);
+
+                                return candidateList;
                             }
-                        }).then(function() {
-                            console.log('I am in the next cascasde!');
+                        }).then(function(requestObj) {
+                            console.log('I am in the next cascasde and got the thing below!');
+                            console.log(requestObj);
                         });
                     }
                 }
