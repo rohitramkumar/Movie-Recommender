@@ -178,12 +178,12 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 var candidateList = [];
 
                                 for (var movie in resp) {
-                                    console.log(movie);
+                                    console.log(resp[movie]);
 
-                                    var output = '';
-                                    for (var property in movie) {
-                                        console.log(movie[property]);
-                                    }
+                                    //var output = '';
+                                    //for (var property in resp[movie]) {
+                                    //    console.log(movie[property]);
+                                    //}
 
 
                                     //candidateList.push(movie[movie_imdb_id]);
