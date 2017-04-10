@@ -169,7 +169,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                 for (var index in userMovies) {
                                     var movieObject = userMovies[index];
-                                    movieIDList.push(parseInt(movieObject['movie_imdb_id']));
+                                    movieIDList.push(movieObject['movie_imdb_id']);
                                 }
 
                                 var userProfile = {user_id:userService.user.id, candidateList:movieIDList};
