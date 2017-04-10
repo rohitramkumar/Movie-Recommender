@@ -78,7 +78,7 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             return def.promise;
         },
 
-        getLearningReccomendations: function() {
+        getLearningRecomendations: function() {
 
             var def = $q.defer();
 

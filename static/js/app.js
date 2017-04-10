@@ -21,6 +21,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 templateUrl: 'static/partials/layout.html',
                 controller: function($scope, $rootScope, $state, $q, user, userService) {
                     $rootScope.user = user;
+
                     $rootScope.login = function(cred) {
                         userService.login(cred).then(function(resp) {
 
@@ -35,13 +36,16 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             }
                         });
                     };
+
                     $rootScope.logout = function() {
                         userService.logout();
                         $state.go('root.home', {}, {reload: true});
                     };
+
                     $rootScope.signupRedirect = function() {
                         $state.go('root.signup', {}, {reload: true});
                     };
+
                     $rootScope.addMovie = function(cred) {
                         userService.addMovie(cred).then(function(response) {
                             if(response == "Success") {
@@ -69,7 +73,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         views: {
             'content': {
                 templateUrl: 'static/partials/partial-home.html',
-                controller: function ($scope, $rootScope, $state) {
+                controller: function ($scope, $rootScope, $state, $q, user, userService) {
                     // API.AI Credentials
                     var accessToken = "d9854338952446d589f83e6a575e0ba4";
                     var baseUrl = "https://api.api.ai/v1/";
@@ -148,6 +152,14 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.movies.currentMovie = movieList[index];
                             };
 
+                            console.log('About to test userService.user');
+                            console.log(userService.user);
+
+                            // Get learning recommendations
+                            if (userService.user) {
+                                getRecommendations();
+                            }
+
                             $state.go('root.home.movie_detail');
                         }
 
@@ -156,9 +168,26 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                     // Function to get learning recommendations from learning agent
                     function getRecommendations() {
+                        console.log('in recomenndations');
 
+                        userService.getUserMovies().then(function(resp) {
+
+                            if (angular.isUndefined(resp)) {
+                                console.log('Could not retrieve movies')
+                            } else if (resp == "Fail") {
+                                console.log('Could not retrieve movies')
+                            } else {
+                                console.log(resp)
+                                var userMovies = resp;
+                                var candidateList = []
+                                for (movie in userMovies) {
+                                    candidateList.push(movie.imdb_id);
+                                }
+                                console.log('About to print final candidate list');
+                                console.log(candidateList);
+                            }
+                        });
                     }
-
                 }
             }
         }
@@ -211,7 +240,13 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             console.log('Could not retrieve movies')
                         } else {
                             console.log(resp)
-                            $scope.userMovies = resp;
+                            var userMovies = resp;
+                            var candidateList = []
+                            for (movie in userMovies) {
+                                candidateList.push(movie.imdb_id);
+                            }
+                            console.log('About to print final candidate list');
+                            console.log(candidateList);
                         }
                     });
                 }
