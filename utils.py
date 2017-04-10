@@ -237,7 +237,8 @@ class LearningAgentClient:
     def getRecommendedMovies(self, data):
         result = requests.post(LEARNING_AGENT_REC_URL, json=data, auth=(
             "movierecommender", "vast_seas_of_infinity"), verify=False)
-
+        print 'in client'
+        print result
         return result.json()
 
     def addMovieToUserHistory(self, data):
