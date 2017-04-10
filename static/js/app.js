@@ -26,7 +26,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         userService.login(cred).then(function(resp) {
 
                             if (angular.isUndefined(resp)) {
-                                alert('username or password incorrect.')
+                                alert('Username or password incorrect.')
                             } else if (resp == "Fail") {
                                 alert('Username or password incorrect.')
                             }
@@ -158,7 +158,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                     // Function to get learning recommendations from learning agent
                     function getRecommendations() {
-                        console.log(' in get recommendations');
                         userService.getUserMovies().then(function(resp) {
                             if (angular.isUndefined(resp)) {
                                 console.log('Could not retrieve movies')
@@ -171,8 +170,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 for (var index in userMovies) {
                                     var movieObject = userMovies[index];
                                     movieIDList.push(parseInt(movieObject['movie_imdb_id']));
-                                    console.log('iter');
-                                    console.log(movieObject);
                                 }
 
                                 var userProfile = {user_id:userService.user.id, candidateList:movieIDList};
@@ -185,13 +182,40 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             return userService.getLearningRecomendations(requestObj);
                         }).then(function(finalResp) {
                             if (angular.isUndefined(finalResp)) {
-                                console.log('Could not retrieve recommendations')
+                                console.log('Could not retrieve recommendations');
                             } else if (finalResp == "Fail") {
-                                console.log('Could not retrieve recommendations')
+                                console.log('Could not retrieve recommendations');
+                            } else if (finalResp == "no model") {
+                                console.log("Don't render recs now");
                             } else {
-                                console.log('heree');
                                 console.log(finalResp);
-                                $scope.recommendations = finalResp;
+                                var index = 0;
+                                var recommendationList = finalResp;
+                                $scope.recommendations = recommendationList;
+                                $scope.recommendations.currentRecommendation = recommendationList[index];
+
+                                // Navigate movie array through nextRec() and prevRec()
+                                // TO-DO: Write unit tests for these functions
+                                $scope.recommendations.nextRecommendation = function() {
+                                    if (index >= (recommendationList.length - 1)) {
+                                        index = 0;
+                                    } else {
+                                        index = index + 1;
+                                    }
+
+                                    $scope.recommendations.currentRecommendation = recommendationList[index];
+                                };
+
+                                $scope.recommendations.prevMovie = function() {
+                                    if (index < 1 ) {
+                                        index = recommendationList.length - 1;
+                                    } else {
+                                        index = index - 1;
+                                    }
+
+                                    $scope.recommendations.currentRecommendation = recommendationList[index];
+                                };
+
                             }
                         });
                     }
