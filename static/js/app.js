@@ -119,8 +119,10 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         var respObject = JSON.parse(val);
                         var respStr = respObject.result.fulfillment.speech;
 
+                        // Update appropriate HTML objects with response
                         $("#spokenResponse").addClass("is-active").find(".spoken-response__text").html(respStr);
 
+                        // If recommnedation made by chat agent, display movie details
                         if (respStr.includes("I found you the following movies")) {
                             console.log("Display movie details!!");
                             console.log(respObject.result.fulfillment.data);
@@ -152,7 +154,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.movies.currentMovie = movieList[index];
                             };
 
-                            // Get learning recommendations if user is logged in
+                            // If user is logged in, get learning recommendations
                             if (userService.user) {
                                 getRecommendations();
                             }
@@ -188,7 +190,16 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             console.log('I am in the next cascasde and got the thing below!');
                             console.log(requestObj);
 
-                            //userService.get_learning_recommendation
+                            return userService.getLearningRecomendations(requestObj);
+                        }).then(function(finalResp) {
+                            if (angular.isUndefined(finalResp)) {
+                                console.log('Could not retrieve recommendations')
+                            } else if (finalResp == "Fail") {
+                                console.log('Could not retrieve recommendations')
+                            } else {
+                                console.log(finalResp);
+                                $scope.recommendations = finalResp;
+                            }
                         });
                     }
                 }
@@ -202,7 +213,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             'movie_detail': {
                 templateUrl: 'static/partials/partial-movie-detail.html',
                 controller: function($scope, $rootScope) {
-                    console.log("I am a placeholder function!");
+                    //console.log("I am a placeholder function!");
                     //$window.location.reload()
 
                 }
@@ -242,13 +253,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             console.log('Could not retrieve movies')
                         } else {
                             console.log(resp)
-                            var userMovies = resp;
-                            var candidateList = []
-                            for (movie in userMovies) {
-                                candidateList.push(movie.imdb_id);
-                            }
-                            console.log('About to print final candidate list');
-                            console.log(candidateList);
+                            $scope.userMovies = resp;
                         }
                     });
                 }
