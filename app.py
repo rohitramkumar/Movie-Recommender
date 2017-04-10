@@ -77,7 +77,7 @@ def get_learning_recommendation():
     data = {"user_id": req.get("username"), "candidate_list": req.get("candidateList")}
     client = utils.LearningAgentClient()
     result = client.getRecommendedMovies(request.data)
-    if result['result'] == 'no model':
+    if result['result'] == []:
         return jsonify("Watchlist is empty so no recommendation can be made")
     else:
         return jsonify(result['result'])
@@ -146,7 +146,7 @@ def processSimilarityRequest(req):
     benchmarkMovie = utils.spellCheck(benchmarkMovie)
     similarMovies = client.getSimilarMovies(benchmarkMovie)
     movieDetails = client.getMovieDetails(similarMovies)
-    return prepareResponse(similarMovies, movieDetails, "gathered-benchmark-movie")
+    return prepareResponse(similarMovies, movieDetails, "gathered-benchmark-movie", 0)
 
 
 def prepareResponse(movies, movieDetails, outboundContextName, outboundContextParam):

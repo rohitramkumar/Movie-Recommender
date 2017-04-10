@@ -146,8 +146,7 @@ class MovieDBApiClient:
             castInfoResult = requests.get(MOVIE_CREDITS_URL.format(movieId, MOVIE_DB_API_KEY))
             movieInfo = json.loads(movieInfoResult.text)
             castInfo = json.loads(castInfoResult.text)
-            imdb_id_str = movieInfo['imdb_id']
-            imdb_id_str = imdb_id_str[2:]
+            imdb_id_str = movieInfo['imdb_id'][2:]
             fullMovieDetails[counter]['imdb_id'] = imdb_id_str
             fullMovieDetails[counter]['overview'] = movieInfo['overview']
             fullMovieDetails[counter]['original_title'] = movieInfo['original_title']
@@ -211,11 +210,8 @@ class MovieDBApiClient:
             movieSimilarityResult = requests.get(
                 MOVIE_SIMILARITY_URL.format(benchmarkMovieId, MOVIE_DB_API_KEY))
             movieSimilarityInfo = json.loads(movieSimilarityResult.text)
-            counter = 0
-            while counter < self.maxResults and counter + self.offset < len(movieSimilarityInfo.get('results')):
-                similarMovies.append(movieSimilarityInfo.get(
-                    'results')[counter + self.offset].get('title'))
-                counter += 1
+            if len(movieSimilarityInfo.get('results')) > 0:
+                similarMovies.append(movieSimilarityInfo.get('results')[0].get('title'))
         return similarMovies
 
     def encodeURLKeyValue(self, pair):
@@ -241,9 +237,6 @@ class LearningAgentClient:
     def getRecommendedMovies(self, data):
         result = requests.post(LEARNING_AGENT_REC_URL, json=data, auth=(
             "movierecommender", "vast_seas_of_infinity"), verify=False)
-
-        print 'debug this'
-        print result
         return result.json()
 
     def addMovieToUserHistory(self, data):
