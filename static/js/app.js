@@ -48,7 +48,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
 
                     $rootScope.addMovie = function(resp) {
-                        curMovieObject = {"username":userService.user.email, "user_id":userService.user.id, "movieName":movies.currentMovie.original_title, "movieImdbId":movies.currentMovie.imdb_id, "rating":resp.movieRating};
+                        curMovieObject = {"username":userService.user.email, "user_id":userService.user.id, "movieName":$scope.movies.currentMovie.original_title, "movieImdbId":$scope.movies.currentMovie.imdb_id, "rating":resp.movieRating};
 
                         userService.addMovie(curMovieObject).then(function(response) {
                             if(response == "Success") {
@@ -132,30 +132,31 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             var movieList = respObject.result.fulfillment.data;
 
                             var index = 0;
-                            $rootScope.movies = movieList;
-                            $rootScope.movies.currentMovie = movieList[index];
+                            $scope.movies = movieList;
+                            $scope.movies.currentMovie = movieList[index];
 
                             // Navigate movie array through nextMovie() and prevMovie()
                             // TO-DO: Write unit tests for these functions
-                            $rootScope.movies.nextMovie = function() {
+                            $scope.movies.nextMovie = function() {
                                 if (index >= (movieList.length - 1)){
                                     index = 0;
                                 } else {
                                     index = index + 1;
                                 }
 
-                                $rootScope.movies.currentMovie = movieList[index];
+                                $scope.movies.currentMovie = movieList[index];
                             };
 
-                            $rootScope.movies.prevMovie = function() {
+                            $scope.movies.prevMovie = function() {
                                 if (index < 1 ){
                                     index = movieList.length - 1;
                                 } else {
                                     index = index - 1;
                                 }
 
-                                $rootScope.movies.currentMovie = movieList[index];
+                                $scope.movies.currentMovie = movieList[index];
                             };
+
 
                             // If user is logged in, get learning recommendations
                             if (userService.user) {
