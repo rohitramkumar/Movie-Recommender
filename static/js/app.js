@@ -45,19 +45,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     $rootScope.signupRedirect = function() {
                         $state.go('root.signup', {}, {reload: true});
                     };
-
-
-                    $rootScope.addMovie = function(resp) {
-                        curMovieObject = {"username":userService.user.email, "user_id":userService.user.id, "movieName":$scope.movies.currentMovie.original_title, "movieImdbId":$scope.movies.currentMovie.imdb_id, "rating":resp.movieRating};
-
-                        userService.addMovie(curMovieObject).then(function(response) {
-                            if(response == "Success") {
-                                alert('Succesfully added movie to your watchlist!');
-                            } else {
-                                alert(response);
-                            }
-                        });
-                    };
                 }
             },
             'header@root': {
@@ -216,10 +203,21 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         views: {
             'movie_detail': {
                 templateUrl: 'static/partials/partial-movie-detail.html',
-                controller: function($scope, $rootScope) {
+                controller: function($scope, $rootScope, $state, $q, user, userService) {
                     //console.log("I am a placeholder function!");
                     //$window.location.reload()
 
+                    $scope.addMovie = function(resp) {
+                        curMovieObject = {"username":userService.user.email, "user_id":userService.user.id, "movieName":$scope.movies.currentMovie.original_title, "movieImdbId":$scope.movies.currentMovie.imdb_id, "rating":resp.movieRating};
+
+                        userService.addMovie(curMovieObject).then(function(response) {
+                            if(response == "Success") {
+                                alert('Succesfully added movie to your watchlist!');
+                            } else {
+                                alert(response);
+                            }
+                        });
+                    };
                 }
             }
         }
