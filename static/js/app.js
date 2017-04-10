@@ -170,7 +170,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                 for (var index in userMovies) {
                                     var movieObject = userMovies[index];
-                                    movieIDList.push(movieObject['movie_imdb_id']);
+                                    movieIDList.push(int(movieObject['movie_imdb_id']));
                                     console.log('iter');
                                     console.log(movieObject);
                                 }
