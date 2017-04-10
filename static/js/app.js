@@ -175,10 +175,11 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             } else {
                                 console.log(resp)
                                 var userMovies = resp;
-                                var candidateList = []
+                                var candidateList = [];
 
                                 for (var movie in userMovies) {
-                                    candidateList.push(movie.imdb_id);
+                                    console.log(movie.imdb_id);
+                                    candidateList.push("" + movie.imdb_id);
                                 }
 
                                 console.log('About to print username');
