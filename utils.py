@@ -88,7 +88,7 @@ def add_movie_to_watchlist(username, movieName, movieImdbId, movieRating):
         return "Fail: Cannot find user!"
     newMovie = model.Movie(name=movieName, movie_imdb_id=movieImdbId, user_rating=movieRating)
     for movie in user.movies:
-        if int(movie.movie_imdb_id) == int(movieImdbId):
+        if movie.name == movieName:
             return "Movie already present in watchlist!"
     user.movies.append(newMovie)
     model.session.commit()
