@@ -186,6 +186,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             } else if (finalResp == "Fail") {
                                 console.log('Could not retrieve recommendations')
                             } else {
+                                console.log('heree');
                                 console.log(finalResp);
                                 $scope.recommendations = finalResp;
                             }
