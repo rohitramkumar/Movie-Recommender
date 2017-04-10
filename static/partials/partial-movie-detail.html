@@ -14,8 +14,6 @@
         <ul class="list-group">
             <li class="list-group-item"><b>Top Billed Cast:</b> {{(movies.currentMovie.cast).join(', ')}}</li>
             <li class="list-group-item"><b>Release Date:</b> {{movies.currentMovie.release_date}}</li>
-            <li class="list-group-item"><b>IMDB ID:</b> {{movies.currentMovie.imdb_id}}</li>
-
             <li class="list-group-item">
                 <button type="button" class="btn btn-default" ng-click="movies.prevMovie()">Previous Result</button>
                 <button type="button" class="btn btn-default" ng-click="movies.nextMovie()">Next Result</button>
@@ -23,11 +21,7 @@
         </ul>
 
         <div ng-if="$parent.user">
-            <p>Interested in this movie?</p>
-            <!--<input type="hidden" ng-model="movieCred.username" ng-init="movieCred.username=user.email"/>
-            <input type="hidden" ng-model="movieCred.user_id" ng-init="movieCred.user_id=user.id"/>
-            <input type="hidden" ng-model="movieCred.movieName" ng-init="movieCred.movieName=movies.currentMovie.original_title"/>
-            <input type="hidden" ng-model="movieCred.movieImdbId" ng-init="movieCred.movieImdbId=movies.currentMovie.imdb_id"/>-->
+            <p>Already seen this movie?</p>
 
             <label>Rate this movie</label><input ng-model="movieCred.movieRating"/>
 
