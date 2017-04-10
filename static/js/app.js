@@ -46,10 +46,13 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         $state.go('root.signup', {}, {reload: true});
                     };
 
-                    $rootScope.addMovie = function(cred) {
-                        userService.addMovie(cred).then(function(response) {
+
+                    $rootScope.addMovie = function(resp) {
+                        curMovieObject = {"username":userService.user.email, "user_id":userService.user.id, "movieName":movies.currentMovie.original_title, "movieImdbId":movies.currentMovie.imdb_id, "rating":resp.movieRating};
+
+                        userService.addMovie(curMovieObject).then(function(response) {
                             if(response == "Success") {
-                                alert('Succesfuly added movie');
+                                alert('Succesfully added movie to your watchlist!');
                             } else {
                                 alert(response);
                             }
