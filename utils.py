@@ -245,5 +245,5 @@ class LearningAgentClient:
         return result.json()
 
     def addMovieToUserHistory(self, data):
-        requests.post(url1, json=data, auth=(
+        requests.post(LEARNING_AGENT_HIST_URL, json=data, auth=(
             "movierecommender", "vast_seas_of_infinity"), verify=False)
