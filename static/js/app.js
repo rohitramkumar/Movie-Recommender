@@ -39,11 +39,11 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         userService.logout();
                         $state.go('root.home', {}, {reload: true});
                     };
-                    $rootScope.signup_redirect = function() {
+                    $rootScope.signupRedirect = function() {
                         $state.go('root.signup', {}, {reload: true});
                     };
-                    $rootScope.add_movie = function(cred) {
-                        userService.add_movie(cred).then(function(response) {
+                    $rootScope.addMovie = function(cred) {
+                        userService.addMovie(cred).then(function(response) {
                             if(response == "Success") {
                                 alert('Succesfuly added movie');
                             } else {
@@ -70,6 +70,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             'content': {
                 templateUrl: 'static/partials/partial-home.html',
                 controller: function ($scope, $rootScope, $state) {
+                    // API.AI Credentials
                     var accessToken = "d9854338952446d589f83e6a575e0ba4";
                     var baseUrl = "https://api.api.ai/v1/";
 
@@ -87,6 +88,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         });
                     });
 
+                    // Function to send request to API.AI chat agent
                     function send() {
                         var text = $("#input").val();
                         $.ajax({
@@ -105,44 +107,45 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 setResponse("Internal Server Error");
                             }
                         });
-                        //setResponse("Loading...");
+                        //setResponse("Loading..."); TO-DO: Add loading animation
                     }
 
+                    // Function to update movie item details using received JSON from API.AI chat agent
                     function setResponse(val) {
                         var respObject = JSON.parse(val);
                         var respStr = respObject.result.fulfillment.speech;
-                        //console.log(respObject);
-                        //$("#response").val(respStr);
+
                         $("#spokenResponse").addClass("is-active").find(".spoken-response__text").html(respStr);
 
                         if (respStr.includes("I found you the following movies")) {
                             console.log("Display movie details!!");
                             console.log(respObject.result.fulfillment.data);
-                            var movie_arr = respObject.result.fulfillment.data;
+                            var movieList = respObject.result.fulfillment.data;
 
                             var index = 0;
-                            $scope.movies = movie_arr;
-                            $scope.movies.currentMovie = movie_arr[index];
+                            $scope.movies = movieList;
+                            $scope.movies.currentMovie = movieList[index];
 
                             // Navigate movie array through nextMovie() and prevMovie()
+                            // TO-DO: Write unit tests for these functions
                             $scope.movies.nextMovie = function() {
-                                if (index >= (movie_arr.length - 1)){
+                                if (index >= (movieList.length - 1)){
                                     index = 0;
                                 } else {
                                     index = index + 1;
                                 }
 
-                                $scope.movies.currentMovie = movie_arr[index];
+                                $scope.movies.currentMovie = movieList[index];
                             };
 
                             $scope.movies.prevMovie = function() {
                                 if (index < 1 ){
-                                    index = movie_arr.length - 1;
+                                    index = movieList.length - 1;
                                 } else {
                                     index = index - 1;
                                 }
 
-                                $scope.movies.currentMovie = movie_arr[index];
+                                $scope.movies.currentMovie = movieList[index];
                             };
 
                             $state.go('root.home.movie_detail');
@@ -150,6 +153,12 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                         $("#input").val('');
                     }
+
+                    // Function to get learning recommendations from learning agent
+                    function getRecommendations() {
+
+                    }
+
                 }
             }
         }
