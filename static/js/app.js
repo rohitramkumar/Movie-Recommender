@@ -181,7 +181,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     console.log(resp[index]);
                                     var movieObject = userMovies[index];
 
-                                    candidateList.push(movieObject[movie_imdb_id]);
+                                    candidateList.push(movieObject['movie_imdb_id']);
                                 }
 
                                 console.log('About to print username');
