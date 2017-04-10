@@ -74,7 +74,7 @@ def get_watchlist():
 def get_learning_recommendation():
     """API endpoint which gets a movie recommendation based on a user's watchlist."""
     req = json.loads(request.data)
-    data = {"user_id": req.get("username"), "candidate_list": req.get("candidateList")}
+    data = {"user_id": req.get("user_id"), "candidate_list": req.get("candidateList")}
     client = utils.LearningAgentClient()
     result = client.getRecommendedMovies(request.data)
     if result['result'] == []:

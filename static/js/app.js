@@ -158,6 +158,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                     // Function to get learning recommendations from learning agent
                     function getRecommendations() {
+                        console.log(' in get recommendations');
                         userService.getUserMovies().then(function(resp) {
                             if (angular.isUndefined(resp)) {
                                 console.log('Could not retrieve movies')
@@ -170,6 +171,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 for (var index in userMovies) {
                                     var movieObject = userMovies[index];
                                     movieIDList.push(movieObject['movie_imdb_id']);
+                                    console.log('iter');
+                                    console.log(movieObject);
                                 }
 
                                 var userProfile = {user_id:userService.user.id, candidateList:movieIDList};
