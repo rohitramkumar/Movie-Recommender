@@ -177,9 +177,16 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 var userMovies = resp;
                                 var candidateList = [];
 
-                                for (var movie in userMovies) {
-                                    console.log(JSON.stringify(movie));
-                                    candidateList.push(movie[movie_imdb_id]);
+                                for (var movie in resp) {
+                                    console.log(movie);
+
+                                    var output = '';
+                                    for (var property in movie) {
+                                        console.log(movie[property]);
+                                    }
+
+
+                                    //candidateList.push(movie[movie_imdb_id]);
                                 }
 
                                 console.log('About to print username');
