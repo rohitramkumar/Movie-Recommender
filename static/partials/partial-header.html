@@ -1,15 +1,54 @@
-<div class="container">
-    <div class="header clearfix">
-        <nav>
+
+        <!--<nav>
           <ul class="nav nav-pills pull-right">
             <li role="presentation" class="active"><a ui-sref="root.home" href="#">Home</a></li>
-            <li role="presentation"><button ng-click="signup()">Sign Up</button></li>
-            <li ng-if="user" role="presentation"><a ui-sref="root.restricted" href="#">View Profile</a></li>
+            <li role="presentation"><a ng-click="signup()">Sign Up</a></li>
+            <li role="presentation" ng-if="!user"><a ng-click="login()">Login</a></li>
+            <li role="presentation" ng-if="user"><a ng-click="logout()">Logout</a></li>
+            <li role="presentation" ng-if="user"><a ui-sref="root.restricted" href="#">View Profile</a></li>
           </ul>
-        </nav>
-        <h3 class="text-muted">Movie Recommendation Engine</h3>
-    </div>
-</div>
+      </nav>
+        <h3 class="text-muted">Movie Recommendation Engine</h3>-->
+        <!-- Second navbar for sign in -->
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-2">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand">Movie Recommendation Service</a>
+                </div>
 
-<span ng-if="user"><button ng-click="logout()">logout</button></span>
-<span ng-if="!user"><button ng-click="login()">login</button></span>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="navbar-collapse-2">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a ui-sref="root.home" href="#">Home</a></li>
+                        <li><a ng-click="signupRedirect()" ng-if="!user" href="">Register</a></li>
+                        <li ng-if="user"><a ui-sref="root.restricted" href="">View Profile</a></li>
+                        <li ng-if="!user">
+                            <a class="btn btn-default btn-outline btn-circle collapsed" data-toggle="collapse" href="#nav-collapse2" aria-expanded="false" aria-controls="nav-collapse2">Sign in</a>
+                        </li>
+                        <li ng-if="user">
+                            <a class="btn btn-default btn-outline btn-circle collapsed" ng-click="logout()" href="#" aria-expanded="false" >Sign out</a>
+                        </li>
+                    </ul>
+                    <div class="collapse nav navbar-nav nav-collapse slide-down" id="nav-collapse2">
+                        <form class="navbar-form navbar-right form-inline" role="form">
+                            <div class="form-group">
+                                <label class="sr-only" for="Email">Email</label>
+                                <input class="form-control" id="Email" ng-model="userCred.username" placeholder="Email" autofocus required />
+                            </div>
+                            <div class="form-group">
+                                <label class="sr-only" for="Password">Password</label>
+                                <input type="password" class="form-control" id="Password" ng-model="userCred.password" placeholder="Password" required />
+                            </div>
+                            <button type="submit" class="btn btn-success" ng-click="login(userCred)">Sign in</button>
+                        </form>
+                    </div>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container -->
+        </nav><!-- /.navbar -->

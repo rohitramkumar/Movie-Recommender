@@ -1,20 +1,11 @@
 angular.module('myApp').service('userService', function($http, $location, $q) {
-    var usersMock = {
-    	'testUser': {
-        	username: 'testUser',
-            password: '1234'
-        },
-        'testUser2': {
-        	username: 'testUser2',
-            password: '12345'
-        }
-    };
 
 	var userService = {
     	user: undefined,
         response: undefined,
+
+        // Send user credentials to login API endpoint
     	login: function(userCredentials) {
-            // Send user info to logni endpoint
             var def = $q.defer();
 
             $http({
@@ -30,19 +21,18 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
 
                 def.resolve(userObj);
             });
-            /*var user = usersMock[userCredentials.username]
-            userService.user = ( user && ( user.password == userCredentials.password ) ) ?
-            	user : undefined;
-            return user;*/
 
             return def.promise;
 
         },
+
+        // Destroy user session
         logout: function() {
         	userService.user = undefined;
         },
+
+        // Send user credentials to signup API endpoint
         signup: function(userCredentials) {
-            // Send user info to signup endpoint
             var def = $q.defer();
 
             $http({
@@ -54,8 +44,56 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             });
 
             return def.promise;
+        },
+
+        // Add movie info to relevant watchlist API endpoint
+        addMovie: function(movieCredentials) {
+
+            var def = $q.defer();
+
+            $http({
+                url: "/api/add_movie_to_watchlist/",
+                method: "POST",
+                data: movieCredentials
+            }).success(function (response) {
+                    def.resolve(response);
+            });
+
+            return def.promise;
+        },
+
+        // Get movie watchlist from relevant API endpoint
+        getUserMovies: function() {
+
+            var def = $q.defer();
+
+            $http({
+                url: "/api/get_watchlist/",
+                method: "POST",
+                data: userService.user.email
+            }).success(function (response) {
+                    def.resolve(response);
+            });
+
+            return def.promise;
+        },
+
+        getLearningRecomendations: function(userProfile) {
+
+            var def = $q.defer();
+
+            $http({
+                url: "/api/get_learning_recommendation/",
+                method: "POST",
+                data: userProfile
+            }).success(function (response) {
+                    def.resolve(response);
+            });
+
+            return def.promise;
         }
     }
+
 
     return userService;
 })

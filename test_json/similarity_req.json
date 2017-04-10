@@ -1,0 +1,19 @@
+{
+"result": {
+    "source": "agent",
+    "resolvedQuery": "yes",
+    "action": "movie.similar",
+    "actionIncomplete": false,
+    "parameters": {},
+    "contexts": [
+      {
+        "name": "gathered-benchmark-movie",
+        "parameters": {
+          "benchmark.original": "The Shawshank Redemption",
+          "benchmark": "The Shawshank Redemption"
+        },
+        "lifespan": 1
+      }
+    ]
+  }
+}

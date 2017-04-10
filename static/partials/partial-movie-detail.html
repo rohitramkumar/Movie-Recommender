@@ -1,4 +1,31 @@
-<p> I'm in a second html file too!!! </p>
-<ul>
-    <li ng-repeat="movie in movies">{{ movie }}</li>
-</ul>
+<div style="float: right">
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading" style="font-size: large">{{movies.currentMovie.original_title}}</div>
+        <div class="panel-body" style="min-width: 500px; min-height: 300px">
+            <p><b>Poster</b></p>
+            <center><img src={{movies.currentMovie.poster}}></center>
+
+            <p><b>Overview</b></p>
+            <p>{{movies.currentMovie.overview}}</p>
+        </div>
+
+        <!-- List group -->
+        <ul class="list-group">
+            <li class="list-group-item"><b>Top Billed Cast:</b> {{(movies.currentMovie.cast).join(', ')}}</li>
+            <li class="list-group-item"><b>Release Date:</b> {{movies.currentMovie.release_date}}</li>
+            <li class="list-group-item">
+                <button type="button" class="btn btn-default" ng-click="movies.prevMovie()">Previous Result</button>
+                <button type="button" class="btn btn-default" ng-click="movies.nextMovie()">Next Result</button>
+            </li>
+        </ul>
+
+        <div ng-if="$parent.user">
+            <p>Already seen this movie?</p>
+
+            <label>Rate this movie</label><input id="userRating" type="number" min="0" max="10" onkeydown="return false" ng-model="movieCred.movieRating"/>
+
+            <center><button ng-click="addMovie(movieCred)" class="btn btn-primary">Add Movie To Watchlist</button></center>
+        </div>
+    </div>
+</div>

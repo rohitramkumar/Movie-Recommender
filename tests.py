@@ -1,49 +1,46 @@
+import json
 import unittest
 import mock
 import json
 from app import processFilteringRequest, processSimilarityRequest, prepareResponse
+from utils import MovieDBApiClient
 
 class AppTest(unittest.TestCase):
 
-	def processFilteringRequestTest(self):
-		# TODO: fill in real testcases
-		# Problem: not regression test since API queries are out of the system
-		
-		with open("test_movie_query.json", "r") as f:
-			req = json.load(f.read())
-		moviesResponse = processFilteringRequest(req)
-		assert(moviesResponse)
-		assertEqual(moviesResponse["speech"], "")
-		
-		pass
+    def test_process_filtering_request(self):
+        with open("test_json/filtering_req.json", "r") as f:
+            j = json.loads(f.read())
+            result = processFilteringRequest(j)
 
-	def processSimilarityRequestTest(self):
-		# TODO: fill in real testcases
-		# Problem: not regression test since API queries are out of the system
+    def test_process_similarity_request(self):
+        with open("test_json/similarity_req.json", "r") as f:
+            j = json.loads(f.read())
+            result = processSimilarityRequest(j)
 
-		with open("test_movie_query.json", "r") as f:
-			req = json.load(f.read())
-		moviesResponse = processFilteringRequest(req)
-		assert(moviesResponse)
-		assertEqual(moviesResponse["speech"], "")
+class UtilsTest(unittest.TestCase):
 
-		pass
+    def setUp(self):
+        self.client = MovieDBApiClient(0,0)
 
-	def prepareResponseTest(self):
+    def test_get_genre_ids(self):
+        result = self.client.getGenresIds(['Action', 'Adventure', 'Comedy'])
+        expected = [28, 12, 35]
+        self.assertEquals(result, expected)
 
-		testMovies0 = []
-		testMovies1 = ["Logan"]
-		testMovies2 = ["Logan", "Iron-Man", "Avengers"]
+    def test_get_cast_ids(self):
+        result = self.client.getCastIds(['Tom Hardy', 'Tom Hanks', 'Robin Williams'])
+        expected = [2524, 31, 2157]
+        self.assertEquals(result, expected)
 
-		# {"results":[{"title":""},{"title":""}]}
-		self.assertEqual(prepareResponse(testMovies0).get("speech"), "Sorry there are no movies that match your request")
-		self.assertEqual(prepareResponse(testMovies1).get("speech"), "I recommend the following movies: Logan")
-		self.assertEqual(prepareResponse(testMovies2).get("speech"), "I recommend the following movies: Logan,Iron-Man,Avengers")
+    def test_get_cast_ids_none(self):
+        result = self.client.getCastIds(['dsfasdfadsfads'])
+        expected = []
+        self.assertEquals(result, expected)
 
-	def spellCheckTest(self):
-		# need verifying
-		self.assertEqual(spellCheck("SuPERNan"), "superman")
-		pass
-
+    def test_encode_url_key_value(self):
+        result = self.client.encodeURLKeyValue(('key', 'value'))
+        expected = '&key=value'
+        self.assertEquals(result, expected)
+        
 if __name__ == "__main__":
-	unittest.main()
+    unittest.main()
