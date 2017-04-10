@@ -55,10 +55,11 @@ def add_movie_to_watchlist():
 
     movie_detail = json.loads(request.data)
     username = movie_detail.get("username")
+    user_id = movie_detail.get("user_id")
     movie_name = movie_detail.get("movieName")
     movie_imdb_id = movie_detail.get("movieImdbId")
     movie_rating = movie_detail.get("movieRating")
-    return utils.add_movie_to_watchlist(username, movie_name, movie_imdb_id, movie_rating)
+    return utils.add_movie_to_watchlist(username, user_id, movie_name, movie_imdb_id, movie_rating)
 
 
 @app.route("/api/get_watchlist/", methods=['POST'])

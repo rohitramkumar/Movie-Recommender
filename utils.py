@@ -79,7 +79,7 @@ def get_watchlist(username):
     return movie_list
 
 
-def add_movie_to_watchlist(username, movieName, movieImdbId, movieRating):
+def add_movie_to_watchlist(username, userID, movieName, movieImdbId, movieRating):
     """Check if user exists; if exists, add movie to specified user's watchlist.
     Also add movie to learning agent database"""
 
@@ -94,7 +94,7 @@ def add_movie_to_watchlist(username, movieName, movieImdbId, movieRating):
     model.session.commit()
     # Learning Agent watchlist.
     client = LearningAgentClient()
-    client.addMovieToUserHistory({'user_id': username,
+    client.addMovieToUserHistory({'user_id': userID,
                                   'movie_imdb_id': movieImdbId,
                                   'user_rating': movieRating,
                                   'timestamp': int(time.time())})
@@ -146,7 +146,9 @@ class MovieDBApiClient:
             castInfoResult = requests.get(MOVIE_CREDITS_URL.format(movieId, MOVIE_DB_API_KEY))
             movieInfo = json.loads(movieInfoResult.text)
             castInfo = json.loads(castInfoResult.text)
-            fullMovieDetails[counter]['imdb_id'] = movieInfo['imdb_id']
+            imdb_id_str = movieInfo['imdb_id']
+            imdb_id_str = imdb_id_str[2:]
+            fullMovieDetails[counter]['imdb_id'] = imdb_id_str
             fullMovieDetails[counter]['overview'] = movieInfo['overview']
             fullMovieDetails[counter]['original_title'] = movieInfo['original_title']
             fullMovieDetails[counter]['poster'] = MOVIE_POSTER_URL + movieInfo['poster_path']

@@ -125,7 +125,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             // Navigate movie array through nextMovie() and prevMovie()
                             // TO-DO: Write unit tests for these functions
                             $scope.movies.nextMovie = function() {
-                                if (index >= (movieList.length - 1)){
+                                if (index >= (movieList.length - 1)) {
                                     index = 0;
                                 } else {
                                     index = index + 1;
@@ -135,7 +135,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             };
 
                             $scope.movies.prevMovie = function() {
-                                if (index < 1 ){
+                                if (index < 1 ) {
                                     index = movieList.length - 1;
                                 } else {
                                     index = index - 1;
@@ -147,7 +147,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                             // If user is logged in, get learning recommendations
                             if (userService.user) {
-                                //getRecommendations();
+                                getRecommendations();
                             }
 
                             $state.go('root.home.movie_detail');
@@ -158,8 +158,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                     // Function to get learning recommendations from learning agent
                     function getRecommendations() {
-                        console.log('in recomenndations');
-
                         userService.getUserMovies().then(function(resp) {
                             if (angular.isUndefined(resp)) {
                                 console.log('Could not retrieve movies')
@@ -174,7 +172,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     movieIDList.push(movieObject['movie_imdb_id']);
                                 }
 
-                                var userProfile = {user_id:userService.user.email, candidateList:movieIDList};
+                                var userProfile = {user_id:userService.user.id, candidateList:movieIDList};
                                 return userProfile;
                             }
                         }).then(function(requestObj) {
@@ -204,7 +202,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             'movie_detail': {
                 templateUrl: 'static/partials/partial-movie-detail.html',
                 controller: function($scope, $rootScope, $state, $q, user, userService) {
-                    //console.log("I am a placeholder function!");
                     //$window.location.reload()
 
                     $scope.addMovie = function(resp) {
