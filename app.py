@@ -69,7 +69,7 @@ def get_learning_recommendation():
     req = json.loads(request.data)
     data = {"user_id" : req.get("username"), "candidate_list" : req.get("candidateList")}
     client = utils.LearningAgentClient()
-    result = client.getRecommendedMovies(data)
+    result = client.getRecommendedMovies(request.data)
     if result['result'] == 'no model':
         return jsonify("Watchlist is empty so no recommendation can be made")
     else:
