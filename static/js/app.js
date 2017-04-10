@@ -208,7 +208,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     //$window.location.reload()
 
                     $scope.addMovie = function(resp) {
-                        curMovieObject = {"username":userService.user.email, "user_id":userService.user.id, "movieName":$scope.movies.currentMovie.original_title, "movieImdbId":$scope.movies.currentMovie.imdb_id, "rating":resp.movieRating};
+                        var curMovieObject = {"username":userService.user.email, "user_id":userService.user.id, "movieName":$scope.movies.currentMovie.original_title, "movieImdbId":$scope.movies.currentMovie.imdb_id, "rating":resp.movieRating};
 
                         userService.addMovie(curMovieObject).then(function(response) {
                             if(response == "Success") {
