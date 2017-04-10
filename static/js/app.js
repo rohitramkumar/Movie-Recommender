@@ -173,28 +173,22 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             } else if (resp == "Fail") {
                                 console.log('Could not retrieve movies')
                             } else {
-                                console.log(resp)
                                 var userMovies = resp;
-                                var candidateList = [];
+                                var movieIDList = [];
 
                                 for (var index in userMovies) {
-                                    console.log(resp[index]);
                                     var movieObject = userMovies[index];
-
-                                    candidateList.push(movieObject['movie_imdb_id']);
+                                    movieIDList.push(movieObject['movie_imdb_id']);
                                 }
 
-                                console.log('About to print username');
-                                console.log(userService.user.email)
-
-                                console.log('About to print final candidate list');
-                                console.log(candidateList);
-
-                                return candidateList;
+                                var userProfile = {user_id:userService.user.email, candidateList:movieIDList};
+                                return userProfile;
                             }
                         }).then(function(requestObj) {
                             console.log('I am in the next cascasde and got the thing below!');
                             console.log(requestObj);
+
+                            //userService.get_learning_recommendation
                         });
                     }
                 }
