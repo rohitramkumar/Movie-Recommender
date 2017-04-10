@@ -132,29 +132,29 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             var movieList = respObject.result.fulfillment.data;
 
                             var index = 0;
-                            $scope.movies = movieList;
-                            $scope.movies.currentMovie = movieList[index];
+                            $rootScope.movies = movieList;
+                            $rootScope.movies.currentMovie = movieList[index];
 
                             // Navigate movie array through nextMovie() and prevMovie()
                             // TO-DO: Write unit tests for these functions
-                            $scope.movies.nextMovie = function() {
+                            $rootScope.movies.nextMovie = function() {
                                 if (index >= (movieList.length - 1)){
                                     index = 0;
                                 } else {
                                     index = index + 1;
                                 }
 
-                                $scope.movies.currentMovie = movieList[index];
+                                $rootScope.movies.currentMovie = movieList[index];
                             };
 
-                            $scope.movies.prevMovie = function() {
+                            $rootScope.movies.prevMovie = function() {
                                 if (index < 1 ){
                                     index = movieList.length - 1;
                                 } else {
                                     index = index - 1;
                                 }
 
-                                $scope.movies.currentMovie = movieList[index];
+                                $rootScope.movies.currentMovie = movieList[index];
                             };
 
                             // If user is logged in, get learning recommendations
