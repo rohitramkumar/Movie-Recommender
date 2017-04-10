@@ -156,7 +156,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                             // If user is logged in, get learning recommendations
                             if (userService.user) {
-                                getRecommendations();
+                                //getRecommendations();
                             }
 
                             $state.go('root.home.movie_detail');
