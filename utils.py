@@ -212,11 +212,8 @@ class MovieDBApiClient:
             movieSimilarityResult = requests.get(
                 MOVIE_SIMILARITY_URL.format(benchmarkMovieId, MOVIE_DB_API_KEY))
             movieSimilarityInfo = json.loads(movieSimilarityResult.text)
-            counter = 0
-            while counter < self.maxResults and counter + self.offset < len(movieSimilarityInfo.get('results')):
-                similarMovies.append(movieSimilarityInfo.get(
-                    'results')[counter + self.offset].get('title'))
-                counter += 1
+            if len(movieSimilarityInfo.get('results')) > 0:
+                similarMovies.append(movieSimilarityInfo.get('results')[0].get('title'))
         return similarMovies
 
     def encodeURLKeyValue(self, pair):

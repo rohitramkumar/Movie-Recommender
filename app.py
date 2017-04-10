@@ -136,7 +136,7 @@ def processSimilarityRequest(req):
     benchmarkMovie = utils.spellCheck(benchmarkMovie)
     similarMovies = client.getSimilarMovies(benchmarkMovie)
     movieDetails = client.getMovieDetails(similarMovies)
-    return prepareResponse(similarMovies, movieDetails, "gathered-benchmark-movie")
+    return prepareResponse(similarMovies, movieDetails, "gathered-benchmark-movie", 0)
 
 def prepareResponse(movies, movieDetails, outboundContextName, outboundContextParam):
     """Helper function that prepares the return object we send to the user
