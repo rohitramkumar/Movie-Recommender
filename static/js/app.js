@@ -80,13 +80,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         $("#rec").click(function(event) {
                             send();
                         });
-
-                        $("#userRating").keypress(function(event) {
-                          return e.metaKey || 
-                            e.which <= 0 ||
-                            e.which == 8 ||
-                            /[0-9]/.test(String.fromCharCode(e.which));
-                        })
                     });
 
                     // Function to send request to API.AI chat agent

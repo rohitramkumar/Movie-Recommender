@@ -97,7 +97,9 @@ input:active, input:focus, textarea:active, textarea:focus {
         transform: translate(0px,0px);
     }
 }
-
 .m-t-10 {
     margin-top: 10px;
-    }
+}
+userRating {
+    border: 1px solid #3F7F93;
+}
