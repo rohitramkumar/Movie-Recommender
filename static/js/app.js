@@ -187,7 +187,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 console.log('About to print final candidate list');
                                 console.log(candidateList);
                             }
-                        }).then(function()) {
+                        }).then(function() {
                             console.log('I am in the next cascasde!');
                         });
                     }
