@@ -72,13 +72,10 @@ def get_watchlist():
 @app.route("/api/get_learning_recommendation/", methods=['POST'])
 def get_learning_recommendation():
     """API endpoint which gets a movie recommendation based on a user's watchlist."""
-    print 'testing!!!'
     req = json.loads(request.data)
-    print req
     data = {"user_id": req.get("username"), "candidate_list": req.get("candidateList")}
-    print data
     client = utils.LearningAgentClient()
-    result = client.getRecommendedMovies(data)
+    result = client.getRecommendedMovies(request.data)
     if result['result'] == 'no model':
         return jsonify("Watchlist is empty so no recommendation can be made")
     else:
