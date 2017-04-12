@@ -188,6 +188,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             } else if (finalResp == "no model") {
                                 console.log("Don't render recs now");
                             } else {
+                                console.log('Final cascade');
                                 console.log(finalResp);
                                 var index = 0;
                                 var recommendationList = finalResp;
