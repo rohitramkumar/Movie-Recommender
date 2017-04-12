@@ -164,31 +164,31 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             } else if (resp == "Fail") {
                                 console.log('Could not retrieve movies')
                             } else {
-                                var userMovies = resp;
+                                var userMovies = $scope.movies;
                                 var movieIDList = [];
 
                                 for (var index in userMovies) {
+                                    console.log(index);
+                                    console.log(userMovies[index]);
+
                                     var movieObject = userMovies[index];
-                                    movieIDList.push(movieObject['movie_imdb_id']);
+
+                                    //movieIDList.push(movieObject['movie_imdb_id']);
                                 }
 
-                                var userProfile = {user_id:userService.user.id, candidateList:movieIDList};
-                                return userProfile;
+                                //var userProfile = {user_id:userService.user.id, candidateList:movieIDList};
+                                //return userProfile;
                             }
                         }).then(function(requestObj) {
-                            console.log('I am in the next cascasde and got the thing below!');
-                            console.log(requestObj);
-
-                            return userService.getLearningRecomendations(requestObj);
+                            //return userService.getLearningRecomendations(requestObj);
                         }).then(function(finalResp) {
-                            if (angular.isUndefined(finalResp)) {
+                            /*if (angular.isUndefined(finalResp)) {
                                 console.log('Could not retrieve recommendations');
                             } else if (finalResp == "Fail") {
                                 console.log('Could not retrieve recommendations');
                             } else if (finalResp == "no model") {
                                 console.log("Don't render recs now");
                             } else {
-                                console.log('Final cascade');
                                 console.log(finalResp);
                                 var index = 0;
                                 var recommendationList = finalResp;
@@ -216,7 +216,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                     $scope.recommendations.currentRecommendation = recommendationList[index];
                                 };
-
+                                */
                             }
                         });
                     }
