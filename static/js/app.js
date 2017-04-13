@@ -172,7 +172,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     if (movieObject == null) {
                                         continue;
                                     }
-
+                                    console.log(movieObject);
+                                    console.log(movieObject['imdb_id']);
                                     movieIDList.push(movieObject['imdb_id']);
                                 }
 
