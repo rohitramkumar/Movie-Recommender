@@ -192,11 +192,15 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 var index = 0;
                                 var recommendationList = finalResp;
                                 $scope.recommendations = recommendationList;
+                                if(typeof finalResp !== 'object') {
+                                    return;
+                                }
+
                                 $scope.recommendations.currentRecommendation = recommendationList[index];
 
                                 // Navigate movie array through nextRec() and prevRec()
                                 // TO-DO: Write unit tests for these functions
-                                $scope.recommendations.nextRecommendation = function() {
+                                $scope.nextRecommendation = function() {
                                     if (index >= (recommendationList.length - 1)) {
                                         index = 0;
                                     } else {
@@ -206,7 +210,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     $scope.recommendations.currentRecommendation = recommendationList[index];
                                 };
 
-                                $scope.recommendations.prevMovie = function() {
+                                $scope.prevMovie = function() {
                                     if (index < 1 ) {
                                         index = recommendationList.length - 1;
                                     } else {
