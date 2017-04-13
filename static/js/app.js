@@ -169,7 +169,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 for (var index in userMovies) {
                                     var movieObject = userMovies[index];
 
-                                    if (!movieObject == null) {
+                                    if (movieObject == null) {
                                         continue;
                                     }
 
