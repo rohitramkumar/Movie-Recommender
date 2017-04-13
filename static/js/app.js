@@ -124,7 +124,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                             // Navigate movie array through nextMovie() and prevMovie()
                             // TO-DO: Write unit tests for these functions
-                            $scope.movies.nextMovie = function() {
+                            $scope.nextMovie = function() {
                                 if (index >= (movieList.length - 1)) {
                                     index = 0;
                                 } else {
@@ -134,7 +134,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.movies.currentMovie = movieList[index];
                             };
 
-                            $scope.movies.prevMovie = function() {
+                            $scope.prevMovie = function() {
                                 if (index < 1 ) {
                                     index = movieList.length - 1;
                                 } else {
