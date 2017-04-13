@@ -144,7 +144,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.movies.currentMovie = movieList[index];
                             };
 
-
                             // If user is logged in, get learning recommendations
                             if (userService.user) {
                                 getRecommendations();
@@ -168,27 +167,20 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 var movieIDList = [];
                                 console.log('About to get into loop');
                                 for (var index in userMovies) {
-                                    console.log(index);
-                                    console.log(userMovies[index]);
-
                                     var movieObject = userMovies[index];
-
-                                    //movieIDList.push(movieObject['movie_imdb_id']);
+                                    movieIDList.push(movieObject['imdb_id']);
                                 }
 
-                                //var userProfile = {user_id:userService.user.id, candidateList:movieIDList};
-                                //return userProfile;
+                                var userProfile = {user_id:userService.user.id, candidateList:movieIDList};
+                                return userProfile;
                             }
                         }).then(function(requestObj) {
-                            //return userService.getLearningRecomendations(requestObj);
-                            console.log('debug');
+                            return userService.getLearningRecomendations(requestObj);
                         }).then(function(finalResp) {
                             if (angular.isUndefined(finalResp)) {
                                 console.log('Could not retrieve recommendations');
-                            } else if (finalResp == "Fail") {
-                                console.log('Could not retrieve recommendations');
                             } else if (finalResp == "no model") {
-                                console.log("Don't render recs now");
+                                console.log("No recommendations returned");
                             } else {
                                 console.log(finalResp);
                                 var index = 0;
