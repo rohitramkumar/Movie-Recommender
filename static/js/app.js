@@ -166,7 +166,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             } else {
                                 var userMovies = $scope.movies;
                                 var movieIDList = [];
-
+                                console.log('About to get into loop');
                                 for (var index in userMovies) {
                                     console.log(index);
                                     console.log(userMovies[index]);
@@ -181,8 +181,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             }
                         }).then(function(requestObj) {
                             //return userService.getLearningRecomendations(requestObj);
+                            console.log('debug');
                         }).then(function(finalResp) {
-                            /*if (angular.isUndefined(finalResp)) {
+                            if (angular.isUndefined(finalResp)) {
                                 console.log('Could not retrieve recommendations');
                             } else if (finalResp == "Fail") {
                                 console.log('Could not retrieve recommendations');
@@ -216,7 +217,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                     $scope.recommendations.currentRecommendation = recommendationList[index];
                                 };
-                                */
+
                             }
                         });
                     }
