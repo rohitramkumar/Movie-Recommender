@@ -168,6 +168,11 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 console.log('About to get into loop');
                                 for (var index in userMovies) {
                                     var movieObject = userMovies[index];
+
+                                    if (!movieObject == null) {
+                                        continue;
+                                    }
+
                                     movieIDList.push(movieObject['imdb_id']);
                                 }
 
