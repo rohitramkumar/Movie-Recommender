@@ -180,7 +180,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.recommendations = recommendationList;
 
                                 // Sometimes the server responds with an error string
-                                if(typeof finalResp !== 'object') {
+                                if(typeof finalResp === 'string') {
                                     return;
                                 }
 
