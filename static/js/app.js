@@ -188,7 +188,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 console.log('At this point the current rec is');
                                 console.log($scope.recommendations.currentRecommendation);
 
-                                for (var num in candidateList) {
+                                for (var num in $scope.movies) {
                                     if (recommendationList[index] == $scope.movies[num].imdb_id) {
                                         $scope.recommendations.currentRecommendation = $scope.movies[num];
                                         break;
