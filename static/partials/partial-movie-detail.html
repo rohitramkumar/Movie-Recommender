@@ -19,11 +19,12 @@
                 <button type="button" class="btn btn-default" ng-click="nextMovie()">Next Result</button>
             </li>
         </ul>
+        <hr>
 
         <div ng-if="$parent.user">
             <p><h3>Already seen this movie?</h3></p>
 
-            <label>Rate this movie</label><input id="userRating" type="number" min="0" max="10" onkeydown="return false" ng-model="movieCred.movieRating"/>
+            <label><h4>Rate this movie</h4></label><input id="userRating" type="number" min="0" max="10" onkeydown="return false" ng-model="movieCred.movieRating"/ required>
 
             <center><button ng-click="addMovie(movieCred)" class="btn btn-primary">Add Movie To Watchlist</button></center>
         </div>
