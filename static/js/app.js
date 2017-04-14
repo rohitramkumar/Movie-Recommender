@@ -185,10 +185,12 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 }
 
                                 $scope.recommendations.currentRecommendation = $scope.movies[index];
+                                console.log('At this point the current rec is');
+                                console.log($scope.recommendations.currentRecommendation);
 
                                 for (var num in candidateList) {
                                     if (recommendationList[index] == $scope.movies[num].imdb_id) {
-                                        $scope.recommendations.currentRecommendation = recommendationList[index];
+                                        $scope.recommendations.currentRecommendation = $scope.movies[num];
                                         break;
                                     }
                                 }
