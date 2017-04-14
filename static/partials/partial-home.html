@@ -24,7 +24,7 @@
 
                 <div class="panel-body" style="min-width: 400px; min-height: 300px" ng-if="recommendations && movies && user">
                     <p><b>Our suggested pick based on your profile</b></p>
-                    <center><img src={{recommendations.currentRecommendation.poster}}></center>
+                    <center><img ng-if="recommendations.currentRecommendation" src={{recommendations.currentRecommendation.poster}}></center>
 
                     <p><b>Movie Name</b></p>
                     <p>{{recommendations.currentRecommendation.original_title}}</p>
