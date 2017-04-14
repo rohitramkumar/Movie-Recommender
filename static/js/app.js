@@ -157,41 +157,36 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                     // Function to get learning recommendations from learning agent
                     function getRecommendations() {
-                        userService.getUserMovies().then(function(resp) {
-                            if (angular.isUndefined(resp)) {
-                                console.log('Could not retrieve movies')
-                            } else if (resp == "Fail") {
-                                console.log('Could not retrieve movies')
-                            } else {
-                                var userMovies = $scope.movies;
-                                var movieIDList = [];
-                                console.log('About to get into loop');
-                                for (var index in userMovies) {
-                                    var movieObject = userMovies[index];
 
-                                    if (movieObject == null) {
-                                        continue;
-                                    }
-                                    console.log(movieObject);
-                                    console.log(movieObject['imdb_id']);
-                                    movieIDList.push(movieObject['imdb_id']);
-                                }
+                        var userMovies = $scope.movies;
+                        var movieIDList = [];
+                        console.log('About to get into loop');
+                        for (var index in userMovies) {
+                            var movieObject = userMovies[index];
 
-                                var userProfile = {user_id:userService.user.id, candidateList:movieIDList};
-                                return userProfile;
+                            if (movieObject == null) {
+                                continue;
                             }
-                        }).then(function(requestObj) {
-                            return userService.getLearningRecomendations(requestObj);
-                        }).then(function(finalResp) {
-                            if (angular.isUndefined(finalResp)) {
+                            console.log(movieObject);
+                            console.log(movieObject['imdb_id']);
+                            movieIDList.push(movieObject['imdb_id']);
+                        }
+
+                        var userProfile = {user_id:userService.user.id, candidateList:movieIDList};
+
+                        userService.getLearningRecomendations(userProfile)
+                        .then(function(resp) {
+                            if (angular.isUndefined(resp)) {
                                 console.log('Could not retrieve recommendations');
-                            } else if (finalResp == "no model") {
+                            } else if (resp == "no model") {
                                 console.log("No recommendations returned");
                             } else {
-                                console.log(finalResp);
+                                console.log(resp);
                                 var index = 0;
-                                var recommendationList = finalResp;
+                                var recommendationList = resp;
                                 $scope.recommendations = recommendationList;
+
+                                // Sometimes the server responds with an error string
                                 if(typeof finalResp !== 'object') {
                                     return;
                                 }
@@ -219,7 +214,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                     $scope.recommendations.currentRecommendation = recommendationList[index];
                                 };
-
                             }
                         });
                     }
