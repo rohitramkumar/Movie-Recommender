@@ -21,13 +21,14 @@
         <div style="float: center">
             <div class="panel panel-default">
                 <div class="panel-heading" style="font-size: large" ng-if="!recommendations && movies && user">Loading recommendations..</div>
+                <div class="panel-heading" style="font-size: large" ng-if="!recommendations && movies && !user">Sign in to get personalized movie suggestions!</div>
 
                 <div class="panel-body" style="min-width: 400px; min-height: 300px" ng-if="recommendations && movies && user">
-                    <p><b>Our suggested pick based on your profile</b></p>
+                    <p><h2>Our suggested pick based on your profile</h2></p>
                     <center><img ng-if="recommendations.currentRecommendation" src={{recommendations.currentRecommendation.poster}}></center>
 
-                    <p><b>Movie Name</b></p>
-                    <p>{{recommendations.currentRecommendation.original_title}}</p>
+                    <center><p><b>Movie Name</b></p>
+                    <p>{{recommendations.currentRecommendation.original_title}}</p></center>
                 </div>
 
                 <!-- List group
