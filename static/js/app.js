@@ -157,18 +157,11 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                     // Function to get learning recommendations from learning agent
                     function getRecommendations() {
-
                         var userMovies = $scope.movies;
                         var movieIDList = [];
-                        console.log('About to get into loop');
+
                         for (var index in userMovies) {
                             var movieObject = userMovies[index];
-
-                            if (movieObject == null) {
-                                continue;
-                            }
-                            console.log(movieObject);
-                            console.log(movieObject['imdb_id']);
                             movieIDList.push(movieObject['imdb_id']);
                         }
 
@@ -191,7 +184,14 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     return;
                                 }
 
-                                $scope.recommendations.currentRecommendation = recommendationList[index];
+                                $scope.recommendations.currentRecommendation = $scope.movies[index];
+
+                                for (var num in candidateList) {
+                                    if (recommendationList[index] == $scope.movies[num].imdb_id) {
+                                        $scope.recommendations.currentRecommendation = recommendationList[index];
+                                        break;
+                                    }
+                                }
 
                                 // Navigate movie array through nextRec() and prevRec()
                                 // TO-DO: Write unit tests for these functions
