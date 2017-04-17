@@ -61,14 +61,12 @@ def add_movie_to_watchlist():
     movie_rating = movie_detail.get("rating")
     return utils.add_movie_to_watchlist(username, user_id, movie_name, movie_imdb_id, movie_rating)
 
-
 @app.route("/api/get_watchlist/", methods=['POST'])
 def get_watchlist():
     """API endpoint which gets all movies in a user's watchlist."""
 
     user_id = request.data
     return jsonify(utils.get_watchlist(user_id))
-
 
 @app.route("/api/get_learning_recommendation/", methods=['POST'])
 def get_learning_recommendation():
@@ -82,6 +80,14 @@ def get_learning_recommendation():
     else:
         return jsonify(result['result'])
 
+@app.route("/api/get_showtimes/", methods=['POST'])
+def get_showtimes():
+    """"API endpoint which gets showtimes for a movie given the user's location."""
+    req = json.loads(request.data)
+    movie_name = req.get("name")
+    coordinates = {'lat' : req.get('lat'), 'lng' : req.get('lng')}
+    showtimes = utils.get_showtimes(movie_names, coordinates)
+    return jsonify(showtimes)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -98,7 +104,6 @@ def webhook():
     r = make_response(json.dumps(res))
     r.headers['Content-Type'] = 'application/json'
     return r
-
 
 def processFilteringRequest(req):
     """Deals with processing the movie filters provided by a user and feeding
