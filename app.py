@@ -134,8 +134,7 @@ def processFilteringRequest(req):
     # Construct movie discovery URL.
     finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_genres', genreIds))
     finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_people', castIds))
-    finalDiscoveryURL = finalDiscoveryURL + \
-        client.encodeURLKeyValue(('certification', userSpecifiedRating))
+    finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('certification_country', 'US')) + client.encodeURLKeyValue(('certification', userSpecifiedRating))
     movies = client.getDiscoveredMovies(finalDiscoveryURL)
     movieDetails = client.getMovieDetails(movies)
     return prepareResponse(movies, movieDetails, "gathered-filters", maxResults + totalResultsGiven)
