@@ -173,7 +173,6 @@ class MovieDBApiClient:
             fullMovieDetails[counter]['poster'] = MOVIE_POSTER_URL + movieInfo['poster_path']
             fullMovieDetails[counter]['cast'] = [item['name'] for item in castInfo['cast'][:5]]
             fullMovieDetails[counter]['release_date'] = movieInfo['release_date']
-            fullMovieDetails[counter][]
             counter += 1
         return fullMovieDetails
 

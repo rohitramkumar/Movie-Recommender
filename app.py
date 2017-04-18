@@ -86,7 +86,7 @@ def get_showtimes():
     req = json.loads(request.data)
     movie_name = req.get("name")
     coordinates = {'lat' : req.get('lat'), 'lng' : req.get('lng')}
-    showtimes = utils.get_showtimes(movie_names, coordinates)
+    showtimes = utils.get_showtimes(movie_name, coordinates)
     return jsonify(showtimes)
 
 @app.route('/webhook', methods=['POST'])
@@ -135,6 +135,7 @@ def processFilteringRequest(req):
     finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_genres', genreIds))
     finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_people', castIds))
     finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('certification_country', 'US')) + client.encodeURLKeyValue(('certification', userSpecifiedRating))
+    print(finalDiscoveryURL)
     movies = client.getDiscoveredMovies(finalDiscoveryURL)
     movieDetails = client.getMovieDetails(movies)
     return prepareResponse(movies, movieDetails, "gathered-filters", maxResults + totalResultsGiven)
