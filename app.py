@@ -132,11 +132,9 @@ def processFilteringRequest(req):
     genreIds = client.getGenresIds(userSpecifiedGenres)
     castIds = client.getCastIds(userSpecifiedCast)
     # Construct movie discovery URL.
-    print(userSpecifiedRating)
     finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_genres', genreIds))
     finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_people', castIds))
     finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('certification_country', 'US'))
-    print(client.encodeURLKeyValue(('certification', userSpecifiedRating)))
     finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('certification', userSpecifiedRating))
     print(finalDiscoveryURL)
     movies = client.getDiscoveredMovies(finalDiscoveryURL)
