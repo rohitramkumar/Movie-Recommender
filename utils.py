@@ -244,10 +244,8 @@ class MovieDBApiClient:
         else:
             if type(pair[1]) == list:
                 return '&' + pair[0] + '=' + ''.join(str(i) for i in pair[1])
-            elif type(pair[1]) == str:
-                return '&' + pair[0] + '=' + pair[1]
             else:
-                return ""
+                return '&' + pair[0] + '=' + pair[1]
 
 
 class LearningAgentClient:
