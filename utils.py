@@ -5,9 +5,11 @@ import os
 import model
 import time
 
-APIAI_KEY = 'd9854338952446d589f83e6a575e0ba4'
-BING_SC_API_KEY = '1c964897dce84d8cb04b5e8ff4634d48'
-MOVIE_DB_API_KEY = '207c3617b856ea5adac5ff6ad68b0bb7'
+ONCONNECT_API_KEY = os.environ['ONCONNECT_API_KEY']
+BING_SC_API_KEY = os.environ['BING_SC_API_KEY']
+MOVIE_DB_API_KEY = os.environ['MOVIE_DB_API_KEY']
+# API which provides movie showtimes
+SHOWTIMES_URL = 'http://data.tmsapi.com/v1.1/movies/showings?api_key={}&startDate={}&lat={}&lng={}'
 # Database that provides simple filtering.
 MOVIE_DB_URL = 'https://api.themoviedb.org/3/'
 # URL Endpoints for different types of filtering data.
@@ -110,7 +112,7 @@ def spellCheck(query):
     encodedQuery = urllib.quote_plus(query)
     url = BING_SC_URL + '&text=' + encodedQuery
     headers = {'Content-Type': 'application/x-www-form-urlencoded',
-               'Ocp-Apim-Subscription-Key': '1c964897dce84d8cb04b5e8ff4634d48'}
+               'Ocp-Apim-Subscription-Key': BING_SC_API_KEY}
     spellCheckResponse = requests.post(url, headers=headers)
     spellCheckInfo = json.loads(spellCheckResponse.text)
     for flaggedToken in spellCheckInfo.get('flaggedTokens'):
@@ -119,6 +121,24 @@ def spellCheck(query):
         newQuery = newQuery.replace(token, suggestion)
     return newQuery
 
+
+def get_showtimes(movie_name, lat_lng):
+
+    showtime_data = {}
+    date = time.strftime("%Y-%m-%d")
+    url = SHOWTIMES_URL.format(ONCONNECT_API_KEY, date, lat_lng['lat'], lat_lng['lng'])
+    result = requests.get(url)
+    info = result.json()
+    for movie_info in info:
+        name = movie_info['title']
+        if movie_name == name:
+            showtimes = movie_info['showtimes']
+            for showtime in showtimes:
+                theatre_name = showtime['theatre']['name']
+                if theatre_name not in showtime_data:
+                    showtime_data[theatre_name] = []
+                showtime_data[theatre_name].append(showtime['dateTime'])
+    return showtime_data
 
 class MovieDBApiClient:
 
@@ -237,8 +257,6 @@ class LearningAgentClient:
     def getRecommendedMovies(self, data):
         result = requests.post(LEARNING_AGENT_REC_URL, json=data, auth=(
             "movierecommender", "vast_seas_of_infinity"), verify=False)
-        print 'in client'
-        print result
         return result.json()
 
     def addMovieToUserHistory(self, data):

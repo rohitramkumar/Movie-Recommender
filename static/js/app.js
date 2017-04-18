@@ -297,7 +297,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     $scope.signup = function(cred) {
                         userService.signup(cred).then(function(response) {
                             if(response == "Success") {
-                                alert('Succesfuly signed up');
                                 $state.go('root.home');
                             } else {
                                 alert(response);
@@ -321,7 +320,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         alert('Username or password incorrect.')
                     }
                     else {
-                        alert('Thanks for logging in!')
                         console.log($scope.user)
                         $state.go('root.home');
                     }
