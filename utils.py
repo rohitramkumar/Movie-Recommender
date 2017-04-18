@@ -140,6 +140,7 @@ def get_showtimes(movie_name, lat_lng):
                 showtime_data[theatre_name].append(showtime['dateTime'])
     return showtime_data
 
+
 class MovieDBApiClient:
 
     """This class abstracts API calls for the api.themoviedb.org."""
