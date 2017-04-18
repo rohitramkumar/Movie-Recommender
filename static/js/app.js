@@ -188,7 +188,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 console.log('Got showtimes for this movie!!');
                                 console.log(resp)
 
-                                $scope.movieShotimes = resp;
+                                $scope.movieShowtimes = resp;
                             }
                         });
 
