@@ -85,6 +85,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             navigator.geolocation.getCurrentPosition(function(position) {
                                 console.log(position.coords.latitude)
                                 console.log(position.coords.longitude)
+                                $scope.latitude = position.coords.latitude;
+                                $scope.longitude = position.coords.longitude;
                             }, function(error) {
                                 alert('You blocked geolocation. ')
                             });
@@ -155,6 +157,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.movies.currentMovie = movieList[index];
                             };
 
+                            // Get movie showtimes
+                            getShowtimes();
+
                             // If user is logged in, get learning recommendations
                             if (userService.user) {
                                 getRecommendations();
@@ -164,6 +169,24 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         }
 
                         $("#input").val('');
+                    }
+
+                    function getShowtimes() {
+                        var currentMovie = $scope.movies[0];
+                        var movieList = {name:currentMovie, lat:$scope.latitude, lng:$scope.longitude};
+
+                        userService.getMovieShowtimes(movieList).then(function(resp) {
+                            if (angular.isUndefined(resp)) {
+                                console.log('Could not retrieve showtimes')
+                            } else if (resp == "Fail") {
+                                console.log('Could not retrieve showtimes')
+                            } else {
+                                console.log('Got showtimes for movie!!');
+                                console.log(resp)
+                                $scope.geolocationMovie = resp;
+                            }
+                        });
+
                     }
 
                     // Function to get learning recommendations from learning agent

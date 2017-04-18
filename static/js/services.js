@@ -91,6 +91,22 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             });
 
             return def.promise;
+        },
+
+
+        getMovieShowtimes: function(movieList) {
+
+            var def = $q.defer();
+
+            $http({
+                url: "/api/get_showtimes/",
+                method: "POST",
+                data: movieList
+            }).success(function (response) {
+                def.resolve(response);
+            });
+
+            return def.promise;
         }
     }
 
