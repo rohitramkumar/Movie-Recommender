@@ -172,7 +172,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     }
 
                     function getShowtimes() {
-                        var currentMovie = $scope.movies[0];
+                        var currentMovie = $scope.movies[0].original_title;
                         var movieList = {name:currentMovie, lat:$scope.latitude, lng:$scope.longitude};
 
                         userService.getMovieShowtimes(movieList).then(function(resp) {
