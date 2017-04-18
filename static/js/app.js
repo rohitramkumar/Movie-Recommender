@@ -138,6 +138,10 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                             console.log('the show times for cur movie are:');
                             console.log($scope.movieShowtimes);
+                            // Hack to get incoming movie details if user asked for more movies.
+                            $("#nextResult").trigger("click");
+                            $("#previousResult").trigger("click");
+
                             // Navigate movie array through nextMovie() and prevMovie()
                             // TO-DO: Write unit tests for these functions
                             $scope.nextMovie = function() {

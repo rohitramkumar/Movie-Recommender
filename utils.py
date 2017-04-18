@@ -238,16 +238,14 @@ class MovieDBApiClient:
         """Takes a tuple consisting of a key and a value and encodes it in a format
         that is acceptable for a url string. This is useful for appending
         parameters and their values to an API url."""
-
+        print(pair)
         if len(pair[1]) == 0 or len(pair[0]) == 0:
             return ""
         else:
             if type(pair[1]) == list:
                 return '&' + pair[0] + '=' + ''.join(str(i) for i in pair[1])
-            elif type(pair[1]) == str:
-                return '&' + pair[0] + '=' + pair[1]
             else:
-                return ""
+                return '&' + pair[0] + '=' + pair[1]
 
 
 class LearningAgentClient:
