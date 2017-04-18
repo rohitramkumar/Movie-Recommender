@@ -134,6 +134,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             var index = 0;
                             $scope.movies = movieList;
                             $scope.movies.currentMovie = movieList[index];
+                            $scope.movies.currentMovie.showtimes = getShowtimes($scope.movies.currentMovie.original_title);
 
                             // Navigate movie array through nextMovie() and prevMovie()
                             // TO-DO: Write unit tests for these functions
@@ -145,6 +146,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 }
 
                                 $scope.movies.currentMovie = movieList[index];
+                                $scope.movies.currentMovie.showtimes = getShowtimes($scope.movies.currentMovie.original_title);
                             };
 
                             $scope.prevMovie = function() {
@@ -155,10 +157,11 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 }
 
                                 $scope.movies.currentMovie = movieList[index];
+                                $scope.movies.currentMovie.showtimes = getShowtimes($scope.movies.currentMovie.original_title);
                             };
 
                             // Get movie showtimes
-                            getShowtimes();
+                            //getShowtimes();
 
                             // If user is logged in, get learning recommendations
                             if (userService.user) {
@@ -171,9 +174,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         $("#input").val('');
                     }
 
-                    function getShowtimes() {
-                        var currentMovie = $scope.movies[0].original_title;
-                        var movieList = {name:currentMovie, lat:String($scope.latitude), lng:String($scope.longitude)};
+                    function getShowtimes(movieName) {
+                        var movieList = {name:movieName, lat:String($scope.latitude), lng:String($scope.longitude)};
 
                         userService.getMovieShowtimes(movieList).then(function(resp) {
                             if (angular.isUndefined(resp)) {
@@ -181,9 +183,10 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             } else if (resp == "Fail") {
                                 console.log('Could not retrieve showtimes')
                             } else {
-                                console.log('Got showtimes for movie!!');
+                                console.log('Got showtimes for this movie!!');
                                 console.log(resp)
-                                $scope.geolocationMovie = resp;
+
+                                return resp;
                             }
                         });
 
@@ -214,6 +217,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.recommendations = recommendationList;
 
                                 // Sometimes the server responds with an error string
+                                // TO-DO: Ask learning group to not to do this?
                                 if(typeof finalResp === 'string') {
                                     return;
                                 }
