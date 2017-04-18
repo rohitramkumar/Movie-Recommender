@@ -14,7 +14,7 @@
         <ul class="list-group">
             <li class="list-group-item"><b>Top Billed Cast:</b> {{(movies.currentMovie.cast).join(', ')}}</li>
             <li class="list-group-item"><b>Release Date:</b> {{movies.currentMovie.release_date}}</li>
-            <li class="list-group-item"><b>Movie Showtimes:</b> {{movies.currentMovie.showtimes[0]}}</li>
+            <li class="list-group-item"><b>Movie Showtimes:</b> {{movies.currentMovie.showtimes}}</li>
 
             <li class="list-group-item">
                 <button type="button" class="btn btn-default" ng-click="prevMovie()">Previous Result</button>
