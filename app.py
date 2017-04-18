@@ -89,7 +89,7 @@ def get_showtimes():
     req = json.loads(request.data)
     movie_name = req.get("name")
     coordinates = {'lat': req.get('lat'), 'lng': req.get('lng')}
-    showtimes = utils.get_showtimes(movie_names, coordinates)
+    showtimes = utils.get_showtimes(movie_name, coordinates)
     return jsonify(showtimes)
 
 
