@@ -122,6 +122,10 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             $scope.movies = movieList;
                             $scope.movies.currentMovie = movieList[index];
 
+                            // Hack to get incoming movie details if user asked for more movies.
+                            $("#nextResult").trigger("click");
+                            $("#previousResult").trigger("click");
+
                             // Navigate movie array through nextMovie() and prevMovie()
                             // TO-DO: Write unit tests for these functions
                             $scope.movies.nextMovie = function() {
