@@ -134,9 +134,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             var index = 0;
                             $scope.movies = movieList;
                             $scope.movies.currentMovie = movieList[index];
-                            $scope.movies.currentMovie.showtimes = getShowtimes($scope.movies.currentMovie.original_title);
+                            $scope.movieShowtimes = getShowtimes($scope.movies.currentMovie.original_title);
                             console.log('the show times for cur movie are:');
-                            console.log($scope.movies.currentMovie.showtimes);
+                            console.log($scope.movieShowtimes);
                             // Navigate movie array through nextMovie() and prevMovie()
                             // TO-DO: Write unit tests for these functions
                             $scope.nextMovie = function() {
@@ -147,7 +147,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 }
 
                                 $scope.movies.currentMovie = movieList[index];
-                                $scope.movies.currentMovie.showtimes = getShowtimes($scope.movies.currentMovie.original_title);
+                                $scope.movieShowtimes = getShowtimes($scope.movies.currentMovie.original_title);
                             };
 
                             $scope.prevMovie = function() {
@@ -158,7 +158,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 }
 
                                 $scope.movies.currentMovie = movieList[index];
-                                $scope.movies.currentMovie.showtimes = getShowtimes($scope.movies.currentMovie.original_title);
+                                $scope.movieShowtimes = getShowtimes($scope.movies.currentMovie.original_title);
                             };
 
                             // Get movie showtimes
