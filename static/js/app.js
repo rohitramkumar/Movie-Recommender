@@ -170,47 +170,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     index = movieList.length - 1;
                                 } else {
                                     index = index - 1;
-                                    $scope.movies.showtimes = function(){
-                                        var postalCode = "61820";
-                                        var movieID = "12792395";
-                                        var d = new Date();
-                                        var dd = d.getDate();
-                                        var mm = d.getMonth()+1;
-                                        var yyyy = d.getFullYear();
-                                        if(dd<10){
-                                            dd='0'+dd;
-                                        }
-                                        if(mm<10){
-                                            mm='0'+mm;
-                                        }
-                                        var today = yyyy+'-'+mm+'-'+dd;
-
-                                        $.ajax({
-                                            type: "GET",
-                                            url: "http://data.tmsapi.com/v1.1/movies/showings?startDate=" + today +
-                                            "&zip=" + postalCode +
-                                            "&api_key=t4enxhzcqzkgpge8jjym9h4t",
-                                            contentType: "application/json; charset=utf-8",
-                                            dataType: "json",
-
-                                            success: function(data) {
-                                                console.log(data);
-                                                for (var i = 0; i < data.length; i++) {
-                                                    if((data[i.toString()].title).contains($scope.movies.currentMovie.original_title)){
-                                                        $scope.showtimes = data[i].showtimes.toString();
-                                                    }
-                                                }
-
-                                            },
-                                            error: function() {
-                                                setResponse("Internal Server Error");
-                                            }
-                                        });
-                                    };
-
-                                    $state.go('root.home.movie_detail');
-
-
                                 }
 
                                 $scope.movies.currentMovie = movieList[index];
@@ -241,9 +200,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 console.log('Could not retrieve showtimes')
                             } else {
                                 console.log('Got showtimes for this movie!!');
-                                console.log(resp)
 
                                 $scope.movieShowtimes = resp;
+                                console.log($scope.movieShowtimes);
                             }
                         });
 
@@ -374,7 +333,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         } else if (resp == "Fail") {
                             console.log('Could not retrieve movies')
                         } else {
-                            console.log(resp)
+                            console.log(resp);
                             $scope.userMovies = resp;
                         }
                     });
@@ -415,7 +374,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         alert('Username or password incorrect.')
                     }
                     else {
-                        console.log($scope.user)
+                        console.log($scope.user);
                         $state.go('root.home');
                     }
                 });

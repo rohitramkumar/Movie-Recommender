@@ -5,9 +5,9 @@ import os
 import model
 import time
 
-ONCONNECT_API_KEY = os.environ['ONCONNECT_API_KEY']
-BING_SC_API_KEY = os.environ['BING_SC_API_KEY']
-MOVIE_DB_API_KEY = os.environ['MOVIE_DB_API_KEY']
+ONCONNECT_API_KEY = "qm8s4qjj43mkkyyxdrxdekmy"
+BING_SC_API_KEY = "1c964897dce84d8cb04b5e8ff4634d48"
+MOVIE_DB_API_KEY = "207c3617b856ea5adac5ff6ad68b0bb7"
 # API which provides movie showtimes
 SHOWTIMES_URL = 'http://data.tmsapi.com/v1.1/movies/showings?api_key={}&startDate={}&lat={}&lng={}'
 # Database that provides simple filtering.
