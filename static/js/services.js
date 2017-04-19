@@ -3,8 +3,9 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
 	var userService = {
     	user: undefined,
         response: undefined,
+
+        // Send user credentials to login API endpoint
     	login: function(userCredentials) {
-            // Send user info to logni endpoint
             var def = $q.defer();
 
             $http({
@@ -24,11 +25,14 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             return def.promise;
 
         },
+
+        // Destroy user session
         logout: function() {
         	userService.user = undefined;
         },
+
+        // Send user credentials to signup API endpoint
         signup: function(userCredentials) {
-            // Send user info to signup endpoint
             var def = $q.defer();
 
             $http({
@@ -41,26 +45,30 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
 
             return def.promise;
         },
-        add_movie: function(userCredentials) {
+
+        // Add movie info to relevant watchlist API endpoint
+        addMovie: function(movieCredentials) {
 
             var def = $q.defer();
 
             $http({
-                url: "/api/add_movie/",
+                url: "/api/add_movie_to_watchlist/",
                 method: "POST",
-                data: userCredentials
+                data: movieCredentials
             }).success(function (response) {
                     def.resolve(response);
             });
 
             return def.promise;
         },
+
+        // Get movie watchlist from relevant API endpoint
         getUserMovies: function() {
 
             var def = $q.defer();
 
             $http({
-                url: "/api/get_movie_all/",
+                url: "/api/get_watchlist/",
                 method: "POST",
                 data: userService.user.email
             }).success(function (response) {
@@ -69,16 +77,33 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
 
             return def.promise;
         },
-        getMovieData: function() {
+
+        getLearningRecomendations: function(userProfile) {
 
             var def = $q.defer();
 
             $http({
-                url: "/api/getFullMovieDetails/",
+                url: "/api/get_learning_recommendation/",
                 method: "POST",
-                data: userService.user.email
+                data: userProfile
             }).success(function (response) {
                     def.resolve(response);
+            });
+
+            return def.promise;
+        },
+
+
+        getMovieShowtimes: function(movieList) {
+
+            var def = $q.defer();
+
+            $http({
+                url: "/api/get_showtimes/",
+                method: "POST",
+                data: movieList
+            }).success(function (response) {
+                def.resolve(response);
             });
 
             return def.promise;

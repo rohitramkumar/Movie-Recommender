@@ -3,15 +3,19 @@
         <!-- Default panel contents -->
         <div class="panel-heading" style="font-size: large">{{movies.currentMovie.original_title}}</div>
         <div class="panel-body" style="min-width: 500px; min-height: 300px">
+            <p><b>Poster</b></p>
+            <center><img src={{movies.currentMovie.poster}}></center>
+
             <p><b>Overview</b></p>
             <p>{{movies.currentMovie.overview}}</p>
-            <img src={{movies.currentMovie.poster}}>
         </div>
 
         <!-- List group -->
         <ul class="list-group">
             <li class="list-group-item"><b>Top Billed Cast:</b> {{(movies.currentMovie.cast).join(', ')}}</li>
-            <li class="list-group-item"><b>IMDB ID:</b> {{movies.currentMovie.imdb_id}}</li>
+            <li class="list-group-item"><b>Release Date:</b> {{movies.currentMovie.release_date}}</li>
+            <li class="list-group-item"><b>Movie Showtimes:</b> {{movies.movieShowtimes['AMC Champaign 13']}}</li>
+
             <li class="list-group-item">
                 <button type="button" class="btn btn-default" ng-click="movies.prevMovie()">Previous Result</button>
                 <button type="button" class="btn btn-default" ng-click="movies.nextMovie()">Next Result</button>
@@ -19,6 +23,13 @@
             </li>
             <li class="list-group-item">{{showtimes}}</li>
         </ul>
+
+        <div ng-if="$parent.user">
+            <p><h3>Already seen this movie?</h3></p>
+
+            <label><h4>Rate this movie</h4></label><input id="userRating" type="number" min="0" max="10" onkeydown="return false" ng-model="movieCred.movieRating"/ required>
+            <center><button ng-click="addMovie(movieCred)" class="btn btn-primary">Add Movie To Watchlist</button></center>
+        </div>
     </div>
 
-</div>
+</div></div>

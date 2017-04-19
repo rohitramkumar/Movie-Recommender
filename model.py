@@ -7,7 +7,8 @@ from sqlalchemy.orm import relationship, backref
 import os
 
 # Sessions
-engine = create_engine('postgres://sibkuzvydevgqi:255578d74ecc93bc32ec26a19acd225e7651d9e8e0b640a176759d3c35037ed7@ec2-184-73-222-194.compute-1.amazonaws.com:5432/d4tqub1q54h1ug', echo=False)
+engine = create_engine(
+    'postgres://sibkuzvydevgqi:255578d74ecc93bc32ec26a19acd225e7651d9e8e0b640a176759d3c35037ed7@ec2-184-73-222-194.compute-1.amazonaws.com:5432/d4tqub1q54h1ug', echo=False)
 session = scoped_session(sessionmaker(bind=engine, autocommit=False, autoflush=False))
 
 Base = declarative_base()
@@ -19,6 +20,8 @@ user_movies_tbl = Table('user_movies', Base.metadata,
                         )
 
 # Models
+
+
 class User(Base):
     __tablename__ = "users"
 
@@ -47,7 +50,7 @@ class Movie(Base):
     __tablename__ = "movies"
 
     id = Column(Integer, primary_key=True, index=True)
-    movie_imdb_id = Column(Integer)
+    movie_imdb_id = Column(String(64))
     user_rating = Column(Integer, default=5)
     name = Column(String(64))
 
@@ -65,6 +68,7 @@ class Movie(Base):
 
 def create_tables():
     Base.metadata.create_all(engine)
+
 
 def main():
     create_tables()

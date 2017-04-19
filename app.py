@@ -1,7 +1,6 @@
 from flask import Flask, url_for, make_response, send_file, request, jsonify, render_template
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
-# from flask_marshmallow import Marshmallow
 
 import utils
 import apiai
@@ -11,8 +10,10 @@ import json
 import sys
 import logging
 
+# App and database config.
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://sibkuzvydevgqi:255578d74ecc93bc32ec26a19acd225e7651d9e8e0b640a176759d3c35037ed7@ec2-184-73-222-194.compute-1.amazonaws.com:5432/d4tqub1q54h1ug'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
 Bootstrap(app)
@@ -26,50 +27,76 @@ def index():
 
 @app.route("/api/login/", methods=['POST'])
 def login():
+    """API endpoint which handles login authentication for the frontend."""
 
     user_detail = json.loads(request.data)
     username = user_detail.get("username")
     password = user_detail.get("password")
+
     return jsonify(utils.login(username, password))
 
 
 @app.route("/api/signup/", methods=['POST'])
 def signup():
+    """API endpoint which handles user signup."""
+
     new_user = json.loads(request.data)
     first_name = new_user.get("firstname")
     last_name = new_user.get("lastname")
     username = new_user.get("username")
     password = new_user.get("password")
+
     return utils.createUser(username, password, first_name, last_name)
 
 
-@app.route("/api/add_movie/", methods=['POST'])
-def add_movie():
-    """This function triggers an API call to add a new
-    movie into the watchlist for a user"""
+@app.route("/api/add_movie_to_watchlist/", methods=['POST'])
+def add_movie_to_watchlist():
+    """API endpoint which adds a new movie into the watchlist for a user."""
+
     movie_detail = json.loads(request.data)
-
     username = movie_detail.get("username")
-    movieName = movie_detail.get("movieName")
-    movieImdbID = movie_detail.get("movieImdbId")
-    movieRating = movie_detail.get("movieRating")
+    user_id = movie_detail.get("user_id")
+    movie_name = movie_detail.get("movieName")
+    movie_imdb_id = movie_detail.get("movieImdbId")
+    movie_rating = movie_detail.get("rating")
+    return utils.add_movie_to_watchlist(username, user_id, movie_name, movie_imdb_id, movie_rating)
 
-    return utils.add_movie(username, movieName, movieImdbID, movieRating)
 
+@app.route("/api/get_watchlist/", methods=['POST'])
+def get_watchlist():
+    """API endpoint which gets all movies in a user's watchlist."""
 
-@app.route("/api/get_movie_all/", methods=['POST'])
-def get_all_movies():
-    """This function triggers an API call to add a new
-    movie into the watchlist for a user"""
     user_id = request.data
+    return jsonify(utils.get_watchlist(user_id))
 
-    return jsonify(utils.get_movie_all(user_id))
+
+@app.route("/api/get_learning_recommendation/", methods=['POST'])
+def get_learning_recommendation():
+    """API endpoint which gets a movie recommendation based on a user's watchlist."""
+    req = json.loads(request.data)
+    data = {"user_id": req.get("user_id"), "candidate_list": req.get("candidateList")}
+    client = utils.LearningAgentClient()
+    result = client.getRecommendedMovies(data)
+    if result['result'] == []:
+        return jsonify("Watchlist is empty so no recommendation can be made")
+    else:
+        return jsonify(result['result'])
+
+
+@app.route("/api/get_showtimes/", methods=['POST'])
+def get_showtimes():
+    """"API endpoint which gets showtimes for a movie given the user's location."""
+    req = json.loads(request.data)
+    movie_name = req.get("name")
+    coordinates = {'lat': req.get('lat'), 'lng': req.get('lng')}
+    showtimes = utils.get_showtimes(movie_name, coordinates)
+    return jsonify(showtimes)
 
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    """This Flask route receives all requests from API.ai and processes these
-    requests according to the action specified by the user"""
+    """Receives all requests from API.ai and processes these
+    requests according to the action specified by the user."""
 
     req = request.get_json(force=True)
     action = req.get('result').get('action')
@@ -80,14 +107,13 @@ def webhook():
         res = processSimilarityRequest(req)
     r = make_response(json.dumps(res))
     r.headers['Content-Type'] = 'application/json'
-
     return r
 
 
 def processFilteringRequest(req):
-    """This function deals with processing the movie filters provided by a user
-    and feeding these filters into api calls for a movie database. The filtered
-    movies returned from these api calls are returned to the user."""
+    """Deals with processing the movie filters provided by a user and feeding
+    these filters into api calls for the movie database. The filtered movies
+    returned from these api calls are returned to the user."""
 
     userSpecifiedData = req.get('result').get('contexts')[0].get('parameters')
     maxResults = int(userSpecifiedData.get('max-results'))
@@ -100,7 +126,7 @@ def processFilteringRequest(req):
     userSpecifiedCastLastName = userSpecifiedData.get('cast-last-name')
     # Chat agent only allows us to parse out first and last names seperately
     # so we need to merge these to get a list of full names.
-    if len(userSpecifiedCastFirstName) == 0:
+    if len(userSpecifiedCastFirstName) == 0 and len(userSpecifiedCastLastName) == 0:
         userSpecifiedCast = []
     else:
         userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(
@@ -113,41 +139,54 @@ def processFilteringRequest(req):
     # Construct movie discovery URL.
     finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_genres', genreIds))
     finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_people', castIds))
+<< << << < HEAD
+    finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(
+        ('certification_country', 'US')) + client.encodeURLKeyValue(('certification', userSpecifiedRating))
+== == == =
+    finalDiscoveryURL = finalDiscoveryURL + \
+        client.encodeURLKeyValue(('certification_country', 'US'))
     finalDiscoveryURL = finalDiscoveryURL + \
         client.encodeURLKeyValue(('certification', userSpecifiedRating))
+>>>>>> > 41b5b707279b8af37235b0542763d8049c2368bc
     movies = client.getDiscoveredMovies(finalDiscoveryURL)
     movieDetails = client.getMovieDetails(movies)
     return prepareResponse(movies, movieDetails, "gathered-filters", maxResults + totalResultsGiven)
 
 
 def processSimilarityRequest(req):
-    """The function deals with processing a single movie provided by the user and
-    returning a list of movies which are similar."""
-    client = utils.MovieDBApiClient()
-    benchmarkMovie = req.get('result').get('contexts')[0].get('parameters').get('benchmark')
+    """Deals with processing a single movie provided by the user and returning
+    a list of movies which are similar."""
+
+    userSpecifiedData = req.get('result').get('contexts')[0].get('parameters')
+    client = utils.MovieDBApiClient(0, 0)
+    benchmarkMovie = userSpecifiedData.get('benchmark')
     benchmarkMovie = utils.spellCheck(benchmarkMovie)
     similarMovies = client.getSimilarMovies(benchmarkMovie)
     movieDetails = client.getMovieDetails(similarMovies)
-    return prepareResponse(similarMovies, movieDetails, "gathered-benchmark-movie")
+    return prepareResponse(similarMovies, movieDetails, "gathered-benchmark-movie", 0)
 
 
 def prepareResponse(movies, movieDetails, outboundContextName, outboundContextParam):
     """Helper function that prepares the return object we send to the user
      given a list of movies."""
+
     if len(movies) > 0:
         speech = "I found you the following movies: " + ', '.join(movies)
     else:
         speech = "Sorry, no movies available."
     return {
         "speech": speech,
-      "displayText": speech,
-      "source": "movie-recommendation-service",
-      "contextOut": [
-          {"name": outboundContextName, "parameters":
-              {"total-results-given": outboundContextParam}, "lifespan": 1}
-      ],
-      "data": movieDetails
+        "displayText": speech,
+        "source": "movie-recommendation-service",
+        "contextOut": [
+            {
+                "name": outboundContextName,
+                "parameters": {"total-results-given": outboundContextParam}, "lifespan": 1
+            }
+        ],
+        "data": movieDetails
     }
 
 if __name__ == '__main__':
+    # For local debugging.
     app.run(debug=True, port=8888, host='0.0.0.0')

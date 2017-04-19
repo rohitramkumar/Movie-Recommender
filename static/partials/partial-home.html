@@ -6,68 +6,45 @@
 
     <!-- COLUMN ONE -->
     <div class="col-sm-6">
-        <div>
-            <!--<input id="input" type="text"> <button id="rec">Submit</button>
-            <br>Response<br> <textarea id="response" cols="40" rows="20"></textarea> -->
 
-            <input id="input" type="text" placeholder="Type here to get started..">
+        <div>
+            <input id="input" type="text" placeholder="Say hi to get started..">
 
             <div id="spokenResponse" class="spoken-response">
                 <div class="spoken-response__text"></div>
             </div>
         </div>
         <br>
-        <a ng-if="movies" ui-sref="root.home.movie_detail" class="btn btn-primary">Update Movie Details</a>
+        <hr>
+
+        <div style="float: center">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="font-size: large" ng-if="!recommendations && movies && user">Loading recommendations..</div>
+                <div class="panel-heading" style="font-size: large" ng-if="!recommendations && movies && !user">Sign in to get personalized movie suggestions!</div>
+
+                <div class="panel-body" style="min-width: 400px; min-height: 300px" ng-if="recommendations && movies && user">
+                    <p><h2>Suggested pick based on your profile</h2></p>
+                    <center><img ng-if="recommendations.currentRecommendation" src={{recommendations.currentRecommendation.poster}}></center>
+                    <br>
+                    <center><p><h3>Movie Name</h3></p>
+                    <p><b>{{recommendations.currentRecommendation.original_title}}</b></p></center>
+                </div>
+
+                <!-- List group
+                <ul class="list-group">
+                    <li class="list-group-item"><b>Top Billed Cast:</b> {{(movies.currentMovie.cast).join(', ')}}</li>
+                    <li class="list-group-item"><b>Release Date:</b> {{movies.currentMovie.release_date}}</li>
+                    <li class="list-group-item">
+                        <button type="button" class="btn btn-default" ng-click="movies.prevMovie()">Previous Result</button>
+                        <button type="button" class="btn btn-default" ng-click="movies.nextMovie()">Next Result</button>
+                    </li>
+                </ul>
+            -->
+            </div>
+        </div>
     </div>
 
     <!-- COLUMN TWO -->
-    <div class="col-sm-6">
+    <div class="col-sm-6" id="detail">
         <div ui-view="movie_detail"></div>
     </div>
-
-    <style type="text/css">
-      html {
-        box-sizing: border-box;
-      }
-      *, *:before, *:after {
-        box-sizing: inherit;
-      }
-      input {
-        background-color: #FFFFFF;
-        border: 1px solid #3F7F93;
-        color: #000000;
-        font-family: "Titillium Web";
-        font-size: 20px;
-        line-height: 43px;
-        padding: 0 0.75em;
-        width: 500px;
-        -webkit-transition: all 0.35s ease-in;
-      }
-      textarea {
-        background-color: #070F24;
-        border: 1px solid #122435;
-        color: #606B88;
-        padding: 0.5em;
-        width: 100%;
-        -webkit-transition: all 0.35s ease-in;
-      }
-      input:active, input:focus, textarea:active, textarea:focus {
-        outline: 2px solid #48788B;
-      }
-      .spoken-response {
-        max-height: 0;
-        overflow: hidden;
-        -webkit-transition: all 0.35s ease-in;
-      }
-      .spoken-response.is-active {
-        max-height: 400px;
-      }
-      .spoken-response__text {
-        background-color: #FFFFFF;
-        border: 1px solid #3F7F93;
-        color: #000000;
-        font-family: "Titillium Web";
-        font-size: 20px;
-        padding: 2em;
-      }
-    </style>

@@ -3,10 +3,13 @@ import json
 import urllib
 import os
 import model
+import time
 
-APIAI_KEY = 'd9854338952446d589f83e6a575e0ba4'
-BING_SC_API_KEY = '1c964897dce84d8cb04b5e8ff4634d48'
-MOVIE_DB_API_KEY = '207c3617b856ea5adac5ff6ad68b0bb7'
+ONCONNECT_API_KEY = os.environ['ONCONNECT_API_KEY']
+BING_SC_API_KEY = os.environ['BING_SC_API_KEY']
+MOVIE_DB_API_KEY = os.environ['MOVIE_DB_API_KEY']
+# API which provides movie showtimes
+SHOWTIMES_URL = 'http://data.tmsapi.com/v1.1/movies/showings?api_key={}&startDate={}&lat={}&lng={}'
 # Database that provides simple filtering.
 MOVIE_DB_URL = 'https://api.themoviedb.org/3/'
 # URL Endpoints for different types of filtering data.
@@ -25,17 +28,19 @@ MOVIE_INFO_URL = (MOVIE_DB_URL + 'movie/{}?api_key={}&language=en-US')
 # URL Endpoint for movie info (credits)
 MOVIE_CREDITS_URL = (MOVIE_DB_URL + 'movie/{}/credits?api_key={}')
 # URL Endpoint for fetching movie posters
-MOVIE_POSTER_URL = 'http://image.tmdb.org/t/p/w185/'
+MOVIE_POSTER_URL = 'https://image.tmdb.org/t/p/w185/'
 # URL Endpoint for spell checking
 BING_SC_URL = 'https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/?mode=proof&mkt=en-us'
 # Learning Agent recommendation URL
-LEARNING_AGENT_REC_URL = "http://ec2-54-200-205-223.us-west-2.compute.amazonaws.com:5000/mrelearner/api/v1.0/recommender"
+LEARNING_AGENT_REC_URL = "https://52.165.149.158/mrelearner/api/v1.0/recommender"
+# Learning Agent history URL
+LEARNING_AGENT_HIST_URL = "https://52.165.149.158/mrelearner/api/v1.0/history"
 # Max possible number of results that can be returned
 MAX_RESULTS = 10
 
 
 def createUser(username, password, first_name, last_name):
-    """Used for sign-up. Get form data and add new user to users table"""
+    """Used for sign-up. Gets form data and adds new user to users table"""
 
     if not password:
         return "Cannot leave password empty"
@@ -55,51 +60,46 @@ def createUser(username, password, first_name, last_name):
 
 def login(username, password):
     """Used for login. Check if user exists; if exists,
-    authenticate pw and return success message."""
+    authenticates credentials and returns success message."""
 
     user = model.User.query.filter_by(email=username).first()
     if user:
         if user.password == password:
-            # myUser = {"username": user.user['email'], "password": user.user[
-            #    'password'], "firstname": user.user['first_name'], "lastname": user.user['last_name']}
             return user.as_dict()
     return "Fail"
 
 
-def get_movie_all(username):
-    """Check if user exists and return all movies in watchlist"""
+def get_watchlist(username):
+    """Returns all movies in a user's watchlist"""
 
     user = model.User.query.filter_by(email=username).first()
-
     if not user:
         return "Fail"
-
     movie_list = []
-
     for movie in user.movies:
         movie_list.append(movie.as_dict())
-
     return movie_list
 
 
-def add_movie(username, movieName, movieImdbId, movieRating):
-    """Check if user exists; if exists, authenticate pw and return success msg"""
+def add_movie_to_watchlist(username, userID, movieName, movieImdbId, movieRating):
+    """Check if user exists; if exists, add movie to specified user's watchlist.
+    Also add movie to learning agent database"""
 
     user = model.User.query.filter_by(email=username).first()
-
     if not user:
         return "Fail: Cannot find user!"
-
     newMovie = model.Movie(name=movieName, movie_imdb_id=movieImdbId, user_rating=movieRating)
-
     for movie in user.movies:
-        print movie
-        if int(movie.movie_imdb_id) == int(movieImdbId):
+        if movie.name == movieName:
             return "Movie already present in watchlist!"
-
     user.movies.append(newMovie)
     model.session.commit()
-
+    # Learning Agent watchlist.
+    client = LearningAgentClient()
+    client.addMovieToUserHistory({'user_id': userID,
+                                  'movie_imdb_id': movieImdbId,
+                                  'user_rating': movieRating,
+                                  'timestamp': int(time.time())})
     return "Success"
 
 
@@ -112,7 +112,7 @@ def spellCheck(query):
     encodedQuery = urllib.quote_plus(query)
     url = BING_SC_URL + '&text=' + encodedQuery
     headers = {'Content-Type': 'application/x-www-form-urlencoded',
-               'Ocp-Apim-Subscription-Key': '1c964897dce84d8cb04b5e8ff4634d48'}
+               'Ocp-Apim-Subscription-Key': BING_SC_API_KEY}
     spellCheckResponse = requests.post(url, headers=headers)
     spellCheckInfo = json.loads(spellCheckResponse.text)
     for flaggedToken in spellCheckInfo.get('flaggedTokens'):
@@ -120,6 +120,25 @@ def spellCheck(query):
         suggestion = flaggedToken.get('suggestions')[0].get('suggestion')
         newQuery = newQuery.replace(token, suggestion)
     return newQuery
+
+
+def get_showtimes(movie_name, lat_lng):
+
+    showtime_data = {}
+    date = time.strftime("%Y-%m-%d")
+    url = SHOWTIMES_URL.format(ONCONNECT_API_KEY, date, lat_lng['lat'], lat_lng['lng'])
+    result = requests.get(url)
+    info = result.json()
+    for movie_info in info:
+        name = movie_info['title']
+        if movie_name == name:
+            showtimes = movie_info['showtimes']
+            for showtime in showtimes:
+                theatre_name = showtime['theatre']['name']
+                if theatre_name not in showtime_data:
+                    showtime_data[theatre_name] = []
+                showtime_data[theatre_name].append(showtime['dateTime'])
+    return showtime_data
 
 
 class MovieDBApiClient:
@@ -148,11 +167,13 @@ class MovieDBApiClient:
             castInfoResult = requests.get(MOVIE_CREDITS_URL.format(movieId, MOVIE_DB_API_KEY))
             movieInfo = json.loads(movieInfoResult.text)
             castInfo = json.loads(castInfoResult.text)
-            fullMovieDetails[counter]['imdb_id'] = movieInfo['imdb_id']
+            imdb_id_str = movieInfo['imdb_id'][2:]
+            fullMovieDetails[counter]['imdb_id'] = imdb_id_str
             fullMovieDetails[counter]['overview'] = movieInfo['overview']
             fullMovieDetails[counter]['original_title'] = movieInfo['original_title']
             fullMovieDetails[counter]['poster'] = MOVIE_POSTER_URL + movieInfo['poster_path']
             fullMovieDetails[counter]['cast'] = [item['name'] for item in castInfo['cast'][:5]]
+            fullMovieDetails[counter]['release_date'] = movieInfo['release_date']
             counter += 1
         return fullMovieDetails
 
@@ -210,36 +231,33 @@ class MovieDBApiClient:
             movieSimilarityResult = requests.get(
                 MOVIE_SIMILARITY_URL.format(benchmarkMovieId, MOVIE_DB_API_KEY))
             movieSimilarityInfo = json.loads(movieSimilarityResult.text)
-            counter = 0
-            while counter < self.maxResults and counter + self.offset < len(movieSimilarityInfo.get('results')):
-                similarMovies.append(movieSimilarityInfo.get(
-                    'results')[counter + self.offset].get('title'))
-                counter += 1
+            if len(movieSimilarityInfo.get('results')) > 0:
+                similarMovies.append(movieSimilarityInfo.get('results')[0].get('title'))
         return similarMovies
 
     def encodeURLKeyValue(self, pair):
         """Takes a tuple consisting of a key and a value and encodes it in a format
         that is acceptable for a url string. This is useful for appending
         parameters and their values to an API url."""
-
+        print(pair)
         if len(pair[1]) == 0 or len(pair[0]) == 0:
             return ""
         else:
             if type(pair[1]) == list:
                 return '&' + pair[0] + '=' + ''.join(str(i) for i in pair[1])
-            elif type(pair[1]) == str:
-                return '&' + pair[0] + '=' + pair[1]
             else:
-                return ""
+                return '&' + pair[0] + '=' + pair[1]
 
 
 class LearningAgentClient:
 
     """This class abstracts API calls to our learning agent on Azure."""
 
-    def getRecommendedMovies(self, userInfo):
-        # Convert user data in json
-        result = requests.post(LEARNING_AGENT_REC_URL, json=data)
+    def getRecommendedMovies(self, data):
+        result = requests.post(LEARNING_AGENT_REC_URL, json=data, auth=(
+            "movierecommender", "vast_seas_of_infinity"), verify=False)
+        return result.json()
 
-    def addMovieToUserHistory(self, movieInfo):
-        pass
+    def addMovieToUserHistory(self, data):
+        requests.post(LEARNING_AGENT_HIST_URL, json=data, auth=(
+            "movierecommender", "vast_seas_of_infinity"), verify=False)
