@@ -135,10 +135,10 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             var index = 0;
                             $scope.movies = movieList;
                             $scope.movies.currentMovie = movieList[index];
-                            getShowtimes($scope.movies.currentMovie.original_title);
+                            //getShowtimes($scope.movies.currentMovie.original_title);
 
-                            console.log('the show times for cur movie are:');
-                            console.log($scope.movieShowtimes);
+                            //console.log('the show times for cur movie are:');
+                            //console.log($scope.movieShowtimes);
                             // Hack to get incoming movie details if user asked for more movies.
                             //$("#nextResult").trigger("click");
                             //$("#previousResult").trigger("click");
