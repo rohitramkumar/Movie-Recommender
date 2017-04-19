@@ -191,9 +191,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 console.log('Could not retrieve showtimes')
                             } else {
                                 console.log('Got showtimes for this movie!!');
-                                console.log(resp)
 
                                 $scope.movieShowtimes = resp;
+                                console.log($scope.movieShowtimes);
                             }
                         });
 
