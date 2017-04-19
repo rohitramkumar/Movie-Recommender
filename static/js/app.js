@@ -89,6 +89,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.longitude = position.coords.longitude;
                             }, function(error) {
                                 alert('You blocked geolocation. ')
+                                console.warn(`ERROR(${error.code}): ${error.message}`);
                             });
                         } else {
                             alert('Geolocation not available.');
