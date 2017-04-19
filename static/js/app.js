@@ -135,7 +135,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             var index = 0;
                             $scope.movies = movieList;
                             $scope.movies.currentMovie = movieList[index];
-                            getShowtimes($scope.movies.currentMovie.original_title);
 
                             console.log('the show times for cur movie are:');
                             console.log($scope.movieShowtimes);
@@ -168,7 +167,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             };
 
                             // Get movie showtimes
-                            //getShowtimes();
+                            getShowtimes($scope.movies.currentMovie.original_title);
 
                             // If user is logged in, get learning recommendations
                             if (userService.user) {
