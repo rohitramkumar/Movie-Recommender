@@ -127,7 +127,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                         $scope.movies.currentMovie = movie_arr[index];
                                     };
                                     $scope.movies.prevMovie = function() {
-                                        if(index <= 1 ){
+                                        if(index <= 0 ){
                                             index = movie_arr.length - 1;
                                         }
                                         else{
@@ -137,7 +137,47 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                         $scope.movies.currentMovie = movie_arr[index];
                                     };
 
+                                    $scope.movies.showtimes = function(){
+                                        var postalCode = "61820";
+                                        var movieID = "12792395";
+                                        var d = new Date();
+                                        var dd = d.getDate();
+                                        var mm = d.getMonth()+1;
+                                        var yyyy = d.getFullYear();
+                                        if(dd<10){
+                                            dd='0'+dd;
+                                        }
+                                        if(mm<10){
+                                            mm='0'+mm;
+                                        }
+                                        var today = yyyy+'-'+mm+'-'+dd;
+
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "http://data.tmsapi.com/v1.1/movies/showings?startDate=" + today +
+                                            "&zip=" + postalCode +
+                                            "&api_key=t4enxhzcqzkgpge8jjym9h4t",
+                                            contentType: "application/json; charset=utf-8",
+                                            dataType: "json",
+
+                                            success: function(data) {
+                                                console.log(data);
+                                                for (var i = 0; i < data.length; i++) {
+                                                    if((data[i.toString()].title).contains($scope.movies.currentMovie.original_title)){
+                                                        $scope.showtimes = data[i].showtimes.toString();
+                                                    }
+                                                }
+
+                                            },
+                                            error: function() {
+                                                setResponse("Internal Server Error");
+                                            }
+                                        });
+                                    };
+
                                     $state.go('root.home.movie_detail');
+
+
                                 }
 
                                 $("#input").val('');
