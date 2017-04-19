@@ -192,7 +192,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             } else {
                                 console.log('Got showtimes for this movie!!');
 
-                                $scope.movieShowtimes = JSON.parse(resp);
+                                $scope.movieShowtimes = resp;
                                 console.log($scope.movieShowtimes);
                             }
                         });
