@@ -134,10 +134,16 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                             var index = 0;
                             $scope.movies = movieList;
+
+
+                            // Get movie showtimes
+                            getMovieInfo($scope.movies);
+
+                            // Assign currentMovie
                             $scope.movies.currentMovie = movieList[index];
 
-                            console.log('the show times for cur movie are:');
-                            console.log($scope.movieShowtimes);
+                            console.log('the movie info object is:');
+                            console.log($scope.movieInfo);
                             // Hack to get incoming movie details if user asked for more movies.
                             $("#nextResult").trigger("click");
                             $("#previousResult").trigger("click");
@@ -164,8 +170,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.movies.currentMovie = movieList[index];
                             };
 
-                            // Get movie showtimes
-                            getMovieInfo($scope.movies);
 
                             // If user is logged in, get learning recommendations
                             if (userService.user) {
