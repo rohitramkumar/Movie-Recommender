@@ -94,12 +94,12 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
         },
 
 
-        getMovieShowtimes: function(movieList) {
+        getGuideboxInfo: function(movieList) {
 
             var def = $q.defer();
 
             $http({
-                url: "/api/get_showtimes/",
+                url: "/api/get_guidebox_info/",
                 method: "POST",
                 data: movieList
             }).success(function (response) {

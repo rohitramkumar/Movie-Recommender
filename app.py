@@ -83,14 +83,13 @@ def get_learning_recommendation():
         return jsonify(result['result'])
 
 
-@app.route("/api/get_showtimes/", methods=['POST'])
-def get_showtimes():
-    """"API endpoint which gets showtimes for a movie given the user's location."""
+@app.route("/api/get_guidebox_info/", methods=['POST'])
+def get_guidebox_info():
+    """"API endpoint which gets more movie information from Guidebox."""
     req = json.loads(request.data)
-    movie_name = req.get("name")
-    coordinates = {'lat': req.get('lat'), 'lng': req.get('lng')}
-    showtimes = utils.get_showtimes(movie_name, coordinates)
-    return jsonify(showtimes)
+    movie_names = req.get('movieNames')
+    guidebox_info = utils.get_guidebox_info(movie_names)
+    return jsonify(guidebox_info)
 
 
 @app.route('/webhook', methods=['POST'])

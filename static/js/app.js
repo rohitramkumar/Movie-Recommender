@@ -152,7 +152,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 }
 
                                 $scope.movies.currentMovie = movieList[index];
-                                //getShowtimes($scope.movies.currentMovie.original_title);
                             };
 
                             $scope.prevMovie = function() {
@@ -163,15 +162,14 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 }
 
                                 $scope.movies.currentMovie = movieList[index];
-                                //getShowtimes($scope.movies.currentMovie.original_title);
                             };
 
                             // Get movie showtimes
-                            getShowtimes($scope.movies.currentMovie.original_title);
+                            getMovieInfo($scope.movies);
 
                             // If user is logged in, get learning recommendations
                             if (userService.user) {
-                                getRecommendations();
+                                getRecommendations($scope.movies);
                             }
 
                             $state.go('root.home.movie_detail');
@@ -180,27 +178,35 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         $("#input").val('');
                     }
 
-                    function getShowtimes(movieName) {
-                        var movieList = {name:movieName, lat:String($scope.latitude), lng:String($scope.longitude)};
+                    function getMovieInfo(movieList) {
+                        var userMovies = movieList;
+                        var movieNameList = [];
 
-                        userService.getMovieShowtimes(movieList).then(function(resp) {
+                        for (var index in userMovies) {
+                            var movieObject = userMovies[index];
+                            movieNameList.push(movieObject['original_title']);
+                        }
+
+                        var request = {movieNames:movieNameList};
+
+                        userService.getGuideboxInfo(request).then(function(resp) {
                             if (angular.isUndefined(resp)) {
-                                console.log('Could not retrieve showtimes')
+                                console.log('Could not retrieve showtimes');
                             } else if (resp == "Fail") {
-                                console.log('Could not retrieve showtimes')
+                                console.log('Could not retrieve showtimes');
                             } else {
                                 console.log('Got showtimes for this movie!!');
 
-                                $scope.movieShowtimes = resp;
-                                console.log($scope.movieShowtimes);
+                                $scope.movieInfo = resp;
+                                console.log($scope.movieInfo);
                             }
                         });
 
                     }
 
                     // Function to get learning recommendations from learning agent
-                    function getRecommendations() {
-                        var userMovies = $scope.movies;
+                    function getRecommendations(movieList) {
+                        var userMovies = movieList;
                         var movieIDList = [];
 
                         for (var index in userMovies) {
