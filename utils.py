@@ -128,6 +128,9 @@ def get_guidebox_info(movie_names):
     guidebox_info = {}
     for movie in movie_names:
         movie_id_result = requests.get(GUIDEBOX_MOVIE_SEARCH_URL.format(GUIDEBOX_API_KEY, movie)).json()
+        if len(movie_id_result.get('results')) == 0:
+            guidebox_info[movie] = "No info"
+            continue
         movie_id = movie_id_result.get('results')[0].get('id')
         guidebox_info_result = requests.get(GUIDEBOX_MOVIE_INFO_URL.format(movie_id, GUIDEBOX_API_KEY)).json()
         # If the movie is in theaters, then provide the fandango link and the metacritic link.
@@ -249,7 +252,6 @@ class MovieDBApiClient:
         """Takes a tuple consisting of a key and a value and encodes it in a format
         that is acceptable for a url string. This is useful for appending
         parameters and their values to an API url."""
-        print(pair)
         if len(pair[1]) == 0 or len(pair[0]) == 0:
             return ""
         else:
