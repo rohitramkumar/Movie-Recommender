@@ -189,9 +189,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         for (var index in userMovies) {
                             var movieObject = userMovies[index];
                             movieNameList.push(movieObject['original_title']);
-                            console.log('Index:');
-                            console.log(index);
-                            console.log(movieObject['original_title']);
                         }
 
                         var request = {movieNames:movieNameList};
