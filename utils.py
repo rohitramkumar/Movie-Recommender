@@ -5,11 +5,13 @@ import os
 import model
 import time
 
-ONCONNECT_API_KEY = os.environ['ONCONNECT_API_KEY']
+GUIDEBOX_API_KEY = os.environ['GUIDEBOX_API_KEY']
 BING_SC_API_KEY = os.environ['BING_SC_API_KEY']
 MOVIE_DB_API_KEY = os.environ['MOVIE_DB_API_KEY']
-# API which provides movie showtimes
-SHOWTIMES_URL = 'http://data.tmsapi.com/v1.1/movies/showings?api_key={}&startDate={}&lat={}&lng={}'
+# URL endpoint which provides a guidebox movie id
+GUIDEBOX_MOVIE_SEARCH_URL = 'http://api-public.guidebox.com/v2/search?api_key={}&type=movie&field=title&query={}'
+# URL endpoint which provides info about a movie given a guidebox id
+GUIDEBOX_MOVIE_INFO_URL = 'http://api-public.guidebox.com/v2/movies/{}?api_key={}'
 # Database that provides simple filtering.
 MOVIE_DB_URL = 'https://api.themoviedb.org/3/'
 # URL Endpoints for different types of filtering data.
@@ -122,23 +124,31 @@ def spellCheck(query):
     return newQuery
 
 
-def get_showtimes(movie_name, lat_lng):
-
-    showtime_data = {}
-    date = time.strftime("%Y-%m-%d")
-    url = SHOWTIMES_URL.format(ONCONNECT_API_KEY, date, lat_lng['lat'], lat_lng['lng'])
-    result = requests.get(url)
-    info = result.json()
-    for movie_info in info:
-        name = movie_info['title']
-        if movie_name == name:
-            showtimes = movie_info['showtimes']
-            for showtime in showtimes:
-                theatre_name = showtime['theatre']['name']
-                if theatre_name not in showtime_data:
-                    showtime_data[theatre_name] = []
-                showtime_data[theatre_name].append(showtime['dateTime'])
-    return showtime_data
+def get_guidebox_info(movie_names):
+    guidebox_info = {}
+    for movie in movie_names:
+        movie_id_result = requests.get(GUIDEBOX_MOVIE_SEARCH_URL.format(GUIDEBOX_API_KEY, movie)).json()
+        movie_id = movie_id_result.get('results')[0].get('id')
+        guidebox_info_result = requests.get(GUIDEBOX_MOVIE_INFO_URL.format(movie_id, GUIDEBOX_API_KEY)).json()
+        # If the movie is in theaters, then provide the fandango link and the metacritic link.
+        if guidebox_info_result.get('in_theaters') == True:
+            fandango = None
+            other_sources = guidebox_info_result.get('other_sources').get('movie_theater')
+            for source in other_sources:
+                if source.get('source') == 'fandango':
+                    fandango = source.get('link')
+            guidebox_info[movie] = {'metacritic' : guidebox_info_result.get('metacritic'), 'fandango' : fandango}
+        # If the movie is not in theatres, provide the metacritic link and a list of streaming options, if applicable.
+        else:
+            subscription_web_sources = guidebox_info_result.get('subscription_web_sources')
+            streaming = []
+            for source in subscription_web_sources:
+                streaming.append({'source' : source.get('source'), 'link' : source.get('link')})
+            purchase_web_sources = guidebox_info_result.get('purchase_web_sources')
+            for source in purchase_web_sources:
+                streaming.append({'source' : source.get('source'), 'link' : source.get('link')})
+            guidebox_info[movie] = {'metacritic' : guidebox_info_result.get('metacritic'), 'streaming' : streaming}
+    return guidebox_info
 
 class MovieDBApiClient:
 
