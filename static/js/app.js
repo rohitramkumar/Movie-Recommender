@@ -80,20 +80,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         $("#rec").click(function(event) {
                             send();
                         });
-
-                        if(!!navigator.geolocation) {
-                            navigator.geolocation.getCurrentPosition(function(position) {
-                                console.log(position.coords.latitude)
-                                console.log(position.coords.longitude)
-                                $scope.latitude = position.coords.latitude;
-                                $scope.longitude = position.coords.longitude;
-                            }, function(error) {
-                                alert('You blocked geolocation. ')
-                                console.warn(`ERROR(${error.code}): ${error.message}`);
-                            });
-                        } else {
-                            alert('Geolocation not available.');
-                        }
                     });
 
                     // Function to send request to API.AI chat agent

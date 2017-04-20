@@ -127,12 +127,14 @@ def spellCheck(query):
 def get_guidebox_info(movie_names):
     guidebox_info = {}
     for movie in movie_names:
-        movie_id_result = requests.get(GUIDEBOX_MOVIE_SEARCH_URL.format(GUIDEBOX_API_KEY, movie)).json()
+        movie_id_result = requests.get(
+            GUIDEBOX_MOVIE_SEARCH_URL.format(GUIDEBOX_API_KEY, movie)).json()
         if len(movie_id_result.get('results')) == 0:
             guidebox_info[movie] = "No info"
             continue
         movie_id = movie_id_result.get('results')[0].get('id')
-        guidebox_info_result = requests.get(GUIDEBOX_MOVIE_INFO_URL.format(movie_id, GUIDEBOX_API_KEY)).json()
+        guidebox_info_result = requests.get(
+            GUIDEBOX_MOVIE_INFO_URL.format(movie_id, GUIDEBOX_API_KEY)).json()
         # If the movie is in theaters, then provide the fandango link and the metacritic link.
         if guidebox_info_result.get('in_theaters') == True:
             fandango = None
@@ -140,17 +142,20 @@ def get_guidebox_info(movie_names):
             for source in other_sources:
                 if source.get('source') == 'fandango':
                     fandango = source.get('link')
-            guidebox_info[movie] = {'metacritic' : guidebox_info_result.get('metacritic'), 'fandango' : fandango}
-        # If the movie is not in theatres, provide the metacritic link and a list of streaming options, if applicable.
+            guidebox_info[movie] = {
+                'metacritic': guidebox_info_result.get('metacritic'), 'fandango': fandango}
+        # If the movie is not in theatres, provide the metacritic link and a list
+        # of streaming options, if applicable.
         else:
             subscription_web_sources = guidebox_info_result.get('subscription_web_sources')
             streaming = []
             for source in subscription_web_sources:
-                streaming.append({'source' : source.get('source'), 'link' : source.get('link')})
+                streaming.append({'source': source.get('source'), 'link': source.get('link')})
             purchase_web_sources = guidebox_info_result.get('purchase_web_sources')
             for source in purchase_web_sources:
-                streaming.append({'source' : source.get('source'), 'link' : source.get('link')})
-            guidebox_info[movie] = {'metacritic' : guidebox_info_result.get('metacritic'), 'streaming' : streaming}
+                streaming.append({'source': source.get('source'), 'link': source.get('link')})
+            guidebox_info[movie] = {
+                'metacritic': guidebox_info_result.get('metacritic'), 'streaming': streaming}
     return guidebox_info
 
 
