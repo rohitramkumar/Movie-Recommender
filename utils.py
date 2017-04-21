@@ -5,11 +5,13 @@ import os
 import model
 import time
 
-ONCONNECT_API_KEY = "qm8s4qjj43mkkyyxdrxdekmy"
-BING_SC_API_KEY = "1c964897dce84d8cb04b5e8ff4634d48"
-MOVIE_DB_API_KEY = "207c3617b856ea5adac5ff6ad68b0bb7"
-# API which provides movie showtimes
-SHOWTIMES_URL = 'http://data.tmsapi.com/v1.1/movies/showings?api_key={}&startDate={}&lat={}&lng={}'
+GUIDEBOX_API_KEY = os.environ['GUIDEBOX_API_KEY']
+BING_SC_API_KEY = os.environ['BING_SC_API_KEY']
+MOVIE_DB_API_KEY = os.environ['MOVIE_DB_API_KEY']
+# URL endpoint which provides a guidebox movie id
+GUIDEBOX_MOVIE_SEARCH_URL = 'http://api-public.guidebox.com/v2/search?api_key={}&type=movie&field=title&query={}'
+# URL endpoint which provides info about a movie given a guidebox id
+GUIDEBOX_MOVIE_INFO_URL = 'http://api-public.guidebox.com/v2/movies/{}?api_key={}'
 # Database that provides simple filtering.
 MOVIE_DB_URL = 'https://api.themoviedb.org/3/'
 # URL Endpoints for different types of filtering data.

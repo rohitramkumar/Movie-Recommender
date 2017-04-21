@@ -1,7 +1,6 @@
 import json
 import unittest
 import mock
-import json
 from app import processFilteringRequest, processSimilarityRequest, prepareResponse
 from utils import MovieDBApiClient
 
