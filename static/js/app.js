@@ -146,6 +146,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 }
 
                                 $scope.movies.currentMovie = movieList[index];
+                                $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
                             };
 
                             $scope.prevMovie = function() {
@@ -156,6 +157,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 }
 
                                 $scope.movies.currentMovie = movieList[index];
+                                $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
                             };
 
 
