@@ -147,7 +147,6 @@ def processFilteringRequest(req):
     movieDetails = client.getMovieDetails(movies)
     return prepareResponse(movies, movieDetails, "gathered-filters", maxResults + totalResultsGiven)
 
-
 def processSimilarityRequest(req):
     """Deals with processing a single movie provided by the user and returning
     a list of movies which are similar."""
@@ -159,7 +158,6 @@ def processSimilarityRequest(req):
     similarMovies = client.getSimilarMovies(benchmarkMovie)
     movieDetails = client.getMovieDetails(similarMovies)
     return prepareResponse(similarMovies, movieDetails, "gathered-benchmark-movie", 0)
-
 
 def prepareResponse(movies, movieDetails, outboundContextName, outboundContextParam):
     """Helper function that prepares the return object we send to the user
@@ -181,6 +179,7 @@ def prepareResponse(movies, movieDetails, outboundContextName, outboundContextPa
         ],
         "data": movieDetails
     }
+
 
 if __name__ == '__main__':
     # For local debugging.
