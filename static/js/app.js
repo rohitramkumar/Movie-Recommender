@@ -164,8 +164,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 getRecommendations($scope.movies);
                             }
 
-                            $scope.movieInfo.currentMovie = $scope.movieInfo[$scope.movies.currentMovie.original_title];
-                            console.log($scope.movieInfo[$scope.movies.currentMovie.original_title]);
+                            $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
+                            console.log($scope.movieInfo[($scope.movies.currentMovie).original_title]);
                             $state.go('root.home.movie_detail');
                         }
 

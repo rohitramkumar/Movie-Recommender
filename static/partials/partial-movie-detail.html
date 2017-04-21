@@ -24,7 +24,7 @@
         <div ng-if="$parent.user">
             <p><h3>Already seen this movie?</h3></p>
 
-            <label><h4>Rate this movie</h4></label><input id="userRating" type="number" min="0" max="10" onkeydown="return false" ng-model="movieCred.movieRating"/ required>
+            <label><h4>Rate this movie</h4></label><input id="userRating" type="number" min="0" max="10" onkeydown="return false" ng-model="movieCred.movieRating"/>
             <center><button ng-click="addMovie(movieCred)" class="btn btn-primary">Add Movie To Watchlist</button></center>
         </div>
     </div>
