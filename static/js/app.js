@@ -80,6 +80,20 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         $("#rec").click(function(event) {
                             send();
                         });
+
+                        if(!!navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(function(position) {
+                                console.log(position.coords.latitude)
+                                console.log(position.coords.longitude)
+                                $scope.latitude = position.coords.latitude;
+                                $scope.longitude = position.coords.longitude;
+                            }, function(error) {
+                                alert('You blocked geolocation. ')
+                                console.warn(`ERROR(${error.code}): ${error.message}`);
+                            });
+                        } else {
+                            alert('Geolocation not available.');
+                        }
                     });
 
                     // Function to send request to API.AI chat agent
@@ -120,16 +134,11 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                             var index = 0;
                             $scope.movies = movieList;
-
-
-                            // Get movie showtimes
-                            getMovieInfo($scope.movies);
-
-                            // Assign currentMovie
                             $scope.movies.currentMovie = movieList[index];
+                            getShowtimes($scope.movies.currentMovie.original_title);
 
-                            console.log('the movie info object is:');
-                            console.log($scope.movieInfo);
+                            console.log('the show times for cur movie are:');
+                            console.log($scope.movieShowtimes);
                             // Hack to get incoming movie details if user asked for more movies.
                             $("#nextResult").trigger("click");
                             $("#previousResult").trigger("click");
@@ -144,6 +153,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 }
 
                                 $scope.movies.currentMovie = movieList[index];
+                                getShowtimes($scope.movies.currentMovie.original_title);
                             };
 
                             $scope.prevMovie = function() {
@@ -154,12 +164,15 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 }
 
                                 $scope.movies.currentMovie = movieList[index];
+                                getShowtimes($scope.movies.currentMovie.original_title);
                             };
 
+                            // Get movie showtimes
+                            //getShowtimes();
 
                             // If user is logged in, get learning recommendations
                             if (userService.user) {
-                                getRecommendations($scope.movies);
+                                getRecommendations();
                             }
 
                             $state.go('root.home.movie_detail');
@@ -168,35 +181,27 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         $("#input").val('');
                     }
 
-                    function getMovieInfo(movieList) {
-                        var userMovies = movieList;
-                        var movieNameList = [];
+                    function getShowtimes(movieName) {
+                        var movieList = {name:movieName, lat:String($scope.latitude), lng:String($scope.longitude)};
 
-                        for (var index in userMovies) {
-                            var movieObject = userMovies[index];
-                            movieNameList.push(movieObject['original_title']);
-                        }
-
-                        var request = {movieNames:movieNameList};
-
-                        userService.getGuideboxInfo(request).then(function(resp) {
+                        userService.getMovieShowtimes(movieList).then(function(resp) {
                             if (angular.isUndefined(resp)) {
-                                console.log('Could not retrieve showtimes');
+                                console.log('Could not retrieve showtimes')
                             } else if (resp == "Fail") {
-                                console.log('Could not retrieve showtimes');
+                                console.log('Could not retrieve showtimes')
                             } else {
                                 console.log('Got showtimes for this movie!!');
 
-                                $scope.movieInfo = resp;
-                                console.log($scope.movieInfo);
+                                $scope.movieShowtimes = resp;
+                                console.log($scope.movieShowtimes);
                             }
                         });
 
                     }
 
                     // Function to get learning recommendations from learning agent
-                    function getRecommendations(movieList) {
-                        var userMovies = movieList;
+                    function getRecommendations() {
+                        var userMovies = $scope.movies;
                         var movieIDList = [];
 
                         for (var index in userMovies) {

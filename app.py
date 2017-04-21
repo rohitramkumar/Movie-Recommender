@@ -12,7 +12,7 @@ import logging
 
 # App and database config.
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgres://sibkuzvydevgqi:255578d74ecc93bc32ec26a19acd225e7651d9e8e0b640a176759d3c35037ed7@ec2-184-73-222-194.compute-1.amazonaws.com:5432/d4tqub1q54h1ug"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
@@ -83,13 +83,14 @@ def get_learning_recommendation():
         return jsonify(result['result'])
 
 
-@app.route("/api/get_guidebox_info/", methods=['POST'])
-def get_guidebox_info():
-    """"API endpoint which gets more movie information from Guidebox."""
+@app.route("/api/get_showtimes/", methods=['POST'])
+def get_showtimes():
+    """"API endpoint which gets showtimes for a movie given the user's location."""
     req = json.loads(request.data)
-    movie_names = req.get('movieNames')
-    guidebox_info = utils.get_guidebox_info(movie_names)
-    return jsonify(guidebox_info)
+    movie_name = req.get("name")
+    coordinates = {'lat': req.get('lat'), 'lng': req.get('lng')}
+    showtimes = utils.get_showtimes(movie_name, coordinates)
+    return jsonify(showtimes)
 
 
 @app.route('/webhook', methods=['POST'])
