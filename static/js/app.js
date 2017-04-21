@@ -124,11 +124,11 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                             // Get movie showtimes
                             getMovieInfo($scope.movies);
-                            $scope.movieInfo.currentMovie = $scope.movieInfo[$scope.movies.currentMovie.original_title];
+
 
                             // Assign currentMovie
                             $scope.movies.currentMovie = movieList[index];
-
+                            $scope.movieInfo.currentMovie = $scope.movieInfo[$scope.movies.currentMovie.original_title];
                             console.log('the movie info object is:');
                             console.log($scope.movieInfo);
                             console.log($scope.movieInfo[$scope.movies.currentMovie.original_title]);
