@@ -1,0 +1,38 @@
+
+{% extends "base.html" %}
+
+
+{% block body %}
+{{ super() }}
+<div ui-view></div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+<!-- Add Jasmine -->
+    <script data-require="jasmine@*" data-semver="2.0.0" src="https://cdn.jsdelivr.net/jasmine/2.0.0/jasmine.js"></script>
+    <!-- Jasmine html & css for reporting -->
+    <link data-require="jasmine@*" data-semver="2.0.0" rel="stylesheet" href="https://cdn.jsdelivr.net/jasmine/2.0.0/jasmine.css" />
+    <script data-require="jasmine@*" data-semver="2.0.0" src="https://cdn.jsdelivr.net/jasmine/2.0.0/jasmine-html.js"></script>
+    <script data-require="jasmine@*" data-semver="2.0.0" src="https://cdn.jsdelivr.net/jasmine/2.0.0/boot.js"></script>
+    <!-- Add AngularJS -->
+    <script data-require="angular.js@1.2.25" data-semver="1.2.25" src="https://code.angularjs.org/1.2.25/angular.js"></script>
+    <!-- AngularJS testing helpers -->
+    <script data-require="angular-mocks@*" data-semver="1.2.25" src="https://code.angularjs.org/1.2.25/angular-mocks.js"></script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+<script src="//unpkg.com/angular-ui-router@0.4.2/release/angular-ui-router.js"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script src="{{ url_for('static', filename='js/services.js') }}"></script>
+<script type="text/javascript" src="static/js/app.spec.2.js"></script>
+{% endblock %}
+
+{% block styles %}
+{{ super() }}
+<link href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/ui-darkness/jquery-ui.min.css" rel="stylesheet">
+<link href="//fonts.googleapis.com/css?family=Titillium+Web:200" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css">
+
+{% endblock %}

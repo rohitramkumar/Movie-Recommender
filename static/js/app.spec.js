@@ -56,3 +56,32 @@ describe('States', function () {
     });
 });
 
+describe('Login', function () {
+    	beforeEach(module('myApp'));
+	beforeEach(module('ui.router'));
+
+    var $state,
+        $rootScope,
+        state = 'root.home';
+
+    // Inject and assign the $state and $rootScope services.
+    // Put the template in template cache.
+    beforeEach(inject(function (_$state_, $templateCache, _$rootScope_) {
+        $state = _$state_;
+        $rootScope = _$rootScope_;
+
+        $templateCache.put('static/partials/partial-home.html', '');
+        $templateCache.put('static/partials/partial-header.html', '');
+        $templateCache.put('static/partials/partial-footer.html', '');
+        $templateCache.put('static/partials/layout.html', '');
+        $templateCache.put('static/partials/partial-movie-detail.html', '');
+        $templateCache.put('static/partials/partial-login.html', '');
+    }));
+    
+    //Test failed logins
+    
+    var cred = {'user':,}
+});
+
+
+

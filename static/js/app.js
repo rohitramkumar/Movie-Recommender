@@ -4,6 +4,35 @@ var movieApp = angular.module('myApp', [
     'ui.router'
 ]);
 
+movieApp.controller('rootController', function($scope, $rootScope, $state, $q, user, userService) {
+    $rootScope.user = user;
+
+    $rootScope.login = function(cred) {
+        userService.login(cred).then(function(resp) {
+            if (angular.isUndefined(resp)) {
+                alert('Username or password incorrect.')
+            } else if (resp == "Fail") {
+                alert('Username or password incorrect.')
+            }
+            else {
+                alert('Thanks for logging in!')
+                $state.go('root.home', {}, {reload: true});
+            }
+        });
+    };
+
+    $rootScope.logout = function() {
+        userService.logout();
+        $state.go('root.home', {}, {reload: true});
+    };
+
+    $rootScope.signupRedirect = function() {
+        $state.go('root.signup', {}, {reload: true});
+    };
+});
+
+
+
 movieApp.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
     $stateProvider
@@ -23,8 +52,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     $rootScope.user = user;
 
                     $rootScope.login = function(cred) {
+                        console.log("login");
                         userService.login(cred).then(function(resp) {
-
+                            console.log("logg???");
                             if (angular.isUndefined(resp)) {
                                 alert('Username or password incorrect.')
                             } else if (resp == "Fail") {
@@ -45,7 +75,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     $rootScope.signupRedirect = function() {
                         $state.go('root.signup', {}, {reload: true});
                     };
-                }
+                },
+                controllerAs: 'rootController'
             },
             'header@root': {
                 templateUrl: 'static/partials/partial-header.html',
@@ -219,7 +250,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             }
                         });
                     }
-                }
+                },
+                controllerAs: 'homeController'
             }
         }
     })
