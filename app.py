@@ -20,22 +20,12 @@ app.logger.setLevel(logging.ERROR)
 Bootstrap(app)
 db = SQLAlchemy(app)
 
-jasmine = Jasmine(app)
-
-jasmine.specs(
-    'static/js/app.spec.js'
-)
-
-jasmine.sources(
-    'static/js/app.js'
-)
-
 
 @app.route("/")
 def index():
     return render_template('index.html')
 
-@app.route("/api/test")
+@app.route("/test/")
 def test():
     return render_template('spec.html')
 
