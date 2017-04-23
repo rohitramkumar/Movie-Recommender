@@ -62,7 +62,7 @@ describe('Login', function () {
 
     var $state,
         $rootScope,
-        state = 'root.home';
+        state = 'root.login';
 
     // Inject and assign the $state and $rootScope services.
     // Put the template in template cache.
@@ -80,7 +80,19 @@ describe('Login', function () {
     
     //Test failed logins
     
-    var cred = {'user':,}
+    var resp = undefined;
+    it('tests if correct error message shows with undefined response', function(resp, done){
+        spyOn(window, 'alert');
+        expect(window.alert).toHaveBeenCalledWith('username or password incorrect.');
+        done();
+    });
+    
+    resp = "Success";
+    
+    resp = "";
+    
+    
+    
 });
 
 

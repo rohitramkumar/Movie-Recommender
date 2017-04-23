@@ -1,6 +1,7 @@
 from flask import Flask, url_for, make_response, send_file, request, jsonify, render_template
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
+from flask.ext.jasmine import Jasmine
 
 import utils
 import apiai
@@ -18,6 +19,16 @@ app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
 Bootstrap(app)
 db = SQLAlchemy(app)
+
+jasmine = Jasmine(app)
+
+jasmine.specs(
+    'src/js/app.spec.js'
+)
+
+jasmine.sources(
+    'src/js/app.js'
+)
 
 
 @app.route("/")
