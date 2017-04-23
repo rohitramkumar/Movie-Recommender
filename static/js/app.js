@@ -359,7 +359,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     }
                 });
             };
-        }
+        },
+       controllerAs: loginCtrl
     });
 });
 
