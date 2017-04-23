@@ -56,13 +56,13 @@ describe('States', function () {
     });
 });
 
-describe('Login', function () {
+describe('Login Controller Tests', function () {
     	beforeEach(module('myApp'));
 	beforeEach(module('ui.router'));
 
-    var $state,
-        $rootScope,
-        state = 'root.login';
+    var $state, $q, userService;
+        
+    state = 'root.login';
 
     // Inject and assign the $state and $rootScope services.
     // Put the template in template cache.
@@ -82,18 +82,44 @@ describe('Login', function () {
     
     var resp = undefined;
     it('tests if correct error message shows with undefined response', function(resp, done){
+        
+        var $scope = {};
+        var controller = $controller('loginController',{$scope = $scope, $q, $userService});
+        
+        $scope.loginFunction(resp);
         spyOn(window, 'alert');
         expect(window.alert).toHaveBeenCalledWith('username or password incorrect.');
         done();
     });
     
+    resp = "Fail";
+    it('tests if correct error message shows with Fail response', function(resp, done){
+        
+        var $scope = {};
+        var controller = $controller('loginController',{$scope = $scope, $q, $userService});
+        
+        $scope.loginFunction(resp);
+        spyOn(window, 'alert');
+        expect(window.alert).toHaveBeenCalledWith('Username or password incorrect.');
+        done();
+    });
+    
     resp = "Success";
+    it('tests if correct error message shows with undefined response', function(resp, done){
+        
+        var $scope = {};
+        var controller = $controller('loginController',{$scope = $scope, $q, $userService});
+        
+        $scope.loginFunction(resp);
+        spyOn(window, 'alert');
+        expect(window.alert).toHaveBeenCalledWith('Thanks for logging in!');
+        done();
+    });
     
-    resp = "";
-    
-    
+    it('tests the successful login redirect', function(){
+        expect($state.current.name).toBe('home');
+    })
     
 });
 
-
-
+describe()

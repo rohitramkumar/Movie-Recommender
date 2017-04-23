@@ -31,70 +31,7 @@ movieApp.controller('rootController', function($scope, $rootScope, $state, $q, u
     };
 });
 
-
-
-movieApp.config(function($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
-    $stateProvider
-
-    .state('root', {
-        url: '',
-        abstract:true,
-        resolve: {
-            'user': function(userService) {
-                return userService.user; // would be async in a real app
-            }
-        },
-        views: {
-            '': {
-                templateUrl: 'static/partials/layout.html',
-                controller: function($scope, $rootScope, $state, $q, user, userService) {
-                    $rootScope.user = user;
-
-                    $rootScope.login = function(cred) {
-                        console.log("login");
-                        userService.login(cred).then(function(resp) {
-                            console.log("logg???");
-                            if (angular.isUndefined(resp)) {
-                                alert('Username or password incorrect.')
-                            } else if (resp == "Fail") {
-                                alert('Username or password incorrect.')
-                            }
-                            else {
-                                alert('Thanks for logging in!')
-                                $state.go('root.home', {}, {reload: true});
-                            }
-                        });
-                    };
-
-                    $rootScope.logout = function() {
-                        userService.logout();
-                        $state.go('root.home', {}, {reload: true});
-                    };
-
-                    $rootScope.signupRedirect = function() {
-                        $state.go('root.signup', {}, {reload: true});
-                    };
-                },
-                controllerAs: 'rootController'
-            },
-            'header@root': {
-                templateUrl: 'static/partials/partial-header.html',
-                controller: function($scope, $rootScope, $state, $q, user, userService) {
-                }
-            },
-            'footer@root': {
-                templateUrl: 'static/partials/partial-footer.html'
-            }
-        }
-    })
-
-    .state('root.home', {
-        url: '/',
-        views: {
-            'content': {
-                templateUrl: 'static/partials/partial-home.html',
-                controller: function ($scope, $rootScope, $state, $q, user, userService) {
+movieApp.controller('homeController', function ($scope, $rootScope, $state, $q, user, userService) {
                     // API.AI Credentials
                     var accessToken = "d9854338952446d589f83e6a575e0ba4";
                     var baseUrl = "https://api.api.ai/v1/";
@@ -250,18 +187,22 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             }
                         });
                     }
-                },
-                controllerAs: 'homeController'
-            }
-        }
-    })
+                });
 
-    .state('root.home.movie_detail', {
-        url: '/movie_detail',
-        views: {
-            'movie_detail': {
-                templateUrl: 'static/partials/partial-movie-detail.html',
-                controller: function($scope, $rootScope, $state, $q, user, userService) {
+movieApp.controller('signupController',function($scope, $rootScope, $q, $state, userService) {
+                    $scope.signup = function(cred) {
+                        userService.signup(cred).then(function(response) {
+                            if(response == "Success") {
+                                alert('Succesfuly signed up');
+                                $state.go('root.home');
+                            } else {
+                                alert(response);
+                            }
+                        });
+                    };
+                });
+
+movieApp.controller('addMovieController',function($scope, $rootScope, $state, $q, user, userService) {
                     //$window.location.reload()
 
                     $scope.addMovie = function(resp) {
@@ -275,7 +216,85 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             }
                         });
                     };
+                });
+
+movieApp.controller('restrictedController',function($scope, $rootScope, auth, userService) {
+                    $rootScope.user = auth;
+
+                    userService.getUserMovies().then(function(resp) {
+                        if (angular.isUndefined(resp)) {
+                            console.log('Could not retrieve movies')
+                        } else if (resp == "Fail") {
+                            console.log('Could not retrieve movies')
+                        } else {
+                            console.log(resp)
+                            $scope.userMovies = resp;
+                        }
+                    });
+                });
+
+movieApp.controller('loginController',function($scope, $state, $q, userService) {
+            $scope.login = function(cred) {
+                $scope.loginFunction = function(resp) {
+                    if (angular.isUndefined(resp)) {
+                        alert('username or password incorrect.')
+                    } else if (resp == "Fail") {
+                        alert('Username or password incorrect.')
+                    }
+                    else {
+                        alert('Thanks for logging in!')
+                        console.log($scope.user)
+                        $state.go('root.home');
+                    }
+                };
+                userService.login(cred).then($scope.loginFunction);
+            };
+        });
+
+movieApp.config(function($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise('/');
+    $stateProvider
+
+    .state('root', {
+        url: '',
+        abstract:true,
+        resolve: {
+            'user': function(userService) {
+                return userService.user; // would be async in a real app
+            }
+        },
+        views: {
+            '': {
+                templateUrl: 'static/partials/layout.html',
+                controller: rootController
+            },
+            'header@root': {
+                templateUrl: 'static/partials/partial-header.html',
+                controller: function($scope, $rootScope, $state, $q, user, userService) {
                 }
+            },
+            'footer@root': {
+                templateUrl: 'static/partials/partial-footer.html'
+            }
+        }
+    })
+
+    .state('root.home', {
+        url: '/',
+        views: {
+            'content': {
+                templateUrl: 'static/partials/partial-home.html',
+                controller: homeController
+            }
+        }
+    })
+
+    .state('root.home.movie_detail', {
+        url: '/movie_detail',
+        views: {
+            'movie_detail': {
+                templateUrl: 'static/partials/partial-movie-detail.html',
+                controller: addMovieController
             }
         }
     })
@@ -302,20 +321,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         views: {
             'content': {
                 templateUrl: 'static/partials/partial-profile.html',
-                controller: function($scope, $rootScope, auth, userService) {
-                    $rootScope.user = auth;
-
-                    userService.getUserMovies().then(function(resp) {
-                        if (angular.isUndefined(resp)) {
-                            console.log('Could not retrieve movies')
-                        } else if (resp == "Fail") {
-                            console.log('Could not retrieve movies')
-                        } else {
-                            console.log(resp)
-                            $scope.userMovies = resp;
-                        }
-                    });
-                }
+                controller: restrictedController
             }
         }
     })
@@ -325,18 +331,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         views: {
             'content': {
                 templateUrl: 'static/partials/partial-signup.html',
-                controller: function($scope, $rootScope, $q, $state, userService) {
-                    $scope.signup = function(cred) {
-                        userService.signup(cred).then(function(response) {
-                            if(response == "Success") {
-                                alert('Succesfuly signed up');
-                                $state.go('root.home');
-                            } else {
-                                alert(response);
-                            }
-                        });
-                    };
-                }
+                controller: signupController
             }
         }
     })
@@ -344,23 +339,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
     .state('login', {
         url: '/login',
         templateUrl: 'static/partials/partial-login.html',
-        controller: function($scope, $state, $q, userService) {
-            $scope.login = function(cred) {
-                userService.login(cred).then(function(resp) {
-                    if (angular.isUndefined(resp)) {
-                        alert('username or password incorrect.')
-                    } else if (resp == "Fail") {
-                        alert('Username or password incorrect.')
-                    }
-                    else {
-                        alert('Thanks for logging in!')
-                        console.log($scope.user)
-                        $state.go('root.home');
-                    }
-                });
-            };
-        },
-       controllerAs: loginCtrl
+        controller: loginController
     });
 });
 

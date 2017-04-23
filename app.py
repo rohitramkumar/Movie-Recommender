@@ -1,7 +1,6 @@
 from flask import Flask, url_for, make_response, send_file, request, jsonify, render_template
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
-from flask.ext.jasmine import Jasmine
 
 import utils
 import apiai
@@ -25,7 +24,7 @@ db = SQLAlchemy(app)
 def index():
     return render_template('index.html')
 
-@app.route("/test/")
+@app.route("/test")
 def test():
     return render_template('spec.html')
 
