@@ -23,11 +23,11 @@ db = SQLAlchemy(app)
 jasmine = Jasmine(app)
 
 jasmine.specs(
-    'src/js/app.spec.js'
+    'static/js/app.spec.js'
 )
 
 jasmine.sources(
-    'src/js/app.js'
+    'static/js/app.js'
 )
 
 
