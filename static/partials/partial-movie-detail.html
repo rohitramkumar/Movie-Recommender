@@ -25,7 +25,7 @@
 
             <label>Rate this movie</label><input id="userRating " type="number" min="0" max="10" onkeydown="return false" ng-model="movieCred.movieRating"/>
 
-            <center><button ng-click="addMovie(movieCred)" class="btn btn-primary">Add Movie To Watchlist</button></center>
+            <center><button id="addToWatchlist" disabled=true ng-click="addMovie(movieCred)" class="btn btn-primary">Add Movie To Watchlist</button></center>
         </div>
     </div>
 </div>

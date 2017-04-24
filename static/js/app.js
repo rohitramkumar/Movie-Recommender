@@ -70,11 +70,16 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                     angular.element(document).ready(function () {
 
-                        $("#input").keypress(function(event) {
+                        $("#userRating").keypress(function(event) {
                             if (event.which == 13) {
                                 event.preventDefault();
                                 send();
                             }
+                        });
+
+                        $('#userRating').on('input', function() {
+                          document.getElementById("addToWatchlist").disabled = false;
+
                         });
 
                         $("#rec").click(function(event) {
