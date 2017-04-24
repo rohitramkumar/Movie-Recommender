@@ -217,8 +217,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         .then(function(resp) {
                             if (angular.isUndefined(resp)) {
                                 console.log('Could not retrieve recommendations');
-                            } else if (resp == "no model") {
-                                console.log("No recommendations returned");
                             } else {
                                 console.log(resp);
                                 var index = 0;
@@ -228,6 +226,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 // Sometimes the server responds with an error string
                                 // TO-DO: Ask learning group to not to do this?
                                 if(typeof finalResp === 'string') {
+                                    $scope.recommendations = "Could not provide user recommendation :(";
                                     return;
                                 }
 
