@@ -269,7 +269,7 @@ movieApp.controller('addMovieController',function($scope, $rootScope, $state, $q
 });
 
 movieApp.controller('restrictedController',function($scope, $rootScope, auth, userService) {
-    $rootScope.user = auth;
+    $rootScope.user = userService.user;
 
     userService.getUserMovies().then(function(resp) {
         if (angular.isUndefined(resp)) {
