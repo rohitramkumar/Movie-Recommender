@@ -134,7 +134,6 @@ describe('root controllers', function () {
         setTimeout(function() {
             expect(msg).toBe('Thanks for logging in!');
             expect(alert).toHaveBeenCalledWith('Thanks for logging in!');
-            // done();
         }, timeout);
     });
 
@@ -150,7 +149,6 @@ describe('root controllers', function () {
 
         setTimeout(function() {
             expect(userService.user).toBe({"username": "user2", "passwords": "pass"});
-            expect(userService.user).toBe("fdgdsf");
         }, timeout);
 
         $rootScope.logout();
