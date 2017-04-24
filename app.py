@@ -24,6 +24,9 @@ db = SQLAlchemy(app)
 def index():
     return render_template('index.html')
 
+@app.route("/test")
+def test():
+    return render_template('app.spec.html')
 
 @app.route("/api/login/", methods=['POST'])
 def login():

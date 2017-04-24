@@ -4,66 +4,39 @@ var movieApp = angular.module('myApp', [
     'ui.router'
 ]);
 
-movieApp.config(function($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
-    $stateProvider
+movieApp.controller('rootController', function($scope, $rootScope, $state, $q, user, userService) {
+    $rootScope.user = user;
 
-    .state('root', {
-        url: '',
-        abstract:true,
-        resolve: {
-            'user': function(userService) {
-                return userService.user; // would be async in a real app
+    $rootScope.login = function(cred) {
+        userService.login(cred).then(function(resp) {
+            var msg = "";
+            if (angular.isUndefined(resp)) {
+                msg = 'Username or password incorrect.';
+                alert('Username or password incorrect.');
+            } else if (resp == "Fail") {
+                msg = 'Username or password incorrect.';
+                alert('Username or password incorrect.');
             }
-        },
-        views: {
-            '': {
-                templateUrl: 'static/partials/layout.html',
-                controller: function($scope, $rootScope, $state, $q, user, userService) {
-                    $rootScope.user = user;
-
-                    $rootScope.login = function(cred) {
-                        userService.login(cred).then(function(resp) {
-
-                            if (angular.isUndefined(resp)) {
-                                alert('Username or password incorrect.')
-                            } else if (resp == "Fail") {
-                                alert('Username or password incorrect.')
-                            }
-                            else {
-                                alert('Thanks for logging in!')
-                                $state.go('root.home', {}, {reload: true});
-                            }
-                        });
-                    };
-
-                    $rootScope.logout = function() {
-                        userService.logout();
-                        $state.go('root.home', {}, {reload: true});
-                    };
-
-                    $rootScope.signupRedirect = function() {
-                        $state.go('root.signup', {}, {reload: true});
-                    };
-                }
-            },
-            'header@root': {
-                templateUrl: 'static/partials/partial-header.html',
-                controller: function($scope, $rootScope, $state, $q, user, userService) {
-                }
-            },
-            'footer@root': {
-                templateUrl: 'static/partials/partial-footer.html'
+            else {
+                msg = 'Thanks for logging in!';
+                alert('Thanks for logging in!');
+                $state.go('root.home', {}, {reload: true});
             }
-        }
-    })
+            return msg;
+        });
+    };
 
-    .state('root.home', {
-        url: '/',
-        views: {
-            'content': {
-                templateUrl: 'static/partials/partial-home.html',
-                controller: function ($scope, $rootScope, $state, $q, user, userService) {
+    $rootScope.logout = function() {
+        userService.logout();
+        $state.go('root.home', {}, {reload: true});
+    };
+
+    $rootScope.signupRedirect = function() {
+        $state.go('root.signup', {}, {reload: true});
+    };
+});
+
+movieApp.controller('homeController', function ($scope, $rootScope, $state, $q, user, userService) {
                     // API.AI Credentials
                     var accessToken = "d9854338952446d589f83e6a575e0ba4";
                     var baseUrl = "https://api.api.ai/v1/";
@@ -119,29 +92,29 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             var movieList = respObject.result.fulfillment.data;
 
                             var index = 0;
-                            $scope.movies = movieList;
-                            $scope.movies.currentMovie = movieList[index];
+                            $rootScope.movies = movieList;
+                            $rootScope.movies.currentMovie = movieList[index];
 
                             // Navigate movie array through nextMovie() and prevMovie()
                             // TO-DO: Write unit tests for these functions
-                            $scope.movies.nextMovie = function() {
+                            $rootScope.movies.nextMovie = function() {
                                 if (index >= (movieList.length - 1)) {
                                     index = 0;
                                 } else {
                                     index = index + 1;
                                 }
 
-                                $scope.movies.currentMovie = movieList[index];
+                                $rootScope.movies.currentMovie = movieList[index];
                             };
 
-                            $scope.movies.prevMovie = function() {
+                            $rootScope.movies.prevMovie = function() {
                                 if (index < 1 ) {
                                     index = movieList.length - 1;
                                 } else {
                                     index = index - 1;
                                 }
 
-                                $scope.movies.currentMovie = movieList[index];
+                                $rootScope.movies.currentMovie = movieList[index];
                             };
 
 
@@ -158,11 +131,13 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                     // Function to get learning recommendations from learning agent
                     function getRecommendations() {
+                       
                         userService.getUserMovies().then(function(resp) {
                             if (angular.isUndefined(resp)) {
                                 console.log('Could not retrieve movies')
                             } else if (resp == "Fail") {
-                                console.log('Could not retrieve movies')
+                                console.log('Could not retrieve movies');
+                                str = 'Could not retrieve movies';
                             } else {
                                 var userMovies = resp;
                                 var movieIDList = [];
@@ -173,6 +148,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 }
 
                                 var userProfile = {user_id:userService.user.id, candidateList:movieIDList};
+                                str = "retrieved movies";
                                 return userProfile;
                             }
                         }).then(function(requestObj) {
@@ -191,12 +167,12 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 console.log(finalResp);
                                 var index = 0;
                                 var recommendationList = finalResp;
-                                $scope.recommendations = recommendationList;
-                                $scope.recommendations.currentRecommendation = recommendationList[index];
+                                $rootScope.recommendations = recommendationList;
+                                $rootScope.recommendations.currentRecommendation = recommendationList[index];
 
                                 // Navigate movie array through nextRec() and prevRec()
                                 // TO-DO: Write unit tests for these functions
-                                $scope.recommendations.nextRecommendation = function() {
+                                $rootScope.recommendations.nextRecommendation = function() {
                                     if (index >= (recommendationList.length - 1)) {
                                         index = 0;
                                     } else {
@@ -206,33 +182,42 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     $scope.recommendations.currentRecommendation = recommendationList[index];
                                 };
 
-                                $scope.recommendations.prevMovie = function() {
+                                $rootScope.recommendations.prevMovie = function() {
                                     if (index < 1 ) {
                                         index = recommendationList.length - 1;
                                     } else {
                                         index = index - 1;
                                     }
 
-                                    $scope.recommendations.currentRecommendation = recommendationList[index];
+                                    $rootScope.recommendations.currentRecommendation = recommendationList[index];
                                 };
 
                             }
                         });
                     }
-                }
-            }
-        }
-    })
+                });
 
-    .state('root.home.movie_detail', {
-        url: '/movie_detail',
-        views: {
-            'movie_detail': {
-                templateUrl: 'static/partials/partial-movie-detail.html',
-                controller: function($scope, $rootScope, $state, $q, user, userService) {
+movieApp.controller('signupController',function($scope, $rootScope, $q, $state, userService) {
+                    $rootScope.respStr = "...";
+                    $rootScope.signup = function(cred) {
+                        userService.signup(cred).then(function(response) {
+                            if(response == "Success") {
+                                alert('Succesfuly signed up');
+                                $rootScope.respStr = "Succesfuly signed up";
+                                $state.go('root.home');
+                                
+                            } else {
+                                alert(response);
+                                $rootScope.respStr = "Could not sign up";
+                            }
+                        });
+                    };
+                });
+
+movieApp.controller('addMovieController',function($scope, $rootScope, $state, $q, user, userService) {
                     //$window.location.reload()
 
-                    $scope.addMovie = function(resp) {
+                    $rootScope.addMovie = function(resp) {
                         var curMovieObject = {"username":userService.user.email, "user_id":userService.user.id, "movieName":$scope.movies.currentMovie.original_title, "movieImdbId":$scope.movies.currentMovie.imdb_id, "rating":resp.movieRating};
 
                         userService.addMovie(curMovieObject).then(function(response) {
@@ -243,7 +228,89 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             }
                         });
                     };
+                });
+
+movieApp.controller('restrictedController',function($scope, $rootScope, auth, userService) {
+                    $rootScope.user = auth;
+
+                    userService.getUserMovies().then(function(resp) {
+                        if (angular.isUndefined(resp)) {
+                            console.log('Could not retrieve movies')
+                        } else if (resp == "Fail") {
+                            console.log('Could not retrieve movies')
+                        } else {
+                            console.log(resp)
+                            $rootScope.userMovies = resp;
+                        }
+                    });
+                });
+
+movieApp.controller('loginController',function($scope, $state, $q, userService) {
+            $rootScope.str = "";
+            $rootScope.login = function(cred) {
+                    
+                    userService.login(cred).then(function(resp) {
+                        if (angular.isUndefined(resp)) {
+                            alert('username or password incorrect.')
+                            $rootScope.str = 'username or password incorrect.';
+                        } else if (resp == "Fail") {
+                            alert('Username or password incorrect.')
+                            $rootScope.str = 'Username or password incorrect.';
+                        }
+                        else {
+                            alert('Thanks for logging in!')
+                            $rootScope.str = 'Thanks for logging in!';
+                            console.log($rootScope.user)
+                            $state.go('root.home');
+                        }
+                    });
+            };
+        });
+
+movieApp.config(function($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise('/');
+    $stateProvider
+
+    .state('root', {
+        url: '',
+        abstract:true,
+        resolve: {
+            'user': function(userService) {
+                return userService.user; // would be async in a real app
+            }
+        },
+        views: {
+            '': {
+                templateUrl: 'static/partials/layout.html',
+                controller: 'rootController'
+            },
+            'header@root': {
+                templateUrl: 'static/partials/partial-header.html',
+                controller: function($scope, $rootScope, $state, $q, user, userService) {
                 }
+            },
+            'footer@root': {
+                templateUrl: 'static/partials/partial-footer.html'
+            }
+        }
+    })
+
+    .state('root.home', {
+        url: '/',
+        views: {
+            'content': {
+                templateUrl: 'static/partials/partial-home.html',
+                controller: 'homeController'
+            }
+        }
+    })
+
+    .state('root.home.movie_detail', {
+        url: '/movie_detail',
+        views: {
+            'movie_detail': {
+                templateUrl: 'static/partials/partial-movie-detail.html',
+                controller: 'addMovieController'
             }
         }
     })
@@ -270,20 +337,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         views: {
             'content': {
                 templateUrl: 'static/partials/partial-profile.html',
-                controller: function($scope, $rootScope, auth, userService) {
-                    $rootScope.user = auth;
-
-                    userService.getUserMovies().then(function(resp) {
-                        if (angular.isUndefined(resp)) {
-                            console.log('Could not retrieve movies')
-                        } else if (resp == "Fail") {
-                            console.log('Could not retrieve movies')
-                        } else {
-                            console.log(resp)
-                            $scope.userMovies = resp;
-                        }
-                    });
-                }
+                controller: 'restrictedController'
             }
         }
     })
@@ -293,18 +347,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         views: {
             'content': {
                 templateUrl: 'static/partials/partial-signup.html',
-                controller: function($scope, $rootScope, $q, $state, userService) {
-                    $scope.signup = function(cred) {
-                        userService.signup(cred).then(function(response) {
-                            if(response == "Success") {
-                                alert('Succesfuly signed up');
-                                $state.go('root.home');
-                            } else {
-                                alert(response);
-                            }
-                        });
-                    };
-                }
+                controller: 'signupController'
             }
         }
     })
@@ -312,22 +355,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
     .state('login', {
         url: '/login',
         templateUrl: 'static/partials/partial-login.html',
-        controller: function($scope, $state, $q, userService) {
-            $scope.login = function(cred) {
-                userService.login(cred).then(function(resp) {
-                    if (angular.isUndefined(resp)) {
-                        alert('username or password incorrect.')
-                    } else if (resp == "Fail") {
-                        alert('Username or password incorrect.')
-                    }
-                    else {
-                        alert('Thanks for logging in!')
-                        console.log($scope.user)
-                        $state.go('root.home');
-                    }
-                });
-            };
-        }
+        controller: 'loginController'
     });
 });
 

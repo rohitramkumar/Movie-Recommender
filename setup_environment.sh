@@ -1,0 +1,4 @@
+export APIAI_KEY="d9854338952446d589f83e6a575e0ba4"
+export BING_SC_API_KEY="1c964897dce84d8cb04b5e8ff4634d48"
+export DATABASE_URL="postgres://sibkuzvydevgqi:255578d74ecc93bc32ec26a19acd225e7651d9e8e0b640a176759d3c35037ed7@ec2-184-73-222-194.compute-1.amazonaws.com:5432/d4tqub1q54h1ug"
+export MOVIE_DB_API_KEY="207c3617b856ea5adac5ff6ad68b0bb7"

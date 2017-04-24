@@ -1,4 +1,4 @@
-angular.module('myApp').service('userService', function($http, $location, $q) {
+angular.module('myApp').service('userService', function userServiceFunction($http, $location, $q) {
 
 	var userService = {
     	user: undefined,
@@ -12,7 +12,7 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
                 url: "/api/login/",
                 method: "POST",
                 data: userCredentials
-            }).success(function (userObj) {
+            }).then(function (userObj) {
                 if(userObj == "Fail") {
                     console.log("Uh Oh");
                 } else {
@@ -39,7 +39,7 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
                 url: "/api/signup/",
                 method: "POST",
                 data: userCredentials
-            }).success(function (response) {
+            }).then(function (response) {
                 def.resolve(response);
             });
 
