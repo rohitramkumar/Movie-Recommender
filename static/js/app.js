@@ -95,11 +95,11 @@ movieApp.controller('homeController', function ($scope, $rootScope, $state, $q, 
             $rootScope.movies = movieList;
 
             // Get movie showtimes
-            getMovieInfo($scope.movies);
+            getMovieInfo($rootScope.movies);
 
             $rootScope.movies.currentMovie = movieList[index];
 
-            console.log($scope.movieInfo);
+            console.log($rootScope.movieInfo);
 
             // Hack to get incoming movie details if user asked for more movies.
             $("#nextResult").trigger("click");
@@ -115,24 +115,24 @@ movieApp.controller('homeController', function ($scope, $rootScope, $state, $q, 
                     index = index + 1;
                 }
 
-                $scope.movies.currentMovie = movieList[index];
-                $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
+                $rootScope.movies.currentMovie = movieList[index];
+                $rootScope.movieInfo.currentMovie = $rootScope.movieInfo[($rootScope.movies.currentMovie).original_title];
             };
 
-            $scope.prevMovie = function() {
+            $rootScope.prevMovie = function() {
                 if (index < 1) {
                     index = movieList.length - 1;
                 } else {
                     index = index - 1;
                 }
 
-                $scope.movies.currentMovie = movieList[index];
-                $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
+                $rootScope.movies.currentMovie = movieList[index];
+                $rootScope.movieInfo.currentMovie = $rootScope.movieInfo[($rootScope.movies.currentMovie).original_title];
             };
 
             // If user is logged in, get learning recommendations
             if (userService.user) {
-                getRecommendations($scope.movies);
+                getRecommendations($rootScope.movies);
             }
 
             $state.go('root.home.movie_detail');
@@ -161,9 +161,9 @@ movieApp.controller('homeController', function ($scope, $rootScope, $state, $q, 
                 console.log('Could not retrieve showtimes');
             } else {
                 console.log('Got showtimes for this movie!!');
-                $scope.movieInfo = resp;
-                console.log($scope.movieInfo);
-                $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
+                $rootScope.movieInfo = resp;
+                console.log($rootScope.movieInfo);
+                $rootScope.movieInfo.currentMovie = $rootScope.movieInfo[($rootScope.movies.currentMovie).original_title];
             }
         });
     }
@@ -190,7 +190,7 @@ movieApp.controller('homeController', function ($scope, $rootScope, $state, $q, 
                 console.log(resp);
                 var index = 0;
                 var recommendationList = resp;
-                $scope.recommendations = recommendationList;
+                $rootScope.recommendations = recommendationList;
 
                 // Sometimes the server responds with an error string
                 // TO-DO: Ask learning group to not to do this?
@@ -198,30 +198,30 @@ movieApp.controller('homeController', function ($scope, $rootScope, $state, $q, 
                     return;
                 }
 
-                $scope.recommendations.currentRecommendation = $scope.movies[index];
+                $rootScope.recommendations.currentRecommendation = $rootScope.movies[index];
                 console.log('At this point the current rec is');
-                console.log($scope.recommendations.currentRecommendation);
+                console.log($rootScope.recommendations.currentRecommendation);
 
-                for (var num in $scope.movies) {
-                    if (recommendationList[index] == $scope.movies[num].imdb_id) {
-                        $scope.recommendations.currentRecommendation = $scope.movies[num];
+                for (var num in $rootScope.movies) {
+                    if (recommendationList[index] == $rootScope.movies[num].imdb_id) {
+                        $rootScope.recommendations.currentRecommendation = $rootScope.movies[num];
                         break;
                     }
                 }
 
                 // Navigate movie array through nextRec() and prevRec()
                 // TO-DO: Write unit tests for these functions
-                $scope.nextRecommendation = function() {
+                $rootScope.nextRecommendation = function() {
                     if (index >= (recommendationList.length - 1)) {
                         index = 0;
                     } else {
                         index = index + 1;
                     }
 
-                    $scope.recommendations.currentRecommendation = recommendationList[index];
+                    $rootScope.recommendations.currentRecommendation = recommendationList[index];
                 };
 
-                $scope.prevRecommendation = function() {
+                $rootScope.prevRecommendation = function() {
                     if (index < 1 ) {
                         index = recommendationList.length - 1;
                     } else {
@@ -256,7 +256,7 @@ movieApp.controller('addMovieController',function($scope, $rootScope, $state, $q
     //$window.location.reload()
 
     $rootScope.addMovie = function(resp) {
-        var curMovieObject = {"username":userService.user.email, "user_id":userService.user.id, "movieName":$scope.movies.currentMovie.original_title, "movieImdbId":$scope.movies.currentMovie.imdb_id, "rating":resp.movieRating};
+        var curMovieObject = {"username":userService.user.email, "user_id":userService.user.id, "movieName":$rootScope.movies.currentMovie.original_title, "movieImdbId":$rootScope.movies.currentMovie.imdb_id, "rating":resp.movieRating};
 
         userService.addMovie(curMovieObject).then(function(response) {
             if(response == "Success") {
@@ -268,7 +268,7 @@ movieApp.controller('addMovieController',function($scope, $rootScope, $state, $q
     };
 });
 
-/*movieApp.controller('restrictedController',function($scope, $rootScope, auth, userService) {
+movieApp.controller('restrictedController',function($scope, $rootScope, auth, userService) {
     $rootScope.user = auth;
 
     userService.getUserMovies().then(function(resp) {
@@ -281,7 +281,7 @@ movieApp.controller('addMovieController',function($scope, $rootScope, $state, $q
             $rootScope.userMovies = resp;
         }
     });
-});*/
+});
 
 movieApp.controller('loginController',function($scope, $state, $q, userService) {
     $rootScope.str = "";
@@ -375,20 +375,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         views: {
             'content': {
                 templateUrl: 'static/partials/partial-profile.html',
-                controller: function($scope, $rootScope, auth, userService) {
-                                    $rootScope.user = auth;
-
-                                    userService.getUserMovies().then(function(resp) {
-                                        if (angular.isUndefined(resp)) {
-                                            console.log('Could not retrieve movies')
-                                        } else if (resp == "Fail") {
-                                            console.log('Could not retrieve movies')
-                                        } else {
-                                            console.log(resp)
-                                            $scope.userMovies = resp;
-                                        }
-                                    });
-                }
+                controller: 'restrictedController'
             }
         }
     })
