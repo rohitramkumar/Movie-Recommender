@@ -95,8 +95,16 @@ movieApp.controller('homeController', function ($scope, $rootScope, $state, $q, 
                             $rootScope.movies = movieList;
                             $rootScope.movies.currentMovie = movieList[index];
 
+                            console.log('the movie info object is:');
+                            console.log($scope.movieInfo);
+
+                            // Hack to get incoming movie details if user asked for more movies.
+                            $("#nextResult").trigger("click");
+                            $("#previousResult").trigger("click");
+
                             // Navigate movie array through nextMovie() and prevMovie()
                             // TO-DO: Write unit tests for these functions
+
                             $rootScope.movies.nextMovie = function() {
                                 if (index >= (movieList.length - 1)) {
                                     index = 0;
@@ -104,24 +112,31 @@ movieApp.controller('homeController', function ($scope, $rootScope, $state, $q, 
                                     index = index + 1;
                                 }
 
-                                $rootScope.movies.currentMovie = movieList[index];
+                                $scope.movies.currentMovie = movieList[index];
+                                $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
+                                //$scope.$apply();
                             };
 
-                            $rootScope.movies.prevMovie = function() {
+                            $scope.prevMovie = function() {
+
                                 if (index < 1 ) {
                                     index = movieList.length - 1;
                                 } else {
                                     index = index - 1;
                                 }
 
-                                $rootScope.movies.currentMovie = movieList[index];
+                                $scope.movies.currentMovie = movieList[index];
+                                $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
+                                //$scope.$apply();
+                                //TO-DO @amanda: write code to check for when there is not info
                             };
 
 
                             // If user is logged in, get learning recommendations
                             if (userService.user) {
-                                getRecommendations();
+                                getRecommendations($scope.movies);
                             }
+
 
                             $state.go('root.home.movie_detail');
                         }
@@ -129,50 +144,78 @@ movieApp.controller('homeController', function ($scope, $rootScope, $state, $q, 
                         $("#input").val('');
                     }
 
-                    // Function to get learning recommendations from learning agent
-                    function getRecommendations() {
-                       
-                        userService.getUserMovies().then(function(resp) {
-                            if (angular.isUndefined(resp)) {
-                                console.log('Could not retrieve movies')
-                            } else if (resp == "Fail") {
-                                console.log('Could not retrieve movies');
-                                str = 'Could not retrieve movies';
-                            } else {
-                                var userMovies = resp;
-                                var movieIDList = [];
 
-                                for (var index in userMovies) {
-                                    var movieObject = userMovies[index];
-                                    movieIDList.push(movieObject['movie_imdb_id']);
+                    function getMovieInfo(movieList) {
+                        var userMovies = movieList;
+                        var movieNameList = [];
+
+                        for (var index in userMovies) {
+                            var movieObject = userMovies[index];
+                            movieNameList.push(movieObject['original_title']);
+                        }
+
+                        var request = {movieNames:movieNameList};
+
+                        userService.getGuideboxInfo(request).then(function(resp) {
+
+                            if (angular.isUndefined(resp)) {
+                                console.log('Could not retrieve showtimes');
+                            } else if (resp == "Fail") {
+                                console.log('Could not retrieve showtimes');
+                            } else {
+                                console.log('Got showtimes for this movie!!');
+                                $scope.movieInfo = resp;
+                                console.log($scope.movieInfo);
+                                $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
+                                console.log($scope.movieInfo[($scope.movies.currentMovie).original_title]);
+                            }
+                        });
+                    }
+
+                    // Function to get learning recommendations from learning agent
+                    function getRecommendations(movieList) {
+                        var userMovies = movieList;
+                        var movieIDList = [];
+
+                        for (var index in userMovies) {
+                            var movieObject = userMovies[index];
+                            movieIDList.push(movieObject['imdb_id']);
+                        }
+
+                        var userProfile = {user_id:userService.user.id, candidateList:movieIDList};
+
+                        userService.getLearningRecomendations(userProfile)
+                        .then(function(resp) {
+                            if (angular.isUndefined(resp)) {
+                                console.log('Could not retrieve recommendations');
+                            } else if (resp == "no model") {
+                                console.log("No recommendations returned");
+                            } else {
+                                console.log(resp);
+                                var index = 0;
+                                var recommendationList = resp;
+                                $scope.recommendations = recommendationList;
+
+                                // Sometimes the server responds with an error string
+                                // TO-DO: Ask learning group to not to do this?
+                                if(typeof finalResp === 'string') {
+                                    return;
                                 }
 
-                                var userProfile = {user_id:userService.user.id, candidateList:movieIDList};
-                                str = "retrieved movies";
-                                return userProfile;
-                            }
-                        }).then(function(requestObj) {
-                            console.log('I am in the next cascasde and got the thing below!');
-                            console.log(requestObj);
+                                $scope.recommendations.currentRecommendation = $scope.movies[index];
+                                console.log('At this point the current rec is');
+                                console.log($scope.recommendations.currentRecommendation);
 
-                            return userService.getLearningRecomendations(requestObj);
-                        }).then(function(finalResp) {
-                            if (angular.isUndefined(finalResp)) {
-                                console.log('Could not retrieve recommendations');
-                            } else if (finalResp == "Fail") {
-                                console.log('Could not retrieve recommendations');
-                            } else if (finalResp == "no model") {
-                                console.log("Don't render recs now");
-                            } else {
-                                console.log(finalResp);
-                                var index = 0;
-                                var recommendationList = finalResp;
-                                $rootScope.recommendations = recommendationList;
-                                $rootScope.recommendations.currentRecommendation = recommendationList[index];
+                                for (var num in $scope.movies) {
+                                    if (recommendationList[index] == $scope.movies[num].imdb_id) {
+                                        $scope.recommendations.currentRecommendation = $scope.movies[num];
+                                        break;
+                                    }
+                                }
 
                                 // Navigate movie array through nextRec() and prevRec()
                                 // TO-DO: Write unit tests for these functions
-                                $rootScope.recommendations.nextRecommendation = function() {
+                                $scope.nextRecommendation = function() {
                                     if (index >= (recommendationList.length - 1)) {
                                         index = 0;
                                     } else {
@@ -182,7 +225,7 @@ movieApp.controller('homeController', function ($scope, $rootScope, $state, $q, 
                                     $scope.recommendations.currentRecommendation = recommendationList[index];
                                 };
 
-                                $rootScope.recommendations.prevMovie = function() {
+                                $scope.prevMovie = function() {
                                     if (index < 1 ) {
                                         index = recommendationList.length - 1;
                                     } else {
@@ -191,7 +234,6 @@ movieApp.controller('homeController', function ($scope, $rootScope, $state, $q, 
 
                                     $rootScope.recommendations.currentRecommendation = recommendationList[index];
                                 };
-
                             }
                         });
                     }

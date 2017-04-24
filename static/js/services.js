@@ -91,6 +91,22 @@ angular.module('myApp').service('userService', function userServiceFunction($htt
             });
 
             return def.promise;
+        },
+
+
+        getGuideboxInfo: function(movieList) {
+
+            var def = $q.defer();
+
+            $http({
+                url: "/api/get_guidebox_info/",
+                method: "POST",
+                data: movieList
+            }).success(function (response) {
+                def.resolve(response);
+            });
+
+            return def.promise;
         }
     }
 

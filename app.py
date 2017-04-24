@@ -86,6 +86,15 @@ def get_learning_recommendation():
         return jsonify(result['result'])
 
 
+@app.route("/api/get_guidebox_info/", methods=['POST'])
+def get_guidebox_info():
+    """"API endpoint which gets more movie information from Guidebox."""
+    req = json.loads(request.data)
+    movie_names = req.get('movieNames')
+    guidebox_info = utils.get_guidebox_info(movie_names)
+    return jsonify(guidebox_info)
+
+
 @app.route('/webhook', methods=['POST'])
 def webhook():
     """Receives all requests from API.ai and processes these
@@ -133,10 +142,13 @@ def processFilteringRequest(req):
     finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_genres', genreIds))
     finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_people', castIds))
     finalDiscoveryURL = finalDiscoveryURL + \
+        client.encodeURLKeyValue(('certification_country', 'US'))
+    finalDiscoveryURL = finalDiscoveryURL + \
         client.encodeURLKeyValue(('certification', userSpecifiedRating))
     movies = client.getDiscoveredMovies(finalDiscoveryURL)
     movieDetails = client.getMovieDetails(movies)
     return prepareResponse(movies, movieDetails, "gathered-filters", maxResults + totalResultsGiven)
+
 
 def processSimilarityRequest(req):
     """Deals with processing a single movie provided by the user and returning
@@ -149,6 +161,7 @@ def processSimilarityRequest(req):
     similarMovies = client.getSimilarMovies(benchmarkMovie)
     movieDetails = client.getMovieDetails(similarMovies)
     return prepareResponse(similarMovies, movieDetails, "gathered-benchmark-movie", 0)
+
 
 def prepareResponse(movies, movieDetails, outboundContextName, outboundContextParam):
     """Helper function that prepares the return object we send to the user
@@ -170,7 +183,6 @@ def prepareResponse(movies, movieDetails, outboundContextName, outboundContextPa
         ],
         "data": movieDetails
     }
-
 
 if __name__ == '__main__':
     # For local debugging.

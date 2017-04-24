@@ -5,9 +5,13 @@ import os
 import model
 import time
 
-APIAI_KEY = 'd9854338952446d589f83e6a575e0ba4'
-BING_SC_API_KEY = '1c964897dce84d8cb04b5e8ff4634d48'
-MOVIE_DB_API_KEY = '207c3617b856ea5adac5ff6ad68b0bb7'
+GUIDEBOX_API_KEY = os.environ['GUIDEBOX_API_KEY']
+BING_SC_API_KEY = os.environ['BING_SC_API_KEY']
+MOVIE_DB_API_KEY = os.environ['MOVIE_DB_API_KEY']
+# URL endpoint which provides a guidebox movie id
+GUIDEBOX_MOVIE_SEARCH_URL = 'http://api-public.guidebox.com/v2/search?api_key={}&type=movie&field=title&query={}'
+# URL endpoint which provides info about a movie given a guidebox id
+GUIDEBOX_MOVIE_INFO_URL = 'http://api-public.guidebox.com/v2/movies/{}?api_key={}'
 # Database that provides simple filtering.
 MOVIE_DB_URL = 'https://api.themoviedb.org/3/'
 # URL Endpoints for different types of filtering data.
@@ -110,7 +114,7 @@ def spellCheck(query):
     encodedQuery = urllib.quote_plus(query)
     url = BING_SC_URL + '&text=' + encodedQuery
     headers = {'Content-Type': 'application/x-www-form-urlencoded',
-               'Ocp-Apim-Subscription-Key': '1c964897dce84d8cb04b5e8ff4634d48'}
+               'Ocp-Apim-Subscription-Key': BING_SC_API_KEY}
     spellCheckResponse = requests.post(url, headers=headers)
     spellCheckInfo = json.loads(spellCheckResponse.text)
     for flaggedToken in spellCheckInfo.get('flaggedTokens'):
@@ -118,6 +122,41 @@ def spellCheck(query):
         suggestion = flaggedToken.get('suggestions')[0].get('suggestion')
         newQuery = newQuery.replace(token, suggestion)
     return newQuery
+
+
+def get_guidebox_info(movie_names):
+    guidebox_info = {}
+    for movie in movie_names:
+        movie_id_result = requests.get(
+            GUIDEBOX_MOVIE_SEARCH_URL.format(GUIDEBOX_API_KEY, movie)).json()
+        if len(movie_id_result.get('results')) == 0:
+            guidebox_info[movie] = "No info"
+            continue
+        movie_id = movie_id_result.get('results')[0].get('id')
+        guidebox_info_result = requests.get(
+            GUIDEBOX_MOVIE_INFO_URL.format(movie_id, GUIDEBOX_API_KEY)).json()
+        # If the movie is in theaters, then provide the fandango link and the metacritic link.
+        if guidebox_info_result.get('in_theaters') == True:
+            fandango = None
+            other_sources = guidebox_info_result.get('other_sources').get('movie_theater')
+            for source in other_sources:
+                if source.get('source') == 'fandango':
+                    fandango = source.get('link')
+            guidebox_info[movie] = {
+                'metacritic': guidebox_info_result.get('metacritic'), 'fandango': fandango}
+        # If the movie is not in theatres, provide the metacritic link and a list
+        # of streaming options, if applicable.
+        else:
+            subscription_web_sources = guidebox_info_result.get('subscription_web_sources')
+            streaming = []
+            for source in subscription_web_sources:
+                streaming.append({'source': source.get('source'), 'link': source.get('link')})
+            purchase_web_sources = guidebox_info_result.get('purchase_web_sources')
+            for source in purchase_web_sources:
+                streaming.append({'source': source.get('source'), 'link': source.get('link')})
+            guidebox_info[movie] = {
+                'metacritic': guidebox_info_result.get('metacritic'), 'streaming': streaming}
+    return guidebox_info
 
 
 class MovieDBApiClient:
@@ -218,16 +257,13 @@ class MovieDBApiClient:
         """Takes a tuple consisting of a key and a value and encodes it in a format
         that is acceptable for a url string. This is useful for appending
         parameters and their values to an API url."""
-
         if len(pair[1]) == 0 or len(pair[0]) == 0:
             return ""
         else:
             if type(pair[1]) == list:
                 return '&' + pair[0] + '=' + ''.join(str(i) for i in pair[1])
-            elif type(pair[1]) == str:
-                return '&' + pair[0] + '=' + pair[1]
             else:
-                return ""
+                return '&' + pair[0] + '=' + pair[1]
 
 
 class LearningAgentClient:
@@ -237,8 +273,6 @@ class LearningAgentClient:
     def getRecommendedMovies(self, data):
         result = requests.post(LEARNING_AGENT_REC_URL, json=data, auth=(
             "movierecommender", "vast_seas_of_infinity"), verify=False)
-        print 'in client'
-        print result
         return result.json()
 
     def addMovieToUserHistory(self, data):

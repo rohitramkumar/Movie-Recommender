@@ -8,30 +8,28 @@
     <div class="col-sm-6">
 
         <div>
-            <input id="input" type="text" placeholder="Type here to get started..">
+            <input id="input" type="text" placeholder="Say hi to get started..">
 
             <div id="spokenResponse" class="spoken-response">
                 <div class="spoken-response__text"></div>
             </div>
         </div>
         <br>
-        <div><a ng-if="movies" ui-sref="root.home.movie_detail" class="btn btn-primary">Update Movie Details</a></div>
         <hr>
 
-        <div style="float: left">
+        <div style="float: center">
             <div class="panel panel-default">
-                <!-- Default panel contents -->
-                <div class="panel-heading" style="font-size: large" ng-if="recommendations">{{ recommendations }}</div>
-                <div class="panel-heading" style="font-size: large" ng-if="!recommendations && movies && user">No Recommendations For Now :(</div>
-                <!--
-                <div class="panel-body" style="min-width: 500px; min-height: 300px">
-                    <p><b>Poster</b></p>
-                    <center><img src={{movies.currentMovie.poster}}></center>
+                <div class="panel-heading" style="font-size: large" ng-if="!recommendations && movies && user">Loading recommendations..</div>
+                <div class="panel-heading" style="font-size: large" ng-if="!recommendations && movies && !user">Sign in to get personalized movie suggestions!</div>
 
-                    <p><b>Overview</b></p>
-                    <p>{{movies.currentMovie.overview}}</p>
+                <div class="panel-body" style="min-width: 400px; min-height: 300px" ng-if="recommendations && movies && user">
+                    <p><h2>Suggested pick based on your profile</h2></p>
+                    <center><img ng-if="recommendations.currentRecommendation" src={{recommendations.currentRecommendation.poster}}></center>
+                    <br>
+                    <center><p><h3>Movie Name</h3></p>
+                    <p><b>{{recommendations.currentRecommendation.original_title}}</b></p></center>
                 </div>
-                -->
+
                 <!-- List group
                 <ul class="list-group">
                     <li class="list-group-item"><b>Top Billed Cast:</b> {{(movies.currentMovie.cast).join(', ')}}</li>
@@ -41,7 +39,7 @@
                         <button type="button" class="btn btn-default" ng-click="movies.nextMovie()">Next Result</button>
                     </li>
                 </ul>
-                -->
+            -->
             </div>
         </div>
     </div>
