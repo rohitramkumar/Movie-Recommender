@@ -121,10 +121,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             var index = 0;
                             $scope.movies = movieList;
 
-
                             // Get movie showtimes
                             getMovieInfo($scope.movies);
-
 
                             // Assign currentMovie
                             $scope.movies.currentMovie = movieList[index];
@@ -160,7 +158,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.movies.currentMovie = movieList[index];
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
                                 //$scope.$apply();
-                                //TODO write code to check for when there is not info
+                                //TO-DO @amanda: write code to check for when there is not info
                             };
 
 
@@ -201,7 +199,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 console.log($scope.movieInfo[($scope.movies.currentMovie).original_title]);
                             }
                         });
-
                     }
 
                     // Function to get learning recommendations from learning agent
