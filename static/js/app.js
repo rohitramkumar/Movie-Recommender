@@ -76,12 +76,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 send();
                             }
                         });
-
-                        $('#userRating').on('input', function() {
-                          document.getElementById("addToWatchlist").disabled = false;
-
-                        });
-
                         $("#rec").click(function(event) {
                             send();
                         });
