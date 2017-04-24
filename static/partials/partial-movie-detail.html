@@ -15,7 +15,7 @@
             <li class="list-group-item"><b>Top Billed Cast:</b> {{(movies.currentMovie.cast).join(', ')}}</li>
             <li class="list-group-item"><b>Release Date:</b> {{movies.currentMovie.release_date}}</li>
             <li class="list-group-item" ng-if="movieInfo.currentMovie.fandango"><b>Fandango:</b> <a href={{movieInfo.currentMovie.fandango}}>Link</a> </li>
-            <li class="list-group-item" ng-if="movieInfo.currentMovie.metacritic"><b>Metacritic:</b> <a href={{movieInfo.currentMovie.metacritic}}><img src="//static.guidebox.com/misc/third_party_logos/very_small/Metacritic.png" /></a> </li>
+            <li class="list-group-item" ng-if="movieInfo.currentMovie.metacritic"><b>Metacritic:</b> <a href={{movieInfo.currentMovie.metacritic}}><img src="https://static.guidebox.com/misc/third_party_logos/very_small/Metacritic.png" /></a> </li>
             <li class="list-group-item" ng-if="movieInfo.currentMovie.streaming"><b>Streaming Options:</b></li>
             <li class="list-group-item" ng-if="movieInfo.currentMovie.streaming" ng-repeat="service in movieInfo.currentMovie.streaming">
                 <a href={{service.link}}>{{service.source}}</a>
