@@ -296,5 +296,4 @@ describe('recommendation', function(){
         }, timeout);
 
     });
-}); 
-
+});
