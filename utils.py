@@ -136,11 +136,14 @@ def get_guidebox_info(movie_names):
         # If the movie is in theaters, then provide the fandango link and the metacritic link.
         if guidebox_info_result.get('in_theaters') == True:
             fandango = None
-            other_sources = guidebox_info_result.get('other_sources').get('movie_theater')
-            for source in other_sources:
-                if source.get('source') == 'fandango':
-                    fandango = source.get('link')
-            guidebox_info[movie] = {'metacritic' : guidebox_info_result.get('metacritic'), 'fandango' : fandango}
+            other_sources = guidebox_info_result.get('other_sources')
+            if 'movie_theater' in other_sources:
+                for source in other_sources:
+                    if source.get('source') == 'fandango':
+                        fandango = source.get('link')
+                        guidebox_info[movie] = {'metacritic' : guidebox_info_result.get('metacritic'), 'fandango' : fandango}
+            else:
+                guidebox_info[movie] = {'metacritic' : guidebox_info_result.get('metacritic')}
         # If the movie is not in theatres, provide the metacritic link and a list of streaming options, if applicable.
         else:
             subscription_web_sources = guidebox_info_result.get('subscription_web_sources')
