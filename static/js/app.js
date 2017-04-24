@@ -211,6 +211,8 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             movieIDList.push(movieObject['imdb_id']);
                         }
 
+                        movieIDList = movieIDList.slice(0, -1);
+
                         var userProfile = {user_id:userService.user.id, candidateList:movieIDList};
 
                         userService.getLearningRecomendations(userProfile)
