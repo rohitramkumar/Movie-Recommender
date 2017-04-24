@@ -93,6 +93,11 @@ movieApp.controller('homeController', function ($scope, $rootScope, $state, $q, 
 
             var index = 0;
             $rootScope.movies = movieList;
+
+
+            // Get movie showtimes
+            getMovieInfo($scope.movies);
+
             $rootScope.movies.currentMovie = movieList[index];
 
             console.log($scope.movieInfo);
