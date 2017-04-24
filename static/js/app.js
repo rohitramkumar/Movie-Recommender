@@ -268,8 +268,8 @@ movieApp.controller('addMovieController',function($scope, $rootScope, $state, $q
     };
 });
 
-movieApp.controller('restrictedController',function($scope, $rootScope, auth, userService) {
-    $rootScope.user = userService.user;
+/*movieApp.controller('restrictedController',function($scope, $rootScope, auth, userService) {
+    $rootScope.user = auth;
 
     userService.getUserMovies().then(function(resp) {
         if (angular.isUndefined(resp)) {
@@ -281,7 +281,7 @@ movieApp.controller('restrictedController',function($scope, $rootScope, auth, us
             $rootScope.userMovies = resp;
         }
     });
-});
+});*/
 
 movieApp.controller('loginController',function($scope, $state, $q, userService) {
     $rootScope.str = "";
@@ -375,7 +375,20 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         views: {
             'content': {
                 templateUrl: 'static/partials/partial-profile.html',
-                controller: 'restrictedController'
+                controller: function($scope, $rootScope, auth, userService) {
+                                    $rootScope.user = auth;
+
+                                    userService.getUserMovies().then(function(resp) {
+                                        if (angular.isUndefined(resp)) {
+                                            console.log('Could not retrieve movies')
+                                        } else if (resp == "Fail") {
+                                            console.log('Could not retrieve movies')
+                                        } else {
+                                            console.log(resp)
+                                            $scope.userMovies = resp;
+                                        }
+                                    });
+                }
             }
         }
     })
