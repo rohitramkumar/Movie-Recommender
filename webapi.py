@@ -1,9 +1,10 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 
 import webapi_utils
 import json
 
 web_api = Blueprint('web_api', __name__)
+
 
 @web_api.route("/api/login/", methods=['POST'])
 def login():
@@ -39,12 +40,14 @@ def add_movie_to_watchlist():
     movie_rating = movie_detail.get("rating")
     return webapi_utils.add_movie_to_watchlist(username, user_id, movie_name, movie_imdb_id, movie_rating)
 
+
 @web_api.route("/api/get_watchlist/", methods=['POST'])
 def get_watchlist():
     """API endpoint which gets all movies in a user's watchlist."""
 
     user_id = request.data
     return jsonify(webapi_utils.get_watchlist(user_id))
+
 
 @web_api.route("/api/get_learning_recommendation/", methods=['POST'])
 def get_learning_recommendation():
@@ -58,6 +61,7 @@ def get_learning_recommendation():
         return jsonify("Watchlist is empty so no recommendation can be made")
     else:
         return jsonify(result['result'])
+
 
 @web_api.route("/api/get_guidebox_info/", methods=['POST'])
 def get_guidebox_info():
