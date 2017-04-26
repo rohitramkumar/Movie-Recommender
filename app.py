@@ -1,21 +1,17 @@
-from flask import Flask, url_for, make_response, send_file, request, jsonify, render_template
+from flask import Flask, make_response, request, jsonify, render_template
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
+from webapi import web_api
 
-import utils
-import apiai
+import app_utils
 import os
-import requests
 import json
-import sys
-import logging
 
 # App and database config.
 app = Flask(__name__)
+app.register_blueprint(web_api)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.logger.addHandler(logging.StreamHandler(sys.stdout))
-app.logger.setLevel(logging.ERROR)
 Bootstrap(app)
 db = SQLAlchemy(app)
 
@@ -23,73 +19,6 @@ db = SQLAlchemy(app)
 @app.route("/")
 def index():
     return render_template('index.html')
-
-
-@app.route("/api/login/", methods=['POST'])
-def login():
-    """API endpoint which handles login authentication for the frontend."""
-
-    user_detail = json.loads(request.data)
-    username = user_detail.get("username")
-    password = user_detail.get("password")
-
-    return jsonify(utils.login(username, password))
-
-
-@app.route("/api/signup/", methods=['POST'])
-def signup():
-    """API endpoint which handles user signup."""
-
-    new_user = json.loads(request.data)
-    first_name = new_user.get("firstname")
-    last_name = new_user.get("lastname")
-    username = new_user.get("username")
-    password = new_user.get("password")
-
-    return utils.createUser(username, password, first_name, last_name)
-
-
-@app.route("/api/add_movie_to_watchlist/", methods=['POST'])
-def add_movie_to_watchlist():
-    """API endpoint which adds a new movie into the watchlist for a user."""
-
-    movie_detail = json.loads(request.data)
-    username = movie_detail.get("username")
-    user_id = movie_detail.get("user_id")
-    movie_name = movie_detail.get("movieName")
-    movie_imdb_id = movie_detail.get("movieImdbId")
-    movie_rating = movie_detail.get("rating")
-    return utils.add_movie_to_watchlist(username, user_id, movie_name, movie_imdb_id, movie_rating)
-
-
-@app.route("/api/get_watchlist/", methods=['POST'])
-def get_watchlist():
-    """API endpoint which gets all movies in a user's watchlist."""
-
-    user_id = request.data
-    return jsonify(utils.get_watchlist(user_id))
-
-
-@app.route("/api/get_learning_recommendation/", methods=['POST'])
-def get_learning_recommendation():
-    """API endpoint which gets a movie recommendation based on a user's watchlist."""
-    req = json.loads(request.data)
-    data = {"user_id": req.get("user_id"), "candidate_list": req.get("candidateList")}
-    client = utils.LearningAgentClient()
-    result = client.getRecommendedMovies(data)
-    if result['result'] == []:
-        return jsonify("Watchlist is empty so no recommendation can be made")
-    else:
-        return jsonify(result['result'])
-
-
-@app.route("/api/get_guidebox_info/", methods=['POST'])
-def get_guidebox_info():
-    """"API endpoint which gets more movie information from Guidebox."""
-    req = json.loads(request.data)
-    movie_names = req.get('movieNames')
-    guidebox_info = utils.get_guidebox_info(movie_names)
-    return jsonify(guidebox_info)
 
 
 @app.route('/webhook', methods=['POST'])
@@ -101,66 +30,68 @@ def webhook():
     action = req.get('result').get('action')
     res = None
     if action == "movie.filtering":
-        res = processFilteringRequest(req)
+        res = process_filtering_request(req)
     elif action == "movie.similar":
-        res = processSimilarityRequest(req)
+        res = process_similarity_request(req)
     r = make_response(json.dumps(res))
     r.headers['Content-Type'] = 'application/json'
     return r
 
 
-def processFilteringRequest(req):
+def process_filtering_request(req):
     """Deals with processing the movie filters provided by a user and feeding
     these filters into api calls for the movie database. The filtered movies
     returned from these api calls are returned to the user."""
 
-    userSpecifiedData = req.get('result').get('contexts')[0].get('parameters')
-    maxResults = int(userSpecifiedData.get('max-results'))
-    totalResultsGiven = int(userSpecifiedData.get('total-results-given'))
-    client = utils.MovieDBApiClient(maxResults, totalResultsGiven)
-    finalDiscoveryURL = utils.MOVIE_DISCOVERY_URL
+    user_specified_data = req.get('result').get('contexts')[0].get('parameters')
+    max_results = int(user_specified_data.get('max-results'))
+    total_results_given = int(user_specified_data.get('total-results-given'))
+    client = app_utils.MovieDBApiClient(max_results, total_results_given)
+    final_discovery_url = app_utils.MOVIE_DISCOVERY_URL
     # Get all filters specified by user on api.ai.
-    userSpecifiedGenres = userSpecifiedData.get('genre')
-    userSpecifiedCastFirstName = userSpecifiedData.get('cast-first-name')
-    userSpecifiedCastLastName = userSpecifiedData.get('cast-last-name')
+    user_specified_genres = user_specified_data.get('genre')
+    user_specified_cast_first_name = user_specified_data.get('cast-first-name')
+    user_specified_cast_last_name = user_specified_data.get('cast-last-name')
     # Chat agent only allows us to parse out first and last names seperately
     # so we need to merge these to get a list of full names.
-    if len(userSpecifiedCastFirstName) == 0 and len(userSpecifiedCastLastName) == 0:
-        userSpecifiedCast = []
+    if len(user_specified_cast_first_name) == 0 and len(user_specified_cast_last_name) == 0:
+        user_specified_cast = []
     else:
-        userSpecifiedCast = [s1 + " " + s2 for s1, s2 in zip(
-            userSpecifiedCastFirstName, userSpecifiedCastLastName)]
-        userSpecifiedCast = map(utils.spellCheck, userSpecifiedCast)
-    userSpecifiedRating = userSpecifiedData.get('rating')
+        user_specified_cast = [s1 + " " + s2 for s1, s2 in zip(
+            user_specified_cast_first_name, user_specified_cast_last_name)]
+        user_specified_cast = map(app_utils.spell_check, user_specified_cast)
+    user_specified_rating = user_specified_data.get('rating')
     # Get movie database information using previously instantiated API client.
-    genreIds = client.getGenresIds(userSpecifiedGenres)
-    castIds = client.getCastIds(userSpecifiedCast)
+    genre_ids = client.get_genre_ids(user_specified_genres)
+    cast_ids = client.get_cast_ids(user_specified_cast)
     # Construct movie discovery URL.
-    finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_genres', genreIds))
-    finalDiscoveryURL = finalDiscoveryURL + client.encodeURLKeyValue(('with_people', castIds))
-    finalDiscoveryURL = finalDiscoveryURL + \
-        client.encodeURLKeyValue(('certification_country', 'US'))
-    finalDiscoveryURL = finalDiscoveryURL + \
-        client.encodeURLKeyValue(('certification', userSpecifiedRating))
-    movies = client.getDiscoveredMovies(finalDiscoveryURL)
-    movieDetails = client.getMovieDetails(movies)
-    return prepareResponse(movies, movieDetails, "gathered-filters", maxResults + totalResultsGiven)
+    final_discovery_url = final_discovery_url + \
+        client.encode_url_key_value(('with_genres', genre_ids))
+    final_discovery_url = final_discovery_url + \
+        client.encode_url_key_value(('with_people', cast_ids))
+    final_discovery_url = final_discovery_url + \
+        client.encode_url_key_value(('certification_country', 'US'))
+    final_discovery_url = final_discovery_url + \
+        client.encode_url_key_value(('certification', user_specified_rating))
+    movies = client.get_discovered_movies(final_discovery_url)
+    movie_details = client.get_movie_details(movies)
+    return prepare_response(movies, movie_details, "gathered-filters", max_results + total_results_given)
 
 
-def processSimilarityRequest(req):
+def process_similarity_request(req):
     """Deals with processing a single movie provided by the user and returning
     a list of movies which are similar."""
 
-    userSpecifiedData = req.get('result').get('contexts')[0].get('parameters')
-    client = utils.MovieDBApiClient(0, 0)
-    benchmarkMovie = userSpecifiedData.get('benchmark')
-    benchmarkMovie = utils.spellCheck(benchmarkMovie)
-    similarMovies = client.getSimilarMovies(benchmarkMovie)
-    movieDetails = client.getMovieDetails(similarMovies)
-    return prepareResponse(similarMovies, movieDetails, "gathered-benchmark-movie", 0)
+    user_specified_data = req.get('result').get('contexts')[0].get('parameters')
+    client = app_utils.MovieDBApiClient(0, 0)
+    benchmarkMovie = user_specified_data.get('benchmark')
+    benchmarkMovie = app_utils.spell_check(benchmarkMovie)
+    similar_movies = client.get_similar_movies(benchmarkMovie)
+    movie_details = client.get_movie_details(similar_movies)
+    return prepare_response(similar_movies, movie_details, "gathered-benchmark-movie", 0)
 
 
-def prepareResponse(movies, movieDetails, outboundContextName, outboundContextParam):
+def prepare_response(movies, movie_details, outbound_context_name, outbound_context_param):
     """Helper function that prepares the return object we send to the user
      given a list of movies."""
 
@@ -174,11 +105,11 @@ def prepareResponse(movies, movieDetails, outboundContextName, outboundContextPa
         "source": "movie-recommendation-service",
         "contextOut": [
             {
-                "name": outboundContextName,
-                "parameters": {"total-results-given": outboundContextParam}, "lifespan": 1
+                "name": outbound_context_name,
+                "parameters": {"total-results-given": outbound_context_param}, "lifespan": 1
             }
         ],
-        "data": movieDetails
+        "data": movie_details
     }
 
 if __name__ == '__main__':
