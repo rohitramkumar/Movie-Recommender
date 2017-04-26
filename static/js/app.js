@@ -140,7 +140,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                 $scope.movies.currentMovie = movieList[index];
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
-                                if($scope.movieInfo) {
+                                if($scope.movieInfo.currentMovie) {
                                     validateStreamingList($scope.movieInfo.currentMovie.streaming);
                                 }
                             };
@@ -154,7 +154,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                 $scope.movies.currentMovie = movieList[index];
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
-                                if($scope.movieInfo.currentMovi) {
+                                if($scope.movieInfo.currentMovie) {
                                     validateStreamingList($scope.movieInfo.currentMovie.streaming);
                                 }
                             };
@@ -192,7 +192,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
 
                                 $scope.movieInfo = resp;
-                                console.log('here2');
                                 console.log($scope.movieInfo);
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
                                 console.log($scope.movieInfo[($scope.movies.currentMovie).original_title]);
