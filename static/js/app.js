@@ -216,7 +216,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             }
 
                             streamList[index].source = finalStreamObj;
-                            console.log(streamList[index].source);
                         }
                     }
 
