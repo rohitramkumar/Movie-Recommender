@@ -1,6 +1,7 @@
 import model
 import time
 import os
+import requests
 
 # API Keys
 GUIDEBOX_API_KEY = os.environ['GUIDEBOX_API_KEY']
@@ -8,6 +9,7 @@ GUIDEBOX_API_KEY = os.environ['GUIDEBOX_API_KEY']
 GUIDEBOX_MOVIE_SEARCH_URL = 'http://api-public.guidebox.com/v2/search?api_key={}&type=movie&field=title&query={}'
 # URL endpoint which provides info about a movie given a guidebox id
 GUIDEBOX_MOVIE_INFO_URL = 'http://api-public.guidebox.com/v2/movies/{}?api_key={}'
+
 
 def create_user(username, password, first_name, last_name):
     """Used for sign-up. Gets form data and adds new user to users table."""
