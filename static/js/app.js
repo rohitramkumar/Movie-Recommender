@@ -203,6 +203,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         });
                     }
 
+                    // Capitalizes first word for each streaming option name
                     function validateStreamingList(streamList) {
                         for (var index in streamList) {
                             var streamObj = streamList[index].source;
@@ -210,7 +211,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             var finalStreamObj = "";
 
                             for (var token in tokenList) {
-                                var tempStr = res[token].charAt(0).toUpperCase() + res[token].slice(1);
+                                var tempStr = tokenList[token].charAt(0).toUpperCase() + tokenList[token].slice(1);
                                 finalStreamObj += tempStr + ' ';
                             }
 
