@@ -145,7 +145,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                 $scope.movies.currentMovie = movieList[index];
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
-                                //$scope.$apply();
                             };
 
                             $scope.prevMovie = function() {
@@ -157,7 +156,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                 $scope.movies.currentMovie = movieList[index];
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
-                                //$scope.$apply();
                                 //TO-DO @amanda: write code to check for when there is not info
                             };
 
