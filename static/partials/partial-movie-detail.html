@@ -22,8 +22,8 @@
                     Streaming Options
                   </button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <a class="dropdown-item" ng-if="movieInfo.currentMovie.streaming" ng-repeat="service in movieInfo.currentMovie.streaming">
-                          <a href={{service.link}}>{{service.source}}</a>
+                      <a class="dropdown-item" ng-repeat="service in movieInfo.currentMovie.streaming">
+                          {{service.source}}
                       </a>
                   </div>
                 </div>
