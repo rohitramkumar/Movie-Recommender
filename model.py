@@ -19,9 +19,8 @@ user_movies_tbl = Table('user_movies', Base.metadata,
                         Column('movie_imdb_id', Integer, ForeignKey('movies.id'))
                         )
 
+
 # Models
-
-
 class User(Base):
     __tablename__ = "users"
 

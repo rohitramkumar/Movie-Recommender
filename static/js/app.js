@@ -132,7 +132,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                             // Hack to get incoming movie details if user asked for more movies.
                             $("#nextResult").trigger("click");
-                            $("#previousResult").trigger("click");
+                            //$("#previousResult").trigger("click");
 
                             // Navigate movie array through nextMovie() and prevMovie()
                             // TO-DO: Write unit tests for these functions
@@ -145,6 +145,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                 $scope.movies.currentMovie = movieList[index];
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
+                                validateStreamingList($scope.movieInfo.currentMovie.streaming);
                             };
 
                             $scope.prevMovie = function() {
@@ -156,9 +157,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                 $scope.movies.currentMovie = movieList[index];
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
+                                validateStreamingList($scope.movieInfo.currentMovie.streaming);
                                 //TO-DO @amanda: write code to check for when there is not info
                             };
-
 
                             // If user is logged in, get learning recommendations
                             if (userService.user) {
@@ -191,12 +192,31 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             } else {
                                 console.log('Got showtimes for this movie!!');
 
+
                                 $scope.movieInfo = resp;
                                 console.log($scope.movieInfo);
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
                                 console.log($scope.movieInfo[($scope.movies.currentMovie).original_title]);
+
+                                validateStreamingList($scope.movieInfo.currentMovie.streaming);
                             }
                         });
+                    }
+
+                    function validateStreamingList(streamList) {
+                        for (var index in streamList) {
+                            var streamObj = streamList[index].source;
+                            var tokenList = streamObj.split('_');
+                            var finalStreamObj = "";
+
+                            for (var token in tokenList) {
+                                var tempStr = res[token].charAt(0).toUpperCase() + res[token].slice(1);
+                                finalStreamObj += tempStr + ' ';
+                            }
+
+                            streamList[index].source = finalStreamObj;
+                            console.log(streamList[index].source);
+                        }
                     }
 
                     // Function to get learning recommendations from learning agent
@@ -224,44 +244,20 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.recommendations = recommendationList;
 
                                 // Sometimes the server responds with an error string
-                                // TO-DO: Ask learning group to not to do this?
                                 if(typeof finalResp === 'string') {
                                     $scope.recommendations = "Could not provide user recommendation :(";
                                     return;
                                 }
 
                                 $scope.recommendations.currentRecommendation = $scope.movies[index];
-                                console.log('At this point the current rec is');
-                                console.log($scope.recommendations.currentRecommendation);
 
+                                // Find the movie at the head of the recommendation list
                                 for (var num in $scope.movies) {
                                     if (recommendationList[index] == $scope.movies[num].imdb_id) {
                                         $scope.recommendations.currentRecommendation = $scope.movies[num];
                                         break;
                                     }
                                 }
-
-                                // Navigate movie array through nextRec() and prevRec()
-                                // TO-DO: Write unit tests for these functions
-                                $scope.nextRecommendation = function() {
-                                    if (index >= (recommendationList.length - 1)) {
-                                        index = 0;
-                                    } else {
-                                        index = index + 1;
-                                    }
-
-                                    $scope.recommendations.currentRecommendation = recommendationList[index];
-                                };
-
-                                $scope.prevMovie = function() {
-                                    if (index < 1 ) {
-                                        index = recommendationList.length - 1;
-                                    } else {
-                                        index = index - 1;
-                                    }
-
-                                    $scope.recommendations.currentRecommendation = recommendationList[index];
-                                };
                             }
                         });
                     }
@@ -276,7 +272,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             'movie_detail': {
                 templateUrl: 'static/partials/partial-movie-detail.html',
                 controller: function($scope, $rootScope, $state, $q, user, userService) {
-                    //$window.location.reload()
 
                     $scope.addMovie = function(resp) {
                         var curMovieObject = {"username":userService.user.email, "user_id":userService.user.id, "movieName":$scope.movies.currentMovie.original_title, "movieImdbId":$scope.movies.currentMovie.imdb_id, "rating":resp.movieRating};
