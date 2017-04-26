@@ -140,9 +140,10 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                 $scope.movies.currentMovie = movieList[index];
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
-                                if($scope.movieInfo.currentMovie) {
+                                if($scope.movieInfo) {
                                     validateStreamingList($scope.movieInfo.currentMovie.streaming);
-                                }                            };
+                                }
+                            };
 
                             $scope.prevMovie = function() {
                                 if (index < 1 ) {
@@ -153,7 +154,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                 $scope.movies.currentMovie = movieList[index];
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
-                                if($scope.movieInfo.currentMovie) {
+                                if($scope.movieInfo) {
                                     validateStreamingList($scope.movieInfo.currentMovie.streaming);
                                 }
                             };
