@@ -103,7 +103,7 @@ def get_guidebox_info(movie_names):
             fandango = None
             other_sources = guidebox_info_result.get('other_sources')
             if 'movie_theater' in other_sources:
-                for source in other_sources:
+                for source in other_source.get('movie_theater')
                     if source.get('source') == 'fandango':
                         fandango = source.get('link')
                         guidebox_info[movie] = {
