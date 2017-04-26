@@ -21,10 +21,10 @@
                   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Streaming Options
                   </button>
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <div class="dropdown-item" ng-repeat="service in movieInfo.currentMovie.streaming">
-                          <a href={{service.link}}>{{service.source}}
-                      </div>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" ng-repeat="service in movieInfo.currentMovie.streaming">
+                      <a class="dropdown-item" href={{service.link}}>
+                          {{service.source}}
+                      </a>
                   </div>
                 </div>
             </li>
