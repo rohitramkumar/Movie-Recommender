@@ -84,8 +84,6 @@ def add_movie_to_watchlist(
 
 
 def get_guidebox_info(movie_names):
-    """Given a list of movie names, return the Guidebox information for each.
-    Guidebox provides metacritic links and links to streaming services."""
     guidebox_info = {}
     for movie in movie_names:
         movie_id_result = requests.get(
@@ -117,4 +115,4 @@ def get_guidebox_info(movie_names):
                 streaming.append({'source': source.get('source'), 'link': source.get('link')})
             guidebox_info[movie] = {
                 'metacritic': guidebox_info_result.get('metacritic'), 'streaming': streaming}
-return guidebox_info
+    return guidebox_info
