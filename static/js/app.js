@@ -70,7 +70,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                     angular.element(document).ready(function () {
 
-                        $("#userRating").keypress(function(event) {
+                        $("#input").keypress(function(event) {
                             if (event.which == 13) {
                                 event.preventDefault();
                                 send();
