@@ -127,15 +127,11 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             // Assign currentMovie
                             $scope.movies.currentMovie = movieList[index];
 
-                            console.log('the movie info object is:');
-                            console.log($scope.movieInfo);
-
                             // Hack to get incoming movie details if user asked for more movies.
                             $("#nextResult").trigger("click");
-                            //$("#previousResult").trigger("click");
+                            $("#previousResult").trigger("click");
 
                             // Navigate movie array through nextMovie() and prevMovie()
-                            // TO-DO: Write unit tests for these functions
                             $scope.nextMovie = function() {
                                 if (index >= (movieList.length - 1)) {
                                     index = 0;
@@ -145,8 +141,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                 $scope.movies.currentMovie = movieList[index];
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
-                                validateStreamingList($scope.movieInfo.currentMovie.streaming);
-                            };
+                                if($scope.movieInfo.currentMovie) {
+                                    validateStreamingList($scope.movieInfo.currentMovie.streaming);
+                                }                            };
 
                             $scope.prevMovie = function() {
                                 if (index < 1 ) {
@@ -157,8 +154,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                 $scope.movies.currentMovie = movieList[index];
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
-                                validateStreamingList($scope.movieInfo.currentMovie.streaming);
-                                //TO-DO @amanda: write code to check for when there is not info
+                                if($scope.movieInfo.currentMovie) {
+                                    validateStreamingList($scope.movieInfo.currentMovie.streaming);
+                                }
                             };
 
                             // If user is logged in, get learning recommendations
@@ -216,6 +214,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             }
 
                             streamList[index].source = finalStreamObj;
+                            console.log(streamList[index].source);
                         }
                     }
 
