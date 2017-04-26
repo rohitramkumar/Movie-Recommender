@@ -1,13 +1,15 @@
 from flask import Flask, make_response, request, jsonify, render_template
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
+from webapi import web_api
 
-import utils
+import app_utils
 import os
 import json
 
 # App and database config.
 app = Flask(__name__)
+app.register_blueprint(web_api)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 Bootstrap(app)
@@ -16,69 +18,6 @@ db = SQLAlchemy(app)
 @app.route("/")
 def index():
     return render_template('index.html')
-
-@app.route("/api/login/", methods=['POST'])
-def login():
-    """API endpoint which handles login authentication for the frontend."""
-
-    user_detail = json.loads(request.data)
-    username = user_detail.get("username")
-    password = user_detail.get("password")
-    return jsonify(utils.login(username, password))
-
-
-@app.route("/api/signup/", methods=['POST'])
-def signup():
-    """API endpoint which handles user signup."""
-
-    new_user = json.loads(request.data)
-    first_name = new_user.get("firstname")
-    last_name = new_user.get("lastname")
-    username = new_user.get("username")
-    password = new_user.get("password")
-    return utils.create_user(username, password, first_name, last_name)
-
-
-@app.route("/api/add_movie_to_watchlist/", methods=['POST'])
-def add_movie_to_watchlist():
-    """API endpoint which adds a new movie into the watchlist for a user."""
-
-    movie_detail = json.loads(request.data)
-    username = movie_detail.get("username")
-    user_id = movie_detail.get("user_id")
-    movie_name = movie_detail.get("movieName")
-    movie_imdb_id = movie_detail.get("movieImdbId")
-    movie_rating = movie_detail.get("rating")
-    return utils.add_movie_to_watchlist(username, user_id, movie_name, movie_imdb_id, movie_rating)
-
-@app.route("/api/get_watchlist/", methods=['POST'])
-def get_watchlist():
-    """API endpoint which gets all movies in a user's watchlist."""
-
-    user_id = request.data
-    return jsonify(utils.get_watchlist(user_id))
-
-@app.route("/api/get_learning_recommendation/", methods=['POST'])
-def get_learning_recommendation():
-    """API endpoint which gets a movie recommendation based on a user's watchlist."""
-
-    req = json.loads(request.data)
-    data = {"user_id": req.get("user_id"), "candidate_list": req.get("candidateList")}
-    client = utils.LearningAgentClient()
-    result = client.get_recommended_movies(data)
-    if result['result'] == []:
-        return jsonify("Watchlist is empty so no recommendation can be made")
-    else:
-        return jsonify(result['result'])
-
-@app.route("/api/get_guidebox_info/", methods=['POST'])
-def get_guidebox_info():
-    """"API endpoint which gets more movie information from Guidebox."""
-
-    req = json.loads(request.data)
-    movie_names = req.get('movieNames')
-    guidebox_info = utils.get_guidebox_info(movie_names)
-    return jsonify(guidebox_info)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
@@ -104,8 +43,8 @@ def process_filtering_request(req):
     user_specified_data = req.get('result').get('contexts')[0].get('parameters')
     max_results = int(user_specified_data.get('max-results'))
     total_results_given = int(user_specified_data.get('total-results-given'))
-    client = utils.MovieDBApiClient(max_results, total_results_given)
-    final_discovery_url = utils.MOVIE_DISCOVERY_URL
+    client = app_utils.MovieDBApiClient(max_results, total_results_given)
+    final_discovery_url = app_utils.MOVIE_DISCOVERY_URL
     # Get all filters specified by user on api.ai.
     user_specified_genres = user_specified_data.get('genre')
     user_specified_cast_first_name = user_specified_data.get('cast-first-name')
@@ -117,7 +56,7 @@ def process_filtering_request(req):
     else:
         user_specified_cast = [s1 + " " + s2 for s1, s2 in zip(
             user_specified_cast_first_name, user_specified_cast_last_name)]
-        user_specified_cast = map(utils.spell_check, user_specified_cast)
+        user_specified_cast = map(app_utils.spell_check, user_specified_cast)
     user_specified_rating = user_specified_data.get('rating')
     # Get movie database information using previously instantiated API client.
     genre_ids = client.get_genre_ids(user_specified_genres)
@@ -137,9 +76,9 @@ def process_similarity_request(req):
     a list of movies which are similar."""
 
     user_specified_data = req.get('result').get('contexts')[0].get('parameters')
-    client = utils.MovieDBApiClient(0, 0)
+    client = app_utils.MovieDBApiClient(0, 0)
     benchmarkMovie = user_specified_data.get('benchmark')
-    benchmarkMovie = utils.spell_check(benchmarkMovie)
+    benchmarkMovie = app_utils.spell_check(benchmarkMovie)
     similar_movies = client.get_similar_movies(benchmarkMovie)
     movie_details = client.get_movie_details(similar_movies)
     return prepare_response(similar_movies, movie_details, "gathered-benchmark-movie", 0)
