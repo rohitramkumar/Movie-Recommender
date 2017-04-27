@@ -243,8 +243,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.movieInfo = resp;
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
 
-                                validateStreamingList($scope.movieInfo.currentMovie.streaming);
-                            }
+                                if($scope.movieInfo.currentMovie) {
+                                    validateStreamingList($scope.movieInfo.currentMovie.streaming);
+                                }                            }
                         });
                     }
 
