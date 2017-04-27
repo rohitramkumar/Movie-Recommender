@@ -172,9 +172,11 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 }
 
                                 $scope.movies.currentMovie = movieList[index];
-                                $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
+                                if ($scope.movieInfo) {
+                                    $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
+                                }
 
-                                if($scope.movieInfo.currentMovie) {
+                                if ($scope.movieInfo.currentMovie) {
                                     validateStreamingList($scope.movieInfo.currentMovie.streaming);
                                 }
                             };
@@ -193,7 +195,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.movies.currentMovie = movieList[index];
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
 
-                                if($scope.movieInfo.currentMovie) {
+                                if ($scope.movieInfo.currentMovie) {
                                     validateStreamingList($scope.movieInfo.currentMovie.streaming);
                                 }
                             };
@@ -243,9 +245,10 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.movieInfo = resp;
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
 
-                                if($scope.movieInfo.currentMovie) {
+                                if ($scope.movieInfo.currentMovie) {
                                     validateStreamingList($scope.movieInfo.currentMovie.streaming);
-                                }                            }
+                                }
+                            }
                         });
                     }
 
@@ -303,7 +306,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 $scope.recommendations = recommendationList;
 
                                 // Sometimes the server responds with an error string
-                                if(typeof finalResp === 'string') {
+                                if (typeof finalResp === 'string') {
                                     $scope.recommendations = "Could not provide user recommendation :(";
                                     return;
                                 }
@@ -350,7 +353,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         var curMovieObject = {"username":userService.user.email, "user_id":userService.user.id, "movieName":$scope.movies.currentMovie.original_title, "movieImdbId":$scope.movies.currentMovie.imdb_id, "rating":ratingObject.movieRating};
 
                         userService.addMovieToWatchList(curMovieObject).then(function(response) {
-                            if(response == "Success") {
+                            if (response == "Success") {
                                 alert('Succesfully added movie to your watchlist!');
                             } else {
                                 alert(response);
@@ -434,7 +437,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                      */
                     $scope.signup = function(credentials) {
                         userService.signup(credentials).then(function(response) {
-                            if(response == "Success") {
+                            if (response == "Success") {
                                 // Redirects to home page after succesfuly regsitered
                                 $state.go('root.home');
                             } else {
