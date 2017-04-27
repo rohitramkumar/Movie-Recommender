@@ -9,6 +9,11 @@ GUIDEBOX_API_KEY = os.environ['GUIDEBOX_API_KEY']
 GUIDEBOX_MOVIE_SEARCH_URL = 'http://api-public.guidebox.com/v2/search?api_key={}&type=movie&field=title&query={}'
 # URL endpoint which provides info about a movie given a guidebox id
 GUIDEBOX_MOVIE_INFO_URL = 'http://api-public.guidebox.com/v2/movies/{}?api_key={}'
+# Learning Agent recommendation URL
+LEARNING_AGENT_REC_URL = "https://52.165.149.158/mrelearner/api/v1.0/recommender"
+# Learning Agent history URL
+LEARNING_AGENT_HIST_URL = "https://52.165.149.158/mrelearner/api/v1.0/history"
+# Max possible number of results that can be returned
 
 
 def create_user(username, password, first_name, last_name):
