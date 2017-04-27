@@ -160,10 +160,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             // Assign current movie to be displayed by front-end
                             $scope.movies.currentMovie = movieList[index];
 
-                            // Hack to get incoming movie details if user asked for more movies.
-                            $("#nextResult").trigger("click");
-                            $("#previousResult").trigger("click");
-
                             /**
                              * nextMovie Function - Iterate through movie array and movie info array as per front-end HTML button.
                              * Updates the current movie being displayed.
@@ -213,6 +209,10 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                         // Reset input field to blank state
                         $("#input").val('');
+
+                        // Hack to get incoming movie details if user asked for more movies.
+                        $("#nextResult").trigger("click");
+                        $("#previousResult").trigger("click");
                     }
 
 
