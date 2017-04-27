@@ -32,7 +32,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
 
                     /**
-                     * Login Function - Takes user credentials from front-end html
+                     * Login - Takes user credentials from front-end html
                      * and passes them to the relevant login function in the user
                      * service.
                      *
@@ -54,7 +54,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     };
 
                     /**
-                     * Logout Function - Calls the relevant logout function
+                     * Logout - Calls the relevant logout function
                      * in user service. Redirects to homepage as a result.
                      */
                     $rootScope.logout = function() {
@@ -98,7 +98,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     var accessToken = "d9854338952446d589f83e6a575e0ba4";
                     var baseUrl = "https://api.api.ai/v1/";
 
-                    // On Document Load Javascript Functionality
+                    // On Document Load Javascriptality
                     angular.element(document).ready(function () {
 
                         // Handles input to interact with the chat agent
@@ -112,7 +112,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
 
                     /**
-                     * sendToChatAgent Function - Sends typed input to the API.AI chat
+                     * sendToChatAgent - Sends typed input to the API.AI chat
                      * agent. Sends a POST http request to API.AI.
                      */
                     function sendToChatAgent() {
@@ -136,7 +136,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     }
 
                     /**
-                     * setResponse Function - Updates movie item details using received JSON from API.AI chat agent
+                     * setResponse - Updates movie item details using received JSON from API.AI chat agent
                      *
                      * @param  {type} value the data received from the chat agent
                      */
@@ -161,7 +161,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             $scope.movies.currentMovie = movieList[index];
 
                             /**
-                             * nextMovie Function - Iterate through movie array and movie info array as per front-end HTML button.
+                             * nextMovie - Iterate through movie array and movie info array as per front-end HTML button.
                              * Updates the current movie being displayed.
                              */
                             $scope.nextMovie = function() {
@@ -180,7 +180,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             };
 
                             /**
-                             * prevMovie Function - Iterate through movie array and movie info array as per front-end HTML button.
+                             * prevMovie - Iterate through movie array and movie info array as per front-end HTML button.
                              * Updates the current movie being displayed.
                              */
                             $scope.prevMovie = function() {
@@ -217,7 +217,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
 
                     /**
-                     * getMovieInfo Function - Given a list of movies, routes the list through
+                     * getMovieInfo - Given a list of movies, routes the list through
                      * to revelant user service function getGuideboxInfo() in order to request
                      * movie showtimes, reviews and streaming options.
                      *
@@ -250,7 +250,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     }
 
                     /**
-                     * validateStreamingList Function - Capitalizes first word for each streaming option name.
+                     * validateStreamingList - Capitalizes first word for each streaming option name.
                      * Also removes any underscores.
                      *
                      * @param  {type} streamList a list of streaming options
@@ -271,7 +271,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     }
 
                     /**
-                     * getRecommendations Function - Takes as input a list of movies, routes them through
+                     * getRecommendations - Takes as input a list of movies, routes them through
                      * the relevant user service function to get learning recommendations from
                      * the learning agent
                      *
@@ -341,7 +341,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
 
                     /**
-                     * addMovie Function - Adds current movie being displayed to a logged
+                     * addMovie - Adds current movie being displayed to a logged
                      * in user's watchlist.
                      *
                      * @param  {type} ratingObject contains user rating for the movie to be added
@@ -426,7 +426,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 controller: function($scope, $rootScope, $q, $state, userService) {
 
                     /**
-                     * signup Function - Takes in user credentials as input and
+                     * signup - Takes in user credentials as input and
                      * routes them through to the relevant user service function
                      * which communicates with the backend database.
                      *
