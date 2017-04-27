@@ -23,7 +23,8 @@
                   </button>
                   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
                       <a class="dropdown-item" ng-repeat="service in movieInfo.currentMovie.streaming" href={{service.link}}>
-                          {{service.source}}
+                          <b>{{service.source}}</b>
+                          <hr>
                       </a>
                   </div>
                 </div>
