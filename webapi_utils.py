@@ -117,3 +117,17 @@ def get_guidebox_info(movie_names):
             guidebox_info[movie] = {
                 'metacritic': guidebox_info_result.get('metacritic'), 'streaming': streaming}
     return guidebox_info
+
+
+class LearningAgentClient:
+
+    """This class abstracts API calls to our learning agent on Azure."""
+
+    def get_recommended_movies(self, data):
+        result = requests.post(LEARNING_AGENT_REC_URL, json=data, auth=(
+            "movierecommender", "vast_seas_of_infinity"), verify=False)
+        return result.json()
+
+    def add_movie_to_user_history(self, data):
+        requests.post(LEARNING_AGENT_HIST_URL, json=data, auth=(
+            "movierecommender", "vast_seas_of_infinity"), verify=False)
