@@ -34,6 +34,7 @@ MOVIE_CREDITS_URL = (MOVIE_DB_URL + 'movie/{}/credits?api_key={}')
 MOVIE_POSTER_URL = 'https://image.tmdb.org/t/p/w185/'
 # URL Endpoint for spell checking
 BING_SC_URL = 'https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/?mode=proof&mkt=en-us'
+# Max possible number of results that can be returned
 MAX_RESULTS = 10
 
 

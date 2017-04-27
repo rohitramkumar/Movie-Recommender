@@ -13,7 +13,6 @@ GUIDEBOX_MOVIE_INFO_URL = 'http://api-public.guidebox.com/v2/movies/{}?api_key={
 LEARNING_AGENT_REC_URL = "https://52.165.149.158/mrelearner/api/v1.0/recommender"
 # Learning Agent history URL
 LEARNING_AGENT_HIST_URL = "https://52.165.149.158/mrelearner/api/v1.0/history"
-# Max possible number of results that can be returned
 
 
 def create_user(username, password, first_name, last_name):
