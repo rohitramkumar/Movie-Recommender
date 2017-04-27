@@ -1,20 +1,29 @@
 angular.module('myApp').service('userService', function($http, $location, $q) {
 
+	/**
+	 * Main service that routes front-end requests through
+     * to the back-end API calls or database queries.
+	 */
 	var userService = {
-    	user: undefined,
+    	user: undefined, // Tracks if user is logged in or not
         response: undefined,
 
-        // Send user credentials to login API endpoint
-    	login: function(userCredentials) {
+
+    	/**
+    	 * login - Sends login credentials to login API endpoint.
+         * This API communicates with the underlying database.
+    	 * @param  {type} loginCredentials a dictionary of username and password
+    	 */
+    	login: function(loginCredentials) {
             var def = $q.defer();
 
             $http({
                 url: "/api/login/",
                 method: "POST",
-                data: userCredentials
+                data: loginCredentials
             }).success(function (userObj) {
                 if(userObj == "Fail") {
-                    console.log("Uh Oh");
+                    console.log("Failed to login.");
                 } else {
                     userService.user = userObj;
                 }
@@ -23,15 +32,21 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             });
 
             return def.promise;
-
         },
 
-        // Destroy user session
+        /**
+    	 * logout - Resets user session.
+    	 *
+    	 */
         logout: function() {
         	userService.user = undefined;
         },
 
-        // Send user credentials to signup API endpoint
+        /**
+         * signup - Sends user credentials to signup API endpoint.
+         * This API communicates with the database.
+         * @param  {type} userCredentials a dictionary of user credentials
+         */
         signup: function(userCredentials) {
             var def = $q.defer();
 
@@ -46,7 +61,13 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             return def.promise;
         },
 
-        // Add movie info to relevant watchlist API endpoint
+        /**
+         * addMovieToWatchList - Adds movie to user's watchlist
+         * through the relevant watchlist API endpoint.
+         * This API communicates with the database.
+         *
+         * @param  {type} movieCredentials movie information
+         */
         addMovieToWatchList: function(movieCredentials) {
 
             var def = $q.defer();
@@ -62,7 +83,12 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             return def.promise;
         },
 
-        // Get movie watchlist from relevant API endpoint
+
+        /**
+         * getUserMovies - Gets movie watchlist for a
+         * logged in user through relevant API endpoint.
+         * This API communicates with the database.
+         */
         getUserMovies: function() {
 
             var def = $q.defer();
@@ -78,6 +104,14 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
             return def.promise;
         },
 
+        /**
+         * getLearningRecomendations - Given a user profile
+         * containing a list of candidate movies, the underlying
+         * API call communicates with the learning server to
+         * provide personalized recommendation.
+         *
+         * @param  {type} userProfile a list of user details and candidate movie list
+         */
         getLearningRecomendations: function(userProfile) {
 
             var def = $q.defer();
@@ -94,6 +128,12 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
         },
 
 
+        /**
+         * getGuideboxInfo - Given a list of movie names, returns
+         * information about movie showtime, reviews and streaming
+         * options.
+         * @param  {type} movieList a list of movie names
+         */
         getGuideboxInfo: function(movieList) {
 
             var def = $q.defer();
