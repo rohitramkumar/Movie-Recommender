@@ -96,7 +96,7 @@ def prepare_response(movies, movie_details, outbound_context_name, outbound_cont
      given a list of movies."""
 
     if len(movies) > 0:
-        speech = "I found you the following movies: " + ', '.join(movies)
+        speech = "I found you the following movies: " + ', '.join(movies) + ". Do you want more?"
     else:
         speech = "Sorry, no movies available."
     return {

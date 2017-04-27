@@ -1,7 +1,6 @@
 import model
 import time
 import os
-import requests
 
 # API Keys
 GUIDEBOX_API_KEY = os.environ['GUIDEBOX_API_KEY']
@@ -13,7 +12,6 @@ GUIDEBOX_MOVIE_INFO_URL = 'http://api-public.guidebox.com/v2/movies/{}?api_key={
 LEARNING_AGENT_REC_URL = "https://52.165.149.158/mrelearner/api/v1.0/recommender"
 # Learning Agent history URL
 LEARNING_AGENT_HIST_URL = "https://52.165.149.158/mrelearner/api/v1.0/history"
-
 
 def create_user(username, password, first_name, last_name):
     """Used for sign-up. Gets form data and adds new user to users table."""
@@ -78,8 +76,7 @@ def add_movie_to_watchlist(
             return "Movie already present in watchlist!"
     user.movies.append(new_movie)
     model.session.commit()
-    # Pass movie to user profile maintained by the learning agent.
-    # TO-DO: Fix this
+    # Learning Agent watchlist.
     client = LearningAgentClient()
     client.add_movie_to_user_history({'user_id': user_id,
                                       'movie_imdb_id': movie_imdb_id,
@@ -89,39 +86,55 @@ def add_movie_to_watchlist(
 
 
 def get_guidebox_info(movie_names):
+    """Given a list of movie names, return the Guidebox information for each.
+    Guidebox provides metacritic links and links to streaming services."""
+
     guidebox_info = {}
     for movie in movie_names:
+        print(movie)
         movie_id_result = requests.get(
-            GUIDEBOX_MOVIE_SEARCH_URL.format(GUIDEBOX_API_KEY, movie)).json()
+            GUIDEBOX_MOVIE_SEARCH_URL.format(
+                GUIDEBOX_API_KEY, movie)).json()
         if len(movie_id_result.get('results')) == 0:
             guidebox_info[movie] = "No info"
             continue
         movie_id = movie_id_result.get('results')[0].get('id')
         guidebox_info_result = requests.get(
-            GUIDEBOX_MOVIE_INFO_URL.format(movie_id, GUIDEBOX_API_KEY)).json()
-        # If the movie is in theaters, then provide the fandango link and the metacritic link.
-        if guidebox_info_result.get('in_theaters') == True:
+            GUIDEBOX_MOVIE_INFO_URL.format(
+                movie_id, GUIDEBOX_API_KEY)).json()
+        # If the movie is in theaters, then provide the fandango link and the
+        # metacritic link.
+        if guidebox_info_result.get('in_theaters') is True:
             fandango = None
-            other_sources = guidebox_info_result.get('other_sources').get('movie_theater')
-            for source in other_sources:
-                if source.get('source') == 'fandango':
-                    fandango = source.get('link')
-            guidebox_info[movie] = {
-                'metacritic': guidebox_info_result.get('metacritic'), 'fandango': fandango}
-        # If the movie is not in theatres, provide the metacritic link and a list
-        # of streaming options, if applicable.
+            other_sources = guidebox_info_result.get('other_sources')
+            if 'movie_theater' in other_sources:
+                for source in other_sources.get('movie_theater')
+                    if source.get('source') == 'fandango':
+                        fandango = source.get('link')
+                        guidebox_info[movie] = {
+                            'metacritic': guidebox_info_result.get('metacritic'),
+                            'fandango': fandango}
+            else:
+                guidebox_info[movie] = {
+                    'metacritic': guidebox_info_result.get('metacritic')}
+        # If the movie is not in theatres, provide the metacritic link and a
+        # list of streaming options, if applicable.
         else:
-            subscription_web_sources = guidebox_info_result.get('subscription_web_sources')
+            subscription_web_sources = guidebox_info_result.get(
+                'subscription_web_sources')
             streaming = []
             for source in subscription_web_sources:
-                streaming.append({'source': source.get('source'), 'link': source.get('link')})
-            purchase_web_sources = guidebox_info_result.get('purchase_web_sources')
+                streaming.append({'source': source.get(
+                    'source'), 'link': source.get('link')})
+            purchase_web_sources = guidebox_info_result.get(
+                'purchase_web_sources')
             for source in purchase_web_sources:
-                streaming.append({'source': source.get('source'), 'link': source.get('link')})
+                streaming.append({'source': source.get(
+                    'source'), 'link': source.get('link')})
             guidebox_info[movie] = {
-                'metacritic': guidebox_info_result.get('metacritic'), 'streaming': streaming}
+                'metacritic': guidebox_info_result.get('metacritic'),
+                'streaming': streaming}
     return guidebox_info
-
 
 class LearningAgentClient:
 
