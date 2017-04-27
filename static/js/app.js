@@ -1,9 +1,17 @@
-'use strict';   // See note sign_up 'use strict'; below
+'use strict';
 
+
+/**
+ *  Movie App Module
+ */
 var movieApp = angular.module('myApp', [
     'ui.router'
 ]);
 
+
+/**
+ * Declaring all states for Movie App Module
+ */
 movieApp.config(function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
     $stateProvider
@@ -13,7 +21,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         abstract:true,
         resolve: {
             'user': function(userService) {
-                return userService.user; // would be async in a real app
+                return userService.user;
             }
         },
         views: {
@@ -22,11 +30,19 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                 controller: function($scope, $rootScope, $state, $q, user, userService) {
                     $rootScope.user = user;
 
-                    $rootScope.login = function(cred) {
-                        userService.login(cred).then(function(resp) {
+
+                    /**
+                     * Login Function - Takes user credentials from front-end html
+                     * and passes them to the relevant login function in the user
+                     * service.
+                     *
+                     * @param  {type} credentials user credentials consisting of username and password
+                     */
+                    $rootScope.login = function(credentials) {
+                        userService.login(credentials).then(function(resp) {
 
                             if (angular.isUndefined(resp)) {
-                                alert('Username or password incorrect.')
+                                alert('Did not get response from back-end')
                             } else if (resp == "Fail") {
                                 alert('Username or password incorrect.')
                             }
@@ -37,20 +53,27 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         });
                     };
 
+                    /**
+                     * Logout Function - Calls the relevant logout function
+                     * in user service. Redirects to homepage as a result.
+                     */
                     $rootScope.logout = function() {
                         userService.logout();
                         $state.go('root.home', {}, {reload: true});
                     };
 
+
+                    /**
+                     * Sign-up Redirect - Redirects the user to the Sign-up
+                     * state.
+                     */
                     $rootScope.signupRedirect = function() {
                         $state.go('root.signup', {}, {reload: true});
                     };
                 }
             },
             'header@root': {
-                templateUrl: 'static/partials/partial-header.html',
-                controller: function($scope, $rootScope, $state, $q, user, userService) {
-                }
+                templateUrl: 'static/partials/partial-header.html'
             },
             'footer@root': {
                 templateUrl: 'static/partials/partial-footer.html'
@@ -58,11 +81,18 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         }
     })
 
+
     .state('root.home', {
         url: '/',
         views: {
             'content': {
                 templateUrl: 'static/partials/partial-home.html',
+
+                /**
+                 * Home Controller - Responsible for all functionality on the home
+                 * page. This includes any interaction with the chat agent and all
+                 * functions populating movie detail or recommendation information.
+                 */
                 controller: function ($scope, $rootScope, $state, $q, user, userService) {
                     // API.AI Credentials
                     var accessToken = "d9854338952446d589f83e6a575e0ba4";
@@ -81,7 +111,9 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         });
                     });
 
-                    // Function to send request to API.AI chat agent
+                    /**
+                     * send - description
+                     */
                     function send() {
                         var text = $("#input").val();
                         $.ajax({
@@ -100,7 +132,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 setResponse("Internal Server Error");
                             }
                         });
-                        //setResponse("Loading..."); TO-DO: Add loading animation
                     }
 
                     // Function to update movie item details using received JSON from API.AI chat agent
@@ -123,7 +154,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             // Get movie showtimes
                             getMovieInfo($scope.movies);
 
-                            // Assign currentMovie
+                            // Assign current movie to be displayed by front-end
                             $scope.movies.currentMovie = movieList[index];
 
                             // Hack to get incoming movie details if user asked for more movies.
@@ -140,13 +171,14 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                 $scope.movies.currentMovie = movieList[index];
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
+
                                 if($scope.movieInfo.currentMovie) {
                                     validateStreamingList($scope.movieInfo.currentMovie.streaming);
                                 }
                             };
 
                             $scope.prevMovie = function() {
-                                if (index < 1 ) {
+                                if (index < 1) {
                                     index = movieList.length - 1;
                                 } else {
                                     index = index - 1;
@@ -154,6 +186,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                                 $scope.movies.currentMovie = movieList[index];
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
+
                                 if($scope.movieInfo.currentMovie) {
                                     validateStreamingList($scope.movieInfo.currentMovie.streaming);
                                 }
@@ -184,17 +217,12 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                         userService.getGuideboxInfo(request).then(function(resp) {
                             if (angular.isUndefined(resp)) {
-                                console.log('Could not retrieve showtimes');
+                                console.log('Did not get response from back-end');
                             } else if (resp == "Fail") {
                                 console.log('Could not retrieve showtimes');
                             } else {
-                                console.log('Got showtimes for this movie!!');
-
-
                                 $scope.movieInfo = resp;
-                                console.log($scope.movieInfo);
                                 $scope.movieInfo.currentMovie = $scope.movieInfo[($scope.movies.currentMovie).original_title];
-                                console.log($scope.movieInfo[($scope.movies.currentMovie).original_title]);
 
                                 validateStreamingList($scope.movieInfo.currentMovie.streaming);
                             }
@@ -315,7 +343,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
                     userService.getUserMovies().then(function(resp) {
                         if (angular.isUndefined(resp)) {
-                            console.log('Could not retrieve movies')
+                            console.log('Did not get response from back-end')
                         } else if (resp == "Fail") {
                             console.log('Could not retrieve movies')
                         } else {
@@ -355,7 +383,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
             $scope.login = function(cred) {
                 userService.login(cred).then(function(resp) {
                     if (angular.isUndefined(resp)) {
-                        alert('username or password incorrect.')
+                        alert('Did not get response from back-end')
                     } else if (resp == "Fail") {
                         alert('Username or password incorrect.')
                     }
