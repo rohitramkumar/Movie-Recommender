@@ -64,7 +64,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
 
 
                     /**
-                     * Sign-up Redirect - Redirects the user to the Sign-up
+                     * Sign-up Redirect - Redirects the user to the sign-up
                      * state.
                      */
                     $rootScope.signupRedirect = function() {
@@ -94,27 +94,28 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                  * functions populating movie detail or recommendation information.
                  */
                 controller: function ($scope, $rootScope, $state, $q, user, userService) {
-                    // API.AI Credentials
+                    // API.AI Access Token
                     var accessToken = "d9854338952446d589f83e6a575e0ba4";
                     var baseUrl = "https://api.api.ai/v1/";
 
+                    // On Document Load Javascript Functionality
                     angular.element(document).ready(function () {
 
+                        // Handles input to interact with the chat agent
                         $("#input").keypress(function(event) {
                             if (event.which == 13) {
                                 event.preventDefault();
-                                send();
+                                sendToChatAgent();
                             }
-                        });
-                        $("#rec").click(function(event) {
-                            send();
                         });
                     });
 
+
                     /**
-                     * send - description
+                     * sendToChatAgent Function - Sends typed input to the API.AI chat
+                     * agent. Sends a POST http request to API.AI.
                      */
-                    function send() {
+                    function sendToChatAgent() {
                         var text = $("#input").val();
                         $.ajax({
                             type: "POST",
@@ -134,24 +135,26 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         });
                     }
 
-                    // Function to update movie item details using received JSON from API.AI chat agent
-                    function setResponse(val) {
-                        var respObject = JSON.parse(val);
+                    /**
+                     * setResponse Function - Updates movie item details using received JSON from API.AI chat agent
+                     *
+                     * @param  {type} value the data received from the chat agent
+                     */
+                    function setResponse(value) {
+                        var respObject = JSON.parse(value);
                         var respStr = respObject.result.fulfillment.speech;
 
-                        // Update appropriate HTML objects with response
+                        // Update appropriate HTML objects with response via jQuery
                         $("#spokenResponse").addClass("is-active").find(".spoken-response__text").html(respStr);
 
-                        // If recommnedation made by chat agent, display movie details
+                        // If movie recommnedations are passed on from the chat agent, displays them
                         if (respStr.includes("I found you the following movies")) {
-                            console.log("Display movie details!!");
-                            console.log(respObject.result.fulfillment.data);
                             var movieList = respObject.result.fulfillment.data;
 
                             var index = 0;
                             $scope.movies = movieList;
 
-                            // Get movie showtimes
+                            // Get movie showtimes and streaming information
                             getMovieInfo($scope.movies);
 
                             // Assign current movie to be displayed by front-end
@@ -161,7 +164,10 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             $("#nextResult").trigger("click");
                             $("#previousResult").trigger("click");
 
-                            // Navigate movie array through nextMovie() and prevMovie()
+                            /**
+                             * nextMovie Function - Iterate through movie array and movie info array as per front-end HTML button.
+                             * Updates the current movie being displayed.
+                             */
                             $scope.nextMovie = function() {
                                 if (index >= (movieList.length - 1)) {
                                     index = 0;
@@ -177,6 +183,10 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 }
                             };
 
+                            /**
+                             * prevMovie Function - Iterate through movie array and movie info array as per front-end HTML button.
+                             * Updates the current movie being displayed.
+                             */
                             $scope.prevMovie = function() {
                                 if (index < 1) {
                                     index = movieList.length - 1;
@@ -197,13 +207,22 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                 getRecommendations($scope.movies);
                             }
 
-
+                            // Display movie detail
                             $state.go('root.home.movie_detail');
                         }
 
+                        // Reset input field to blank state
                         $("#input").val('');
                     }
 
+
+                    /**
+                     * getMovieInfo Function - Given a list of movies, routes the list through
+                     * to revelant user service function getGuideboxInfo() in order to request
+                     * movie showtimes, reviews and streaming options.
+                     *
+                     * @param  {type} movieList a list of movie objects
+                     */
                     function getMovieInfo(movieList) {
                         var userMovies = movieList;
                         var movieNameList = [];
@@ -229,7 +248,12 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         });
                     }
 
-                    // Capitalizes first word for each streaming option name
+                    /**
+                     * validateStreamingList Function - Capitalizes first word for each streaming option name.
+                     * Also removes any underscores.
+                     *
+                     * @param  {type} streamList a list of streaming options
+                     */
                     function validateStreamingList(streamList) {
                         for (var index in streamList) {
                             var streamObj = streamList[index].source;
@@ -242,11 +266,17 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             }
 
                             streamList[index].source = finalStreamObj;
-                            console.log(streamList[index].source);
                         }
                     }
 
-                    // Function to get learning recommendations from learning agent
+                    /**
+                     * getRecommendations Function - Takes as input a list of movies, routes them through
+                     * the relevant user service function to get learning recommendations from
+                     * the learning agent
+                     *
+                     * @param  {type} movieList a list of movie objects
+                     */
+
                     function getRecommendations(movieList) {
                         var userMovies = movieList;
                         var movieIDList = [];
@@ -256,8 +286,10 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             movieIDList.push(movieObject['imdb_id']);
                         }
 
+                        // Remove duplicate movie entry from the end of the list
                         movieIDList = movieIDList.slice(0, -1);
 
+                        // Prepare request from the current movie candidate list
                         var userProfile = {user_id:userService.user.id, candidateList:movieIDList};
 
                         userService.getLearningRecomendations(userProfile)
@@ -265,8 +297,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                             if (angular.isUndefined(resp)) {
                                 console.log('Could not retrieve recommendations');
                             } else {
-                                console.log(resp);
-                                var index = 0;
+                                var index = 0; // Default index is 0 to retrieve entry at head
                                 var recommendationList = resp;
                                 $scope.recommendations = recommendationList;
 
@@ -276,6 +307,7 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                                     return;
                                 }
 
+                                // Set current recommendation to be displayed
                                 $scope.recommendations.currentRecommendation = $scope.movies[index];
 
                                 // Find the movie at the head of the recommendation list
@@ -298,12 +330,25 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         views: {
             'movie_detail': {
                 templateUrl: 'static/partials/partial-movie-detail.html',
+
+                /**
+                * Movie Detail Controller - Responsible for all content on the
+                * movie detail state. This includes any movie detail displayed and
+                * functionality to rate a movie and add it to user watchlist.
+                */
                 controller: function($scope, $rootScope, $state, $q, user, userService) {
 
-                    $scope.addMovie = function(resp) {
-                        var curMovieObject = {"username":userService.user.email, "user_id":userService.user.id, "movieName":$scope.movies.currentMovie.original_title, "movieImdbId":$scope.movies.currentMovie.imdb_id, "rating":resp.movieRating};
 
-                        userService.addMovie(curMovieObject).then(function(response) {
+                    /**
+                     * addMovie Function - Adds current movie being displayed to a logged
+                     * in user's watchlist.
+                     *
+                     * @param  {type} ratingObject contains user rating for the movie to be added
+                     */
+                    $scope.addMovie = function(ratingObject) {
+                        var curMovieObject = {"username":userService.user.email, "user_id":userService.user.id, "movieName":$scope.movies.currentMovie.original_title, "movieImdbId":$scope.movies.currentMovie.imdb_id, "rating":ratingObject.movieRating};
+
+                        userService.addMovieToWatchList(curMovieObject).then(function(response) {
                             if(response == "Success") {
                                 alert('Succesfully added movie to your watchlist!');
                             } else {
@@ -319,6 +364,12 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
     .state('root.restricted', {
         url: '/profile',
         resolve: {
+
+            /**
+             * auth - Ensures that only a logged in user can
+             * access profile page. Otherwise redirects to
+             * the login state.
+             */
             auth: function(userService, $q, $timeout) {
 
                 var deferred = $q.defer();
@@ -338,6 +389,13 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         views: {
             'content': {
                 templateUrl: 'static/partials/partial-profile.html',
+
+                /**
+                * User Profile Controller - Responsible for all content on the
+                * logged in user's profile page. This includes any movies in a
+                * user's watchlist. Calls user service getUserMovies() when
+                * instantiated.
+                */
                 controller: function($scope, $rootScope, auth, userService) {
                     $rootScope.user = auth;
 
@@ -347,7 +405,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                         } else if (resp == "Fail") {
                             console.log('Could not retrieve movies')
                         } else {
-                            console.log(resp)
                             $scope.userMovies = resp;
                         }
                     });
@@ -361,10 +418,23 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
         views: {
             'content': {
                 templateUrl: 'static/partials/partial-signup.html',
+                /**
+                * Sign Up Controller - Responsible for the registeration
+                * process for a new user.
+                */
                 controller: function($scope, $rootScope, $q, $state, userService) {
-                    $scope.signup = function(cred) {
-                        userService.signup(cred).then(function(response) {
+
+                    /**
+                     * signup Function - Takes in user credentials as input and
+                     * routes them through to the relevant user service function
+                     * which communicates with the backend database.
+                     *
+                     * @param  {type} credentials a dictionary of user credentials
+                     */
+                    $scope.signup = function(credentials) {
+                        userService.signup(credentials).then(function(response) {
                             if(response == "Success") {
+                                // Redirects to home page after succesfuly regsitered
                                 $state.go('root.home');
                             } else {
                                 alert(response);
@@ -373,26 +443,6 @@ movieApp.config(function($stateProvider, $urlRouterProvider) {
                     };
                 }
             }
-        }
-    })
-
-    .state('login', {
-        url: '/login',
-        templateUrl: 'static/partials/partial-login.html',
-        controller: function($scope, $state, $q, userService) {
-            $scope.login = function(cred) {
-                userService.login(cred).then(function(resp) {
-                    if (angular.isUndefined(resp)) {
-                        alert('Did not get response from back-end')
-                    } else if (resp == "Fail") {
-                        alert('Username or password incorrect.')
-                    }
-                    else {
-                        console.log($scope.user)
-                        $state.go('root.home');
-                    }
-                });
-            };
         }
     });
 });

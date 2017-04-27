@@ -47,7 +47,7 @@ angular.module('myApp').service('userService', function($http, $location, $q) {
         },
 
         // Add movie info to relevant watchlist API endpoint
-        addMovie: function(movieCredentials) {
+        addMovieToWatchList: function(movieCredentials) {
 
             var def = $q.defer();
 
