@@ -74,7 +74,8 @@ def add_movie_to_watchlist(
             return "Movie already present in watchlist!"
     user.movies.append(new_movie)
     model.session.commit()
-    # Learning Agent watchlist.
+    # Pass movie to user profile maintained by the learning agent.
+    # TO-DO: Fix this
     client = LearningAgentClient()
     client.add_movie_to_user_history({'user_id': user_id,
                                       'movie_imdb_id': movie_imdb_id,
