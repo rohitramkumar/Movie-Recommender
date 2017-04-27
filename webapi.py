@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify
 import webapi_utils
 import json
 
-    web_api = Blueprint('web_api', __name__)
+web_api = Blueprint('web_api', __name__)
 
 @web_api.route("/api/login/", methods=['POST'])
 def login():

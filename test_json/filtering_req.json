@@ -5,10 +5,10 @@
     "action": "",
     "actionIncomplete": false,
     "parameters": {
-      "cast-first-name": ["Tom"],
-      "cast-last-name": ["Hardy"],
+      "cast-first-name": ["Robin"],
+      "cast-last-name": ["Williams"],
       "genre": [
-        "Action"
+        "Comedy"
       ],
       "max-results": "2",
       "rating": ""
@@ -17,19 +17,19 @@
       {
         "name": "gathered-filters",
         "parameters": {
-          "cast-first-name.original": ["Tom"],
+          "cast-first-name.original": ["Robin"],
           "max-results": "2",
           "total-results-given": "0",
           "total-results-given.original": "0",
           "rating.original": "",
           "rating": "",
           "genre": [
-            "Action"
+            "Comedy"
           ],
-          "cast-last-name": ["Hardy"],
-          "genre.original": "action",
-          "cast-last-name.original": ["Hardy"],
-          "cast-first-name": ["Tom"],
+          "cast-last-name": ["Williams"],
+          "genre.original": "comedy",
+          "cast-last-name.original": ["Williams"],
+          "cast-first-name": ["Robin"],
           "max-results.original": "2"
         },
         "lifespan": 3

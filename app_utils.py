@@ -34,10 +34,6 @@ MOVIE_CREDITS_URL = (MOVIE_DB_URL + 'movie/{}/credits?api_key={}')
 MOVIE_POSTER_URL = 'https://image.tmdb.org/t/p/w185/'
 # URL Endpoint for spell checking
 BING_SC_URL = 'https://api.cognitive.microsoft.com/bing/v5.0/spellcheck/?mode=proof&mkt=en-us'
-# Learning Agent recommendation URL
-LEARNING_AGENT_REC_URL = "https://52.165.149.158/mrelearner/api/v1.0/recommender"
-# Learning Agent history URL
-LEARNING_AGENT_HIST_URL = "https://52.165.149.158/mrelearner/api/v1.0/history"
 # Max possible number of results that can be returned
 MAX_RESULTS = 10
 
@@ -183,17 +179,3 @@ class MovieDBApiClient:
                 return '&' + pair[0] + '=' + ','.join(str(i) for i in pair[1])
             else:
                 return '&' + pair[0] + '=' + pair[1]
-
-
-class LearningAgentClient:
-
-    """This class abstracts API calls to our learning agent on Azure."""
-
-    def get_recommended_movies(self, data):
-        result = requests.post(LEARNING_AGENT_REC_URL, json=data, auth=(
-            "movierecommender", "vast_seas_of_infinity"), verify=False)
-        return result.json()
-
-    def add_movie_to_user_history(self, data):
-        requests.post(LEARNING_AGENT_HIST_URL, json=data, auth=(
-            "movierecommender", "vast_seas_of_infinity"), verify=False)

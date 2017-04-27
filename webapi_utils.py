@@ -8,6 +8,10 @@ GUIDEBOX_API_KEY = os.environ['GUIDEBOX_API_KEY']
 GUIDEBOX_MOVIE_SEARCH_URL = 'http://api-public.guidebox.com/v2/search?api_key={}&type=movie&field=title&query={}'
 # URL endpoint which provides info about a movie given a guidebox id
 GUIDEBOX_MOVIE_INFO_URL = 'http://api-public.guidebox.com/v2/movies/{}?api_key={}'
+# Learning Agent recommendation URL
+LEARNING_AGENT_REC_URL = "https://52.165.149.158/mrelearner/api/v1.0/recommender"
+# Learning Agent history URL
+LEARNING_AGENT_HIST_URL = "https://52.165.149.158/mrelearner/api/v1.0/history"
 
 def create_user(username, password, first_name, last_name):
     """Used for sign-up. Gets form data and adds new user to users table."""
@@ -133,3 +137,16 @@ def get_guidebox_info(movie_names):
                 'metacritic': guidebox_info_result.get('metacritic'),
                 'streaming': streaming}
     return guidebox_info
+
+class LearningAgentClient:
+
+    """This class abstracts API calls to our learning agent on Azure."""
+
+    def get_recommended_movies(self, data):
+        result = requests.post(LEARNING_AGENT_REC_URL, json=data, auth=(
+            "movierecommender", "vast_seas_of_infinity"), verify=False)
+        return result.json()
+
+    def add_movie_to_user_history(self, data):
+        requests.post(LEARNING_AGENT_HIST_URL, json=data, auth=(
+            "movierecommender", "vast_seas_of_infinity"), verify=False)
