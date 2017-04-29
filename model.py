@@ -8,16 +8,21 @@ import os
 
 # Sessions
 engine = create_engine(
-    'postgres://sibkuzvydevgqi:255578d74ecc93bc32ec26a19acd225e7651d9e8e0b640a176759d3c35037ed7@ec2-184-73-222-194.compute-1.amazonaws.com:5432/d4tqub1q54h1ug', echo=False)
-session = scoped_session(sessionmaker(bind=engine, autocommit=False, autoflush=False))
+    'postgres://sibkuzvydevgqi:255578d74ecc93bc32ec26a19acd225e7651d9e8e0b640a176759d3c35037ed7@ec2-184-73-222-194.compute-1.amazonaws.com:5432/d4tqub1q54h1ug',
+    echo=False)
+session = scoped_session(
+    sessionmaker(
+        bind=engine,
+        autocommit=False,
+        autoflush=False))
 
 Base = declarative_base()
 Base.query = session.query_property()
 
-user_movies_tbl = Table('user_movies', Base.metadata,
-                        Column('user_id', Integer, ForeignKey('users.id')),
-                        Column('movie_imdb_id', Integer, ForeignKey('movies.id'))
-                        )
+user_movies_tbl = Table(
+    'user_movies', Base.metadata, Column(
+        'user_id', Integer, ForeignKey('users.id')), Column(
+            'movie_imdb_id', Integer, ForeignKey('movies.id')))
 
 
 # Models
@@ -71,6 +76,7 @@ def create_tables():
 
 def main():
     create_tables()
+
 
 if __name__ == "__main__":
     main()

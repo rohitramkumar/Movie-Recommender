@@ -4,6 +4,7 @@ import mock
 from app import process_filtering_request, process_similarity_request, prepare_response
 from app_utils import MovieDBApiClient
 
+
 class AppTest(unittest.TestCase):
 
     def test_process_filtering_request(self):
@@ -18,10 +19,11 @@ class AppTest(unittest.TestCase):
             j = json.loads(f.read())
             result = process_similarity_request(j)
 
+
 class AppUtilsTest(unittest.TestCase):
 
     def setUp(self):
-        self.client = MovieDBApiClient(0,0)
+        self.client = MovieDBApiClient(0, 0)
 
     def test_get_genre_ids(self):
         result = self.client.get_genre_ids(['Action', 'Adventure', 'Comedy'])
@@ -29,7 +31,8 @@ class AppUtilsTest(unittest.TestCase):
         self.assertEquals(result, expected)
 
     def test_get_cast_ids(self):
-        result = self.client.get_cast_ids(['Tom Hardy', 'Tom Hanks', 'Robin Williams'])
+        result = self.client.get_cast_ids(
+            ['Tom Hardy', 'Tom Hanks', 'Robin Williams'])
         expected = [2524, 31, 2157]
         self.assertEquals(result, expected)
 
@@ -44,14 +47,10 @@ class AppUtilsTest(unittest.TestCase):
         self.assertEquals(result, expected)
 
     def test_spell_check(self):
-        pass
+        result = self.client.spell_check('Will Farell')
+        expected = "Will Ferrell"
+        self.assertEquals(result, expected)
 
 
-class WebAPITest(unittest.TestCase):
-    pass
-
-class WebAPIUtilsTest(unittest.TestCase):
-    pass
-    
 if __name__ == "__main__":
     unittest.main()

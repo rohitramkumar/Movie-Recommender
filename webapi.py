@@ -5,6 +5,7 @@ import json
 
 web_api = Blueprint('web_api', __name__)
 
+
 @web_api.route("/api/login/", methods=['POST'])
 def login():
     """API endpoint which handles login authentication for the frontend."""
@@ -37,7 +38,9 @@ def add_movie_to_watchlist():
     movie_name = movie_detail.get("movieName")
     movie_imdb_id = movie_detail.get("movieImdbId")
     movie_rating = movie_detail.get("rating")
-    return webapi_utils.add_movie_to_watchlist(username, user_id, movie_name, movie_imdb_id, movie_rating)
+    return webapi_utils.add_movie_to_watchlist(
+        username, user_id, movie_name, movie_imdb_id, movie_rating)
+
 
 @web_api.route("/api/get_watchlist/", methods=['POST'])
 def get_watchlist():
@@ -46,18 +49,21 @@ def get_watchlist():
     user_id = request.data
     return jsonify(webapi_utils.get_watchlist(user_id))
 
+
 @web_api.route("/api/get_learning_recommendation/", methods=['POST'])
 def get_learning_recommendation():
     """API endpoint which gets a movie recommendation based on a user's watchlist."""
 
     req = json.loads(request.data)
-    data = {"user_id": req.get("user_id"), "candidate_list": req.get("candidateList")}
+    data = {"user_id": req.get("user_id"),
+            "candidate_list": req.get("candidateList")}
     client = webapi_utils.LearningAgentClient()
     result = client.get_recommended_movies(data)
     if result['result'] == []:
         return jsonify("Watchlist is empty so no recommendation can be made")
     else:
         return jsonify(result['result'])
+
 
 @web_api.route("/api/get_guidebox_info/", methods=['POST'])
 def get_guidebox_info():

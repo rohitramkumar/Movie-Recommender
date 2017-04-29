@@ -1,4 +1,4 @@
-from flask import Flask, make_response, request, jsonify, render_template
+from flask import Flask, make_response, request, render_template
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from webapi import web_api
@@ -43,7 +43,8 @@ def process_filtering_request(req):
     these filters into api calls for the movie database. The filtered movies
     returned from these api calls are returned to the user."""
 
-    user_specified_data = req.get('result').get('contexts')[0].get('parameters')
+    user_specified_data = req.get('result').get('contexts')[
+        0].get('parameters')
     max_results = int(user_specified_data.get('max-results'))
     total_results_given = int(user_specified_data.get('total-results-given'))
     client = app_utils.MovieDBApiClient(max_results, total_results_given)
@@ -54,7 +55,8 @@ def process_filtering_request(req):
     user_specified_cast_last_name = user_specified_data.get('cast-last-name')
     # Chat agent only allows us to parse out first and last names seperately
     # so we need to merge these to get a list of full names.
-    if len(user_specified_cast_first_name) == 0 and len(user_specified_cast_last_name) == 0:
+    if len(user_specified_cast_first_name) == 0 and len(
+            user_specified_cast_last_name) == 0:
         user_specified_cast = []
     else:
         user_specified_cast = [s1 + " " + s2 for s1, s2 in zip(
@@ -75,42 +77,53 @@ def process_filtering_request(req):
         client.encode_url_key_value(('certification', user_specified_rating))
     movies = client.get_discovered_movies(final_discovery_url)
     movie_details = client.get_movie_details(movies)
-    return prepare_response(movies, movie_details, "gathered-filters", max_results + total_results_given)
+    return prepare_response(
+        movies,
+        movie_details,
+        "gathered-filters",
+        max_results +
+        total_results_given)
 
 
 def process_similarity_request(req):
     """Deals with processing a single movie provided by the user and returning
     a list of movies which are similar."""
 
-    user_specified_data = req.get('result').get('contexts')[0].get('parameters')
+    user_specified_data = req.get('result').get('contexts')[
+        0].get('parameters')
     client = app_utils.MovieDBApiClient(0, 0)
     benchmarkMovie = user_specified_data.get('benchmark')
     benchmarkMovie = app_utils.spell_check(benchmarkMovie)
     similar_movies = client.get_similar_movies(benchmarkMovie)
     movie_details = client.get_movie_details(similar_movies)
-    return prepare_response(similar_movies, movie_details, "gathered-benchmark-movie", 0)
+    return prepare_response(
+        similar_movies,
+        movie_details,
+        "gathered-benchmark-movie",
+        0)
 
 
-def prepare_response(movies, movie_details, outbound_context_name, outbound_context_param):
+def prepare_response(
+        movies,
+        movie_details,
+        outbound_context_name,
+        outbound_context_param):
     """Helper function that prepares the return object we send to the user
      given a list of movies."""
 
     if len(movies) > 0:
-        speech = "I found you the following movies: " + ', '.join(movies) + ". Do you want more?"
+        speech = "I found you the following movies: " + \
+            ', '.join(movies) + ". Do you want more?"
     else:
         speech = "Sorry, no movies available."
-    return {
-        "speech": speech,
-        "displayText": speech,
-        "source": "movie-recommendation-service",
-        "contextOut": [
-            {
-                "name": outbound_context_name,
-                "parameters": {"total-results-given": outbound_context_param}, "lifespan": 1
-            }
-        ],
-        "data": movie_details
-    }
+    return {"speech": speech,
+            "displayText": speech,
+            "source": "movie-recommendation-service",
+            "contextOut": [{"name": outbound_context_name,
+                            "parameters": {"total-results-given": outbound_context_param},
+                            "lifespan": 1}],
+            "data": movie_details}
+
 
 if __name__ == '__main__':
     # For local debugging.
