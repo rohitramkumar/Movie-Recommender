@@ -7,14 +7,22 @@ We provide an API for the front end to use the recommendation services.
 
 # Overall architecture
 
-![alt text](http://imgur.com/YfZeexN)
+![alt text](http://imgur.com/YfZeexN.png)
 
 # Code and File Structure
 
-static/js/app.js - Contains all Angular.JS states and controllers which control each aspect of the web application. Details in Fig 1.a.  
+app.py - Contains the main flask route which is hit by the api.ai chat agent.
+
+app_utils.py - Contains utility classes (MovieABApiClient) and functions used in app.py webapi.py - Contains API which is used by the front-end 
+
+static/js/app.js - Contains all Angular.JS states and controllers which control each aspect of the web application.  
+
 static/js/services.js - Contains the primary user service which handles all HTTP request with the backend flask API (webapi.py). The Flask API in turn helps communicate with the chat agent, learning server or database. 
-static/partials/*.html - Contains all HTML files which are used by each Angular.JS state. For example, we have separate html files for the login page, movie-detail partial and view-profile page. 
-webapi_utils.py - Contains utility functions to communicate with the underlying postgresql database.
+
+static/partials - Contains all HTML files which are used by each Angular.JS state. For example, we have separate html files for the login page, movie-detail partial and view-profile page. 
+
+webapi_utils.py - Contains utility functions to communicate with the underlying postgresql database. Also includes the learning agent classes.
+
 model.py - Contains database model information for user database.
 
 # Install and Deploy
