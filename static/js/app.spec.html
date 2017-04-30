@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+  <head>
+    <!-- Add Jasmine -->
+    <script data-require="jasmine@*" data-semver="2.0.0" src="https://cdn.jsdelivr.net/jasmine/2.0.0/jasmine.js"></script>
+    <!-- Jasmine html & css for reporting -->
+    <link data-require="jasmine@*" data-semver="2.0.0" rel="stylesheet" href="https://cdn.jsdelivr.net/jasmine/2.0.0/jasmine.css" />
+    <script data-require="jasmine@*" data-semver="2.0.0" src="https://cdn.jsdelivr.net/jasmine/2.0.0/jasmine-html.js"></script>
+    <script data-require="jasmine@*" data-semver="2.0.0" src="https://cdn.jsdelivr.net/jasmine/2.0.0/boot.js"></script>
+    <!-- Add AngularJS -->
+    <script data-require="angular.js@1.2.25" data-semver="1.2.25" src="https://code.angularjs.org/1.2.25/angular.js"></script>
+    <!-- AngularJS testing helpers -->
+    <script data-require="angular-mocks@*" data-semver="1.2.25" src="https://code.angularjs.org/1.2.25/angular-mocks.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.4.2/angular-ui-router.js"></script>
+  </head>
+
+  <body ng-app="myApp">
+    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="services.js"></script>
+    <!-- This is our test spec -->
+    <script type="text/javascript" src="app.spec.js"></script>
+  </body>
+
+</html>
