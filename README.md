@@ -1,9 +1,8 @@
 # Movie Recommendation Service
 
-This repo contains the front-end and api.ai components of the movie recommender project. The learning portion of the project can be found <a href="https://github.com/Slash0BZ/movie_recommender">here.</a>
+Movie recommender is a project that recommends movies through an intelligent chat agent that a user can interact with. User's can ask for personalized movie suggestions if they register for a user account and build a movie watch-list. 
 
-Movie recommender is a project that recommends movies based on two factors: the trending/in-theater movies and the recommendation based on a user's watched movie histories. 
-We provide an API for the front end to use the recommendation services.
+This repo contains the front-end, api.ai, and database model components of the movie recommender project. The learning portion of the project can be found <a href="https://github.com/Slash0BZ/movie_recommender">here.</a>
 
 # Overall architecture
 
