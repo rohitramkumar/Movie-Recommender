@@ -24,6 +24,10 @@ webapi_utils.py - Contains utility functions to communicate with the underlying 
 
 model.py - Contains database model information for user database.
 
+templates/app.spec.html - Tests for the front-end using jasmine.js framework.
+
+tests.py - Contains unit tests for the chat agent functionality as well as back-end API calls.
+
 # Install and Deploy
 
 The flask server is in app.py on the repo root. 
