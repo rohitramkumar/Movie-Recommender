@@ -28,6 +28,10 @@ templates/app.spec.html - Tests for the front-end using jasmine.js framework.
 
 tests.py - Contains unit tests for the chat agent functionality as well as back-end API calls.
 
+# Detailed Documentation
+
+Click <a href="https://docs.google.com/document/d/1zR0i8IYlvWiY05bJxtEwA6mh7qu2QsVhHCduVYH3JLA/edit?usp=sharing"> here</a>.
+
 # Install and Deploy
 
 The flask server is in app.py on the repo root. 
@@ -39,3 +43,7 @@ Any and all requirements are in requirements.txt, all dependencies are automatic
 # Packaging
 
 The main Flask server is packaged in app.py and does not require any special instructions for deployment on Heroku.
+
+# Contributors List
+
+ramkumr2, hskhan10, amthoma3, ziweiba2, zwen6
