@@ -1,5 +1,5 @@
 # Movie Recommendation Service
-<a href="https://movie-recommendation-service.herokuapp.com/"> Link </a>
+<a href="https://movie-recommendation-service.herokuapp.com/"> Link To Working Project Homepage </a>
 
 Movie recommender is a project that recommends movies through an intelligent chat agent that a user can interact with. User's can ask for personalized movie suggestions if they register for a user account and build a movie watch-list. 
 
@@ -44,6 +44,8 @@ Any and all requirements are in requirements.txt, all dependencies are automatic
 # Packaging
 
 The main Flask server is packaged in app.py and does not require any special instructions for deployment on Heroku.
+<a href="https://movie-recommendation-service.herokuapp.com/"> Link To Working Project Homepage </a>
+
 
 # Contributors List
 
