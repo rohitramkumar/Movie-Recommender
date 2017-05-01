@@ -1,4 +1,5 @@
 # Movie Recommendation Service
+<a href="https://movie-recommendation-service.herokuapp.com/"> Link </a>
 
 Movie recommender is a project that recommends movies through an intelligent chat agent that a user can interact with. User's can ask for personalized movie suggestions if they register for a user account and build a movie watch-list. 
 
